@@ -1,0 +1,50 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Diagram class="oracle.dbtools.crest.swingui.relational.DPVRelational" name="Wordle" id="10E5AB5E-570E-5DDE-9A23-F02E9DDE2BDE">
+<createdBy>phs</createdBy>
+<modifiedBy>phs</modifiedBy>
+<createdTime>2022-01-20 19:01:49 UTC</createdTime>
+<autoRoute>false</autoRoute>
+<boxInbox>true</boxInbox>
+<showLegend>false</showLegend>
+<showLabels>false</showLabels>
+<showRelAttributes>false</showRelAttributes>
+<gridEnabled>false</gridEnabled>
+<showGrid>false</showGrid>
+<diagramColor>-1</diagramColor>
+<display>false</display>
+<notation>1</notation>
+<objectViews>
+<OView class="oracle.dbtools.crest.swingui.relational.TVTable" oid="65653DAD-92D6-2231-61AF-845B09B4E0E3" otype="Table" vid="E039967F-3E82-3816-EA25-65E70FEE38E9">
+<hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
+<bounds x="50" y="50" width="170" height="110"/>
+</OView>
+<OView class="oracle.dbtools.crest.swingui.relational.TVTable" oid="7B9E3D0B-301C-9FD2-C5C9-53AC810563DA" otype="Table" vid="E5B3160F-E895-F67E-D124-A73944C608DD">
+<hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
+<bounds x="80" y="110" width="170" height="110"/>
+</OView>
+<OView class="oracle.dbtools.crest.swingui.relational.TVTable" oid="F29CFCF5-1794-BF4E-F998-EE28A4EF6D1F" otype="Table" vid="D93E66C5-8F3D-1F32-0C7A-8487F5838769">
+<hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
+<bounds x="60" y="70" width="170" height="110"/>
+</OView>
+</objectViews>
+<connectors>
+<Connector class="oracle.dbtools.crest.swingui.relational.TVFKRelation" oid="6259DF18-5A6B-23D4-F1BD-251CAE084C15" otype="FKIndexAssociation" vid_source="E5B3160F-E895-F67E-D124-A73944C608DD" vid_target="E039967F-3E82-3816-EA25-65E70FEE38E9">
+<hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
+<backgroundColor>-16777216</backgroundColor>
+<lineWidth>1</lineWidth>
+<points>
+<point x="80" y="135"/>
+<point x="220" y="135"/>
+</points>
+</Connector>
+<Connector class="oracle.dbtools.crest.swingui.relational.TVFKRelation" oid="BB0139A6-1991-795E-3625-66C3EB159E28" otype="FKIndexAssociation" vid_source="D93E66C5-8F3D-1F32-0C7A-8487F5838769" vid_target="E039967F-3E82-3816-EA25-65E70FEE38E9">
+<hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
+<backgroundColor>-16777216</backgroundColor>
+<lineWidth>1</lineWidth>
+<points>
+<point x="60" y="115"/>
+<point x="220" y="115"/>
+</points>
+</Connector>
+</connectors>
+</Diagram>

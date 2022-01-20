@@ -1,0 +1,7 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<LogicalDesign class="oracle.dbtools.crest.model.design.logical.LogicalDesign" name="Logical" id="542AE87B-AC53-FE3E-EFF5-00BFE49D7A1F" mainViewID="77C539D0-7D0D-D7B4-0CF5-48B1D950D31E">
+<createdBy>phs</createdBy>
+<createdTime>2022-01-20 18:55:59 UTC</createdTime>
+<ownerDesignName>wordle</ownerDesignName>
+<shouldBeOpen>false</shouldBeOpen>
+</LogicalDesign>

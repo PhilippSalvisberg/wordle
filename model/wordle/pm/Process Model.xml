@@ -1,0 +1,7 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<ProcessModel class="oracle.dbtools.crest.model.design.process.ProcessModel" name="Process Model" id="C65971E5-897B-B32E-2D18-F92B4D8748C5">
+<createdBy>phs</createdBy>
+<createdTime>2022-01-20 18:55:59 UTC</createdTime>
+<ownerDesignName>wordle</ownerDesignName>
+<shouldBeOpen>false</shouldBeOpen>
+</ProcessModel>

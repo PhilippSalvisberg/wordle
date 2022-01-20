@@ -1,0 +1,76 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="F29CFCF5-1794-BF4E-F998-EE28A4EF6D1F" name="WORDS">
+<createdBy>phs</createdBy>
+<createdTime>2022-01-20 19:01:49 UTC</createdTime>
+<ownerDesignName>wordle</ownerDesignName>
+<importedID>98F6755A-7EC2-3991-ECF5-5036E79A5E3C</importedID>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="WORD" id="E0BE83D2-CDBD-59CA-AE04-D1595D41A8F2">
+<createdBy>phs</createdBy>
+<createdTime>2022-01-20 19:01:49 UTC</createdTime>
+<ownerDesignName>wordle</ownerDesignName>
+<importedID>A9C90B98-1776-D803-B151-8F46E292D6E9</importedID>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>5 CHAR</dataTypeSize>
+<ownDataTypeParameters>5 CHAR,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="GAME_NUMBER" id="2D74EE46-CBC6-28A3-AD23-2181F396D93A">
+<createdBy>phs</createdBy>
+<createdTime>2022-01-20 19:01:49 UTC</createdTime>
+<ownerDesignName>wordle</ownerDesignName>
+<importedID>5B3142C8-080D-12DD-2574-35B62389E6D0</importedID>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>*</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,*,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="GAME_ON" id="0CE9A17E-0E27-BB00-9360-9337D2A9ED9E">
+<createdBy>phs</createdBy>
+<createdTime>2022-01-20 19:01:49 UTC</createdTime>
+<ownerDesignName>wordle</ownerDesignName>
+<importedID>705D64F7-63EF-1217-0D3A-681268F7304D</importedID>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<dataTypeSize>7</dataTypeSize>
+<ownDataTypeParameters>7,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="48914683-3688-F685-D703-785FDC400A67" name="WORDS_PK">
+<createdBy>phs</createdBy>
+<createdTime>2022-01-20 19:01:49 UTC</createdTime>
+<ownerDesignName>wordle</ownerDesignName>
+<importedID>D5FE6CA7-B954-FADC-97F0-3C94FB88AC60</importedID>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="E0BE83D2-CDBD-59CA-AE04-D1595D41A8F2"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="71C475AE-FDAD-623A-8AC8-2CD465363B28" name="WORDS_PK">
+<createdBy>phs</createdBy>
+<createdTime>2022-01-20 19:01:49 UTC</createdTime>
+<ownerDesignName>wordle</ownerDesignName>
+<importedID>8BF8F06B-C534-E1F4-1FE2-A6B0D0092E18</importedID>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="E0BE83D2-CDBD-59CA-AE04-D1595D41A8F2"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

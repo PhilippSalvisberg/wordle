@@ -1,0 +1,7 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<BusinessInfoDesign class="oracle.dbtools.crest.model.businessinfo.BusinessInfoDesign" name="Business Information" id="0CB72F2D-54EF-53BE-92FD-EA2800A88770">
+<createdBy>phs</createdBy>
+<createdTime>2022-01-20 18:55:59 UTC</createdTime>
+<ownerDesignName>wordle</ownerDesignName>
+<shouldBeOpen>false</shouldBeOpen>
+</BusinessInfoDesign>

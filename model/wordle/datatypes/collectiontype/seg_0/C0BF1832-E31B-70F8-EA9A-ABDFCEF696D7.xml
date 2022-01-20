@@ -1,0 +1,16 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<CollectionType class="oracle.dbtools.crest.model.design.datatypes.CollectionType" name="WORD_CT" directorySegmentName="seg_0" id="C0BF1832-E31B-70F8-EA9A-ABDFCEF696D7">
+<createdBy>phs</createdBy>
+<createdTime>2022-01-20 18:59:54 UTC</createdTime>
+<generatorID>ACEDB788-54B5-73E2-13D9-E365884AA92C</generatorID>
+<ownerDesignName>wordle</ownerDesignName>
+<importedID>ACEDB788-54B5-73E2-13D9-E365884AA92C</importedID>
+<predefined>false</predefined>
+<dataTypeDescr class="oracle.dbtools.crest.model.design.datatypes.CollectionType$DataTypeWrapper">
+<size>5</size>
+<type>LOGDT024</type>
+<isreference>false</isreference>
+</dataTypeDescr>
+<maxElement>1</maxElement>
+<type>COLLECTION</type>
+</CollectionType>

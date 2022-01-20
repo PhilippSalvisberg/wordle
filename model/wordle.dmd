@@ -1,0 +1,16 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="wordle" id="BF50ADC0-BD43-5F8D-BD23-BBCF25E988AF" version="3.5">
+<createdBy>phs</createdBy>
+<createdTime>2022-01-20 18:55:58 UTC</createdTime>
+<ownerDesignName>wordle</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>BF50ADC0-BD43-5F8D-BD23-BBCF25E988AF</designId>
+<usedDesignStorageDescriptors>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="9A9E7F6A-8AED-D615-B471-F1E7D55E7CF7">
+<designStoragePath>/</designStoragePath>
+</designDescr>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="2CE8E60F-E302-E4DF-FE77-53E072952553">
+<designStoragePath>/</designStoragePath>
+</designDescr>
+</usedDesignStorageDescriptors>
+</OSDM_Design>

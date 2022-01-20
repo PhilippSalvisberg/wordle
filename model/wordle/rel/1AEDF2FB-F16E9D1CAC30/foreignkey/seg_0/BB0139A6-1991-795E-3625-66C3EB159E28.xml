@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="BB0139A6-1991-795E-3625-66C3EB159E28" containerWithKeyObject="65653DAD-92D6-2231-61AF-845B09B4E0E3" localFKIndex="59488E3A-0293-3E57-7C5D-E8975ACD6965" name="CHARS_IN_WORDS_WORD_FK">
+<createdBy>phs</createdBy>
+<createdTime>2022-01-20 19:01:49 UTC</createdTime>
+<ownerDesignName>wordle</ownerDesignName>
+<importedID>081F994B-0D43-A6CC-D844-01409EA2BD22</importedID>
+<referredTableLongName>WORDS</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>F29CFCF5-1794-BF4E-F998-EE28A4EF6D1F</referredTableID>
+<keyObject>48914683-3688-F685-D703-785FDC400A67</keyObject>
+<referredKeyID>48914683-3688-F685-D703-785FDC400A67</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>WORD</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

@@ -1,0 +1,8 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<relationalModel class="oracle.dbtools.crest.model.design.relational.RelationalDesign" name="Wordle" id="1AEDF2FB-204E-09E9-4899-F16E9D1CAC30" mainViewID="10E5AB5E-570E-5DDE-9A23-F02E9DDE2BDE">
+<createdBy>phs</createdBy>
+<createdTime>2022-01-20 19:01:48 UTC</createdTime>
+<ownerDesignName>wordle</ownerDesignName>
+<shouldBeOpen>false</shouldBeOpen>
+<selectedRDBMSSite>01F6E6D1-21D0-CFBD-ABDD-3988D1813575</selectedRDBMSSite>
+</relationalModel>
