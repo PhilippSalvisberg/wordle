@@ -7,7 +7,8 @@ create or replace package wordle is
 
    function play(
       in_game_number in words.game_number%type,
-      in_words       in word_ct
+      in_words       in word_ct,
+      in_autoplay    in integer default 0
    ) return word_ct;
 
    function play(
@@ -19,9 +20,7 @@ create or replace package wordle is
       in_word5       in words.word%type default null,
       in_word6       in words.word%type default null
    ) return word_ct;
-
-   function play(in_words in word_ct) return word_ct;
-
+   
    function play(
       in_word1 in words.word%type,
       in_word2 in words.word%type default null,
@@ -30,6 +29,25 @@ create or replace package wordle is
       in_word5 in words.word%type default null,
       in_word6 in words.word%type default null
    ) return word_ct;
+   
+   function autoplay(
+      in_game_number in words.game_number%type,
+      in_word1       in words.word%type default null,
+      in_word2       in words.word%type default null,
+      in_word3       in words.word%type default null,
+      in_word4       in words.word%type default null,
+      in_word5       in words.word%type default null,
+      in_word6       in words.word%type default null
+   ) return word_ct;
 
+   function autoplay(
+      in_word1       in words.word%type default null,
+      in_word2       in words.word%type default null,
+      in_word3       in words.word%type default null,
+      in_word4       in words.word%type default null,
+      in_word5       in words.word%type default null,
+      in_word6       in words.word%type default null
+   ) return word_ct;
+   
 end wordle;
 /
