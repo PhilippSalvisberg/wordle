@@ -82,6 +82,7 @@ select word
    and word like '%r%'
    and word not like '%g%'
    and word not like '%l%'
+   and word not in ('glory')
  order by case when game_number is not null then 0 else 1 end, word
  fetch first 2 rows only]'
            from dual
@@ -224,7 +225,7 @@ select word
          select null
            from dual
          union all
-         select 'Bravo!' as column_value
+         select 'Bravo! You completed Wordle 213 5/6' as column_value
            from dual;
       ut.expect(l_actual).to_equal(l_expected);
    end play_213_5;
