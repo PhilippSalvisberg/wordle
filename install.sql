@@ -6,22 +6,25 @@ prompt =========================================================================
 prompt install data model
 prompt ================================================================================================================
 
-@source/table/chars.sql
-@source/table/words.sql
-@source/table/char_in_words.sql
+@main/table/chars.sql
+@main/table/words.sql
+@main/table/char_in_words.sql
 
 prompt ================================================================================================================
 prompt install object types
 prompt ================================================================================================================
 
-@source/type/word_ct.sql
+@main/type/word_ct.sql
 
 prompt ================================================================================================================
 prompt install PL/SQL packages
 prompt ================================================================================================================
 
-@source/package/initial_load.pks
-@source/package/initial_load.pkb
+@main/package/initial_load.pks
+@main/package/initial_load.pkb
+@main/package/wordle.pks
+@main/package/wordle.pkb
+
 
 prompt ================================================================================================================
 prompt intial load
