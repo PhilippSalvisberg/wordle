@@ -61,9 +61,9 @@ This works in any SQL client and is therefore the default. The next table should
 
 ASCII | ANSI | Notes / Mnemonics
 -- | -- | --
-.T. | <span style="background-color:#68AB67;color:#ffffff;">&nbsp;T&nbsp;</span> | Dots mean the letter is at the right position. The dots are like anchors on both sides, making the result final.
-(N) | <span style="background-color:#C6B55E;color:#ffffff;">&nbsp;N&nbsp;</span> | Parenthesis mean the right letter but at the wrong position. 
--U- | <span style="background-color:#787C7E;color:#ffffff;">&nbsp;U&nbsp;</span> | Dashes mean the letter is not used (multiple occurrences of the same letter are not honored). It's similar to the syntax used  in some Wikis to cross out words.
+.T. | <img src="image/t-green-box.svg" alt="T" width="16">| Dots mean the letter is at the right position. The dots are like anchors on both sides, making the result final.
+(N) | <img src="image/n-gold-box.svg" alt="N" width="16"> | Parenthesis mean the right letter but at the wrong position. 
+-U- | <img src="image/u-gray-box.svg" alt="U" width="16"> | Dashes mean the letter is not used (multiple occurrences of the same letter are not honored). It's similar to the syntax used  in some Wikis to cross out words.
 
 
 ## Single Guess via Table Function `wordle.play`
