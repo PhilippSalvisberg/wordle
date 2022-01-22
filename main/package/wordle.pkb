@@ -243,7 +243,7 @@ create or replace package body wordle is
       end evaluate_guesses;
       --
       function exact_matches return varchar2 is
-         l_pred varchar2(200 char);
+         l_pred varchar2(5 char);
       begin
          <<process_positions_in_word>>
          for i in 1..5
