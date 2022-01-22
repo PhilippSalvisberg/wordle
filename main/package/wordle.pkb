@@ -209,7 +209,7 @@ create or replace package body wordle is
                when '2' then
                   t_exact_matches(i) := l_guess_char;
                when '1' then
-                  t_wrong_pos_matches(l_guess_char) := l_guess_char;
+                  t_wrong_pos_matches(l_guess_char) := to_char(i);
                else
                   if instr(in_solution, l_guess_char) = 0 then
                      t_no_matches(l_guess_char) := l_guess_char;
@@ -243,7 +243,7 @@ create or replace package body wordle is
       end evaluate_guesses;
       --
       function exact_matches return varchar2 is
-         l_pred varchar2(200 char);
+         l_pred varchar2(5 char);
       begin
          <<process_positions_in_word>>
          for i in 1..5
@@ -257,6 +257,23 @@ create or replace package body wordle is
          return l_pred;
       end exact_matches;
       --
+      function wrong_pos_pattern(
+         in_char in varchar2, 
+         in_pos in integer
+      ) return varchar2 is
+         l_pattern varchar2 (5 char);
+      begin
+         for i in 1 .. 5
+         loop
+            if i = in_pos then
+               l_pattern := l_pattern || in_char;
+            else
+               l_pattern := l_pattern || '_';
+            end if;
+         end loop;
+         return l_pattern;
+      end wrong_pos_pattern;
+      --
       function wrong_pos_matches return varchar2 is
          l_pred varchar2(4000 char);
          l_char varchar2(1);
@@ -269,7 +286,11 @@ create or replace package body wordle is
                       || chr(10)
                       || '               and word like ''%'
                       || l_char
-                      || '%''';
+                      || '%'''
+                      || chr(10)
+                      || '               and word not like '''
+                      || wrong_pos_pattern(l_char, to_number(t_wrong_pos_matches(l_char)))
+                      || '''';
             l_char := t_wrong_pos_matches.next(l_char);
          end loop add_like_predicates;
          return l_pred;
