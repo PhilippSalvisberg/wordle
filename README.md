@@ -384,4 +384,4 @@ Here are the relevant signaturs of the PL/SQL package `wordle` for the `autoplay
    ) return word_ct;
 ```
 
-The functions are basically identical to the other `pay` functions. The only difference is that the `in_autopay` parameter is set to `1` (true).
+The functions are basically identical to the other `play` functions. The only difference is that the `in_autoplay` parameter is set to `1` (true).
