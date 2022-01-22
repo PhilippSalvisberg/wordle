@@ -80,6 +80,7 @@ select word
   from words
  where word like '__o_y'
    and word like '%r%'
+   and word not like '___r_'
    and word not like '%g%'
    and word not like '%l%'
    and word not in ('glory')
@@ -229,6 +230,34 @@ select word
            from dual;
       ut.expect(l_actual).to_equal(l_expected);
    end play_213_5;
+
+   -- -----------------------------------------------------------------------------------------------------------------
+   -- play_consider_wrong_positions_in_suggestions, see issue #2
+   -- -----------------------------------------------------------------------------------------------------------------
+   procedure play_consider_wrong_positions_in_suggestions is
+      l_evaluation       varchar2(1000);
+      l_first_suggestion varchar2(1000);
+   begin
+      -- arrange
+      wordle.set_ansiconsole(false);
+      wordle.set_show_query(false);
+      wordle.set_suggestions(1);
+      
+      -- act
+      select column_value into l_evaluation from wordle.play(209, 'aback') where rownum = 1;
+      select text
+        into l_first_suggestion
+        from (select rownum as row_num, column_value as text from wordle.play(209, 'aback'))
+       where row_num = 5;
+      
+      -- assert guess
+      ut.expect(l_evaluation).to_equal('(A) -B- -A- -C- -K-');
+
+      -- assert suggestion
+      -- cannot start with 'a', 'b', 'c' or 'k', hence it must not start with an 'a'.
+      -- first suggestion was 'adage' before code change.
+      ut.expect(l_first_suggestion).not_to_match('^a[a-z]{4}');
+   end play_consider_wrong_positions_in_suggestions;
 
 end test_wordle;
 /
