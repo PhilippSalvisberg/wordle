@@ -232,7 +232,24 @@ create or replace package body wordle is
          t_rows.extend;
          t_rows(t_rows.count) := in_row;
       end append;
-      -- 
+      --
+      function position_added(
+         in_num_list in t_num_list_type,
+         in_pos      in integer
+      ) return boolean is
+         l_found boolean := false;
+      begin
+         <<look_for_pos>>
+         for i in 1..in_num_list.count
+         loop
+            if in_num_list(i) = in_pos then
+               l_found := true;
+               exit look_for_pos;
+            end if;
+         end loop look_for_pos;
+         return l_found;
+      end position_added;
+      --
       procedure add_matches(
          in_guess    in varchar2,
          in_pattern  in varchar2,
@@ -241,6 +258,7 @@ create or replace package body wordle is
          l_pattern_char varchar2(1);
          l_guess_char   varchar2(1);
          t_num_list     t_num_list_type;
+         l_found        integer;
       begin
          <<populate_query_predicate_input>>
          for i in 1..length(in_pattern)
@@ -252,10 +270,12 @@ create or replace package body wordle is
                   t_exact_matches(i) := l_guess_char;
                when '1' then
                   if t_wrong_pos_matches.exists(l_guess_char) then
-                     t_num_list                        := t_wrong_pos_matches(l_guess_char);
-                     t_num_list.extend;
-                     t_num_list(t_num_list.count)      := i;
-                     t_wrong_pos_matches(l_guess_char) := t_num_list;
+                     t_num_list := t_wrong_pos_matches(l_guess_char);
+                     if not position_added(t_num_list, i) then
+                        t_num_list.extend;
+                        t_num_list(t_num_list.count)      := i;
+                        t_wrong_pos_matches(l_guess_char) := t_num_list;
+                     end if;
                   else
                      t_wrong_pos_matches(l_guess_char) := t_num_list_type(i);
                   end if;
