@@ -31,8 +31,15 @@ create or replace package test_wordle is
    --%test(play Wordle 213 fifth attempt and solved)
    procedure play_213_5;
    
+   --%endcontext
+
+   --%context(fetatures and bug fixes)
+
    --%test(consider wrong positions in suggestions)
    procedure play_consider_wrong_positions_in_suggestions;
+   
+   --%test(consider occurrences of repeated letters)
+   procedure play_consider_occurrences_of_repeated_letters;
    
    --%endcontext
 
