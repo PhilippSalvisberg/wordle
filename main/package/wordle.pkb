@@ -258,12 +258,12 @@ create or replace package body wordle is
       end exact_matches;
       --
       function wrong_pos_pattern(
-         in_char in varchar2, 
-         in_pos in integer
+         in_char in varchar2,
+         in_pos  in integer
       ) return varchar2 is
-         l_pattern varchar2 (5 char);
+         l_pattern varchar2(5 char);
       begin
-         for i in 1 .. 5
+         for i in 1..5
          loop
             if i = in_pos then
                l_pattern := l_pattern || in_char;
@@ -403,7 +403,11 @@ create or replace package body wordle is
          evaluate_guesses;
          if completed() then
             append(null);
-            append('Bravo! You completed Wordle ' || l_game_number || ' ' || t_words.count || '/6');
+            append('Bravo! You completed Wordle '
+               || l_game_number
+               || ' '
+               || t_words.count
+               || '/6');
          elsif g_suggestions > 0 then
             populate_suggestions;
             auto_extend_word_list;
@@ -464,12 +468,12 @@ create or replace package body wordle is
    -- autoplay (public, convenience)
    -- -----------------------------------------------------------------------------------------------------------------
    function autoplay(
-      in_word1       in words.word%type default null,
-      in_word2       in words.word%type default null,
-      in_word3       in words.word%type default null,
-      in_word4       in words.word%type default null,
-      in_word5       in words.word%type default null,
-      in_word6       in words.word%type default null
+      in_word1 in words.word%type default null,
+      in_word2 in words.word%type default null,
+      in_word3 in words.word%type default null,
+      in_word4 in words.word%type default null,
+      in_word5 in words.word%type default null,
+      in_word6 in words.word%type default null
    ) return word_ct is
    begin
       return play(null, word_ct(in_word1, in_word2, in_word3, in_word4, in_word5, in_word6), 1);
