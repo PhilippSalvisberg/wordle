@@ -349,7 +349,7 @@ Bravo! You completed Wordle 209 6/6
 98 rows selected. 
 ```
 
-In this case no guess was used as starting point. This works. `autoplay` always chooses the first suggestion, also for the very first guess. This process is repeated until a solution is found. It does not matter how many guesses are necessary. Currently in a bit more than 92% of the cases a solution is found within 6 guesses. In one case 10 guesses are necessary. This could and should be improved.
+In this case no guess was used as starting point. This works. `autoplay` always chooses the first suggestion, also for the very first guess. This process is repeated until a solution is found. It does not matter how many guesses are necessary. Currently in a bit more than 94 percent of the cases a solution is found within 6 guesses. In two cases 9 guesses are necessary. This could and should be improved.
 
 ### Signatures
 
