@@ -222,7 +222,8 @@ create or replace package body wordle is
       -- 
       type t_exact_type is table of varchar2(1) index by pls_integer;
       t_exact_matches     t_exact_type           := t_exact_type(1 => null, 2 => null, 3 => null, 4 => null, 5 => null);
-      type t_char_type is table of varchar2(1) index by varchar2(1);
+      type t_num_list_type is table of pls_integer;
+      type t_char_type is table of t_num_list_type index by varchar2(1);
       t_wrong_pos_matches t_char_type            := t_char_type();
       t_no_matches        t_char_type            := t_char_type();
       --
@@ -239,6 +240,7 @@ create or replace package body wordle is
       ) is
          l_pattern_char varchar2(1);
          l_guess_char   varchar2(1);
+         t_num_list     t_num_list_type;
       begin
          <<populate_query_predicate_input>>
          for i in 1..length(in_pattern)
@@ -249,10 +251,17 @@ create or replace package body wordle is
                when '2' then
                   t_exact_matches(i) := l_guess_char;
                when '1' then
-                  t_wrong_pos_matches(l_guess_char) := to_char(i);
+                  if t_wrong_pos_matches.exists(l_guess_char) then
+                     t_num_list                        := t_wrong_pos_matches(l_guess_char);
+                     t_num_list.extend;
+                     t_num_list(t_num_list.count)      := i;
+                     t_wrong_pos_matches(l_guess_char) := t_num_list;
+                  else
+                     t_wrong_pos_matches(l_guess_char) := t_num_list_type(i);
+                  end if;
                else
                   if instr(in_solution, l_guess_char) = 0 then
-                     t_no_matches(l_guess_char) := l_guess_char;
+                     t_no_matches(l_guess_char) := t_num_list_type(i);
                   end if;
             end case;
          end loop populate_query_predicate_input;
@@ -315,23 +324,29 @@ create or replace package body wordle is
       end wrong_pos_pattern;
       --
       function wrong_pos_matches return varchar2 is
-         l_pred varchar2(4000 char);
-         l_char varchar2(1);
+         l_pred     varchar2(4000 char);
+         l_char     varchar2(1);
+         t_num_list t_num_list_type;
       begin
          l_char := t_wrong_pos_matches.first;
          <<add_like_predicates>>
          while l_char is not null
          loop
-            l_pred := l_pred
-                      || chr(10)
-                      || '               and word like ''%'
-                      || l_char
-                      || '%'''
-                      || chr(10)
-                      || '               and word not like '''
-                      || wrong_pos_pattern(l_char, to_number(t_wrong_pos_matches(l_char)))
-                      || '''';
-            l_char := t_wrong_pos_matches.next(l_char);
+            l_pred     := l_pred
+                          || chr(10)
+                          || '               and word like ''%'
+                          || l_char
+                          || '%''';
+            t_num_list := t_wrong_pos_matches(l_char);
+            for i in 1..t_num_list.count
+            loop
+               l_pred := l_pred
+                         || chr(10)
+                         || '               and word not like '''
+                         || wrong_pos_pattern(l_char, t_num_list(i))
+                         || '''';
+            end loop;
+            l_char     := t_wrong_pos_matches.next(l_char);
          end loop add_like_predicates;
          return l_pred;
       end wrong_pos_matches;
