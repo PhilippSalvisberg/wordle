@@ -163,8 +163,7 @@ select * from wordle.autoplay(209);
 produces this result:
 
 ```
-
-Result Sequence                                                                                     
+Result Sequence
 ----------------------------------------------------------------------------------------------------
 
 select word
@@ -192,6 +191,7 @@ select word
   from words
  where word like '_____'
    and word like '%a%'
+   and word not like 'a____'
    and word not like '%b%'
    and word not like '%c%'
    and word not like '%k%'
@@ -199,156 +199,154 @@ select word
  order by case when game_number is not null then 0 else 1 end, word
  fetch first 10 rows only
 
-adage
-adapt
-adept
-admin
-admit
-adopt
-adore
-adorn
-adult
-affix
+daddy
+daily
+dairy
+daisy
+dally
+dandy
+datum
+daunt
+dealt
+death
 
-autoplay added: adage (2)
+autoplay added: daddy (2)
 
 (A) -B- -A- -C- -K-
-(A) -D- -A- .G. -E-
+-D- .A. -D- -D- .Y.
 
 select word
   from words
- where word like '___g_'
+ where word like '_a__y'
    and word like '%a%'
+   and word not like 'a____'
    and word not like '%b%'
    and word not like '%c%'
    and word not like '%d%'
-   and word not like '%e%'
    and word not like '%k%'
-   and word not in ('aback', 'adage')
+   and word not in ('aback', 'daddy')
  order by case when game_number is not null then 0 else 1 end, word
  fetch first 10 rows only
 
-align
-laugh
-manga
-mango
-mangy
-tango
-tangy
-tonga
-aargh
-ahigh
+early
+fairy
+fanny
+fatty
+gaily
+gassy
+gayly
+hairy
+happy
+harpy
 
-autoplay added: align (3)
+autoplay added: early (3)
 
 (A) -B- -A- -C- -K-
-(A) -D- -A- .G. -E-
-(A) -L- -I- .G. (N)
+-D- .A. -D- -D- .Y.
+-E- .A. -R- -L- .Y.
 
 select word
   from words
- where word like '___g_'
+ where word like '_a__y'
    and word like '%a%'
-   and word like '%n%'
+   and word not like 'a____'
    and word not like '%b%'
    and word not like '%c%'
    and word not like '%d%'
    and word not like '%e%'
-   and word not like '%i%'
    and word not like '%k%'
    and word not like '%l%'
-   and word not in ('aback', 'adage', 'align')
+   and word not like '%r%'
+   and word not in ('aback', 'daddy', 'early')
  order by case when game_number is not null then 0 else 1 end, word
  fetch first 10 rows only
 
-manga
-mango
+fanny
+fatty
+gassy
+happy
+hasty
+jazzy
+mammy
 mangy
-tango
-tangy
-tonga
-fanga
-fango
-fangs
-gangs
+nanny
+nasty
 
-autoplay added: manga (4)
+autoplay added: fanny (4)
 
 (A) -B- -A- -C- -K-
-(A) -D- -A- .G. -E-
-(A) -L- -I- .G. (N)
--M- .A. .N. .G. -A-
+-D- .A. -D- -D- .Y.
+-E- .A. -R- -L- .Y.
+-F- .A. .N. -N- .Y.
 
 select word
   from words
- where word like '_ang_'
+ where word like '_an_y'
    and word like '%a%'
-   and word like '%n%'
+   and word not like 'a____'
    and word not like '%b%'
    and word not like '%c%'
    and word not like '%d%'
    and word not like '%e%'
-   and word not like '%i%'
+   and word not like '%f%'
+   and word not like '%k%'
+   and word not like '%l%'
+   and word not like '%r%'
+   and word not in ('aback', 'daddy', 'early', 'fanny')
+ order by case when game_number is not null then 0 else 1 end, word
+ fetch first 10 rows only
+
+mangy
+nanny
+pansy
+tangy
+janny
+janty
+manty
+panty
+tansy
+tanty
+
+autoplay added: mangy (5)
+
+(A) -B- -A- -C- -K-
+-D- .A. -D- -D- .Y.
+-E- .A. -R- -L- .Y.
+-F- .A. .N. -N- .Y.
+-M- .A. .N. .G. .Y.
+
+select word
+  from words
+ where word like '_angy'
+   and word like '%a%'
+   and word not like 'a____'
+   and word not like '%b%'
+   and word not like '%c%'
+   and word not like '%d%'
+   and word not like '%e%'
+   and word not like '%f%'
    and word not like '%k%'
    and word not like '%l%'
    and word not like '%m%'
-   and word not in ('aback', 'adage', 'align', 'manga')
- order by case when game_number is not null then 0 else 1 end, word
- fetch first 10 rows only
-
-tango
-tangy
-fanga
-fango
-fangs
-gangs
-hangs
-panga
-pangs
-ranga
-
-autoplay added: tango (5)
-
-(A) -B- -A- -C- -K-
-(A) -D- -A- .G. -E-
-(A) -L- -I- .G. (N)
--M- .A. .N. .G. -A-
-.T. .A. .N. .G. -O-
-
-select word
-  from words
- where word like 'tang_'
-   and word like '%a%'
-   and word like '%n%'
-   and word not like '%b%'
-   and word not like '%c%'
-   and word not like '%d%'
-   and word not like '%e%'
-   and word not like '%i%'
-   and word not like '%k%'
-   and word not like '%l%'
-   and word not like '%m%'
-   and word not like '%o%'
-   and word not in ('aback', 'adage', 'align', 'manga', 'tango')
+   and word not like '%r%'
+   and word not in ('aback', 'daddy', 'early', 'fanny', 'mangy')
  order by case when game_number is not null then 0 else 1 end, word
  fetch first 10 rows only
 
 tangy
-tanga
-tangs
 
 autoplay added: tangy (6)
 
 (A) -B- -A- -C- -K-
-(A) -D- -A- .G. -E-
-(A) -L- -I- .G. (N)
--M- .A. .N. .G. -A-
-.T. .A. .N. .G. -O-
+-D- .A. -D- -D- .Y.
+-E- .A. -R- -L- .Y.
+-F- .A. .N. -N- .Y.
+-M- .A. .N. .G. .Y.
 .T. .A. .N. .G. .Y.
 
 Bravo! You completed Wordle 209 6/6
 
-100 rows selected. 
+98 rows selected. 
 ```
 
 In this case no guess was used as starting point. This works. `autoplay` always chooses the first suggestion, also for the very first guess. This process is repeated until a solution is found. It does not matter how many guesses are necessary. Currently in a bit more than 92% of the cases a solution is found within 6 guesses. In one case 10 guesses are necessary. This could and should be improved.
