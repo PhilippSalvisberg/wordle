@@ -258,6 +258,25 @@ select word
       -- first suggestion was 'adage' before code change.
       ut.expect(l_first_suggestion).not_to_match('^a[a-z]{4}');
    end play_consider_wrong_positions_in_suggestions;
+   
+   -- -----------------------------------------------------------------------------------------------------------------
+   -- play_consider_occurrences_of_repeated_letters, see issue #5
+   -- -----------------------------------------------------------------------------------------------------------------
+   procedure play_consider_occurrences_of_repeated_letters is
+       l_actual varchar2(1000);
+   begin
+       -- arrange
+       wordle.set_ansiconsole(false);
+       
+       -- act
+       select text
+        into l_actual
+        from (select rownum as row_num, column_value as text from wordle.play(217, 'aback', 'cinch'))
+       where row_num = 2;
+
+      -- assert       
+      ut.expect(l_actual).to_equal('-C- .I. .N. .C. -H-');
+   end play_consider_occurrences_of_repeated_letters;
 
 end test_wordle;
 /

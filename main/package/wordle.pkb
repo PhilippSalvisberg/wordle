@@ -116,25 +116,65 @@ create or replace package body wordle is
    ) return words.word%type
       deterministic
    is
-      l_solution      words.word%type := lower(in_solution);
-      l_guess         words.word%type := lower(in_guess);
-      l_pattern       words.word%type;
-      l_solution_char varchar2(1);
-      l_guess_char    varchar2(1);
+      l_solution       words.word%type := lower(in_solution); -- NOSONAR: function call will not fail
+      l_guess          words.word%type := lower(in_guess);    -- NOSONAR: function call will not fail
+      type t_letter_type is table of pls_integer index by varchar2(1);
+      t_solution_chars t_letter_type   := t_letter_type();
+      t_guess_chars    t_letter_type   := t_letter_type();
+      l_pattern        words.word%type;
+      l_solution_char  varchar2(1);
+      l_guess_char     varchar2(1);
+      --
+      procedure add_char(in_chars in out t_letter_type,
+                         in_char  in     varchar2) is
+      begin
+         if in_chars.exists(in_char) then
+            in_chars(in_char) := in_chars(in_char) + 1;
+         else
+            in_chars(in_char) := 1;
+         end if;
+      end add_char;
       --
       procedure append(in_match in varchar2) is
       begin
          l_pattern := l_pattern || in_match;
       end append;
+      --
+      function number_of_guessed_char(
+         in_solution in varchar2,
+         in_guess    in varchar,
+         in_char     in varchar
+      ) return integer is
+         l_result integer := 0;
+      begin
+         for i in 1..length(in_solution)
+         loop
+            if substr(in_solution, i, 1) = in_char and substr(in_guess, i, 1) = in_char then
+               l_result := l_result + 1;
+            end if;
+         end loop;
+         return l_result;
+      end number_of_guessed_char;
    begin
+      <<count_letter_occurrences_in_solution>>
+      for i in 1..length(l_solution)
+      loop
+         add_char(t_solution_chars, substr(l_solution, i, 1));
+      end loop count_letter_occurrences_in_solution;
+
       <<process_characters>>
       for i in 1..length(l_solution)
       loop
          l_solution_char := substr(l_solution, i, 1);
          l_guess_char    := substr(l_guess, i, 1);
+         add_char(t_guess_chars, l_guess_char);
          if l_guess_char = l_solution_char then
             append('2');
-         elsif instr(l_solution, l_guess_char) > 0 and instr(l_guess, l_guess_char) = i then
+         elsif instr(l_solution, l_guess_char) > 0
+            and (t_solution_chars(l_guess_char)
+               - number_of_guessed_char(l_solution, l_guess, l_guess_char)
+               - t_guess_chars(l_guess_char) >= 0)
+         then
             append('1');
          else
             append('0');
@@ -258,12 +298,12 @@ create or replace package body wordle is
       end exact_matches;
       --
       function wrong_pos_pattern(
-         in_char in varchar2, 
-         in_pos in integer
+         in_char in varchar2,
+         in_pos  in integer
       ) return varchar2 is
-         l_pattern varchar2 (5 char);
+         l_pattern varchar2(5 char);
       begin
-         for i in 1 .. 5
+         for i in 1..5
          loop
             if i = in_pos then
                l_pattern := l_pattern || in_char;
@@ -403,7 +443,11 @@ create or replace package body wordle is
          evaluate_guesses;
          if completed() then
             append(null);
-            append('Bravo! You completed Wordle ' || l_game_number || ' ' || t_words.count || '/6');
+            append('Bravo! You completed Wordle '
+               || l_game_number
+               || ' '
+               || t_words.count
+               || '/6');
          elsif g_suggestions > 0 then
             populate_suggestions;
             auto_extend_word_list;
@@ -464,12 +508,12 @@ create or replace package body wordle is
    -- autoplay (public, convenience)
    -- -----------------------------------------------------------------------------------------------------------------
    function autoplay(
-      in_word1       in words.word%type default null,
-      in_word2       in words.word%type default null,
-      in_word3       in words.word%type default null,
-      in_word4       in words.word%type default null,
-      in_word5       in words.word%type default null,
-      in_word6       in words.word%type default null
+      in_word1 in words.word%type default null,
+      in_word2 in words.word%type default null,
+      in_word3 in words.word%type default null,
+      in_word4 in words.word%type default null,
+      in_word5 in words.word%type default null,
+      in_word6 in words.word%type default null
    ) return word_ct is
    begin
       return play(null, word_ct(in_word1, in_word2, in_word3, in_word4, in_word5, in_word6), 1);
