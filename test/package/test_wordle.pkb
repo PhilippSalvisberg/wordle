@@ -260,6 +260,34 @@ select word
    end play_consider_wrong_positions_in_suggestions;
    
    -- -----------------------------------------------------------------------------------------------------------------
+   -- play_consider_wrong_positions_in_suggestions_for_repeated_letters, see issue #8
+   -- -----------------------------------------------------------------------------------------------------------------
+   procedure play_consider_wrong_positions_in_suggestions_for_repeated_letters is
+      l_evaluation       varchar2(1000);
+      l_first_suggestion varchar2(1000);
+   begin
+      -- arrange
+      wordle.set_ansiconsole(false);
+      wordle.set_show_query(false);
+      wordle.set_suggestions(1);
+      
+      -- act
+      select column_value into l_evaluation from wordle.play(162, 'aback') where rownum = 1;
+      select text
+        into l_first_suggestion
+        from (select rownum as row_num, column_value as text from wordle.play(162, 'aback', 'defer', 'egret', 'inter'))
+       where row_num = 8;
+      
+      -- assert guess
+      ut.expect(l_evaluation).to_equal('-A- -B- -A- -C- -K-');
+
+      -- assert suggestion
+      -- cannot start with 'a', 'd', 'e' or 'i', hence it must not start with an 'e'.
+      -- first suggestion was 'erupt' before code change.
+      ut.expect(l_first_suggestion).not_to_match('^e[a-z]{4}');
+   end play_consider_wrong_positions_in_suggestions_for_repeated_letters;
+   
+   -- -----------------------------------------------------------------------------------------------------------------
    -- play_consider_occurrences_of_repeated_letters, see issue #5
    -- -----------------------------------------------------------------------------------------------------------------
    procedure play_consider_occurrences_of_repeated_letters is

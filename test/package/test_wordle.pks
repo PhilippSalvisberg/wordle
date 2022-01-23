@@ -38,6 +38,9 @@ create or replace package test_wordle is
    --%test(consider wrong positions in suggestions)
    procedure play_consider_wrong_positions_in_suggestions;
    
+   --%test(consider wrong positions in suggestions for repeated letters)
+   procedure play_consider_wrong_positions_in_suggestions_for_repeated_letters;
+
    --%test(consider occurrences of repeated letters)
    procedure play_consider_occurrences_of_repeated_letters;
    
