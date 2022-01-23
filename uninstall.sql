@@ -13,6 +13,7 @@ prompt =========================================================================
 prompt uninstall all other objects
 prompt ================================================================================================================
 
+drop view full_autoplay_results;
 drop package wordle;
 drop package initial_load;
 drop type word_ct;
