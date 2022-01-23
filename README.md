@@ -63,7 +63,7 @@ ASCII | ANSI | Notes / Mnemonics
 -- | -- | --
 .T. | <img src="image/t-green-box.svg" alt="T" width="20">| Dots mean the letter is at the right position. The dots are like anchors on both sides, making the result final.
 (N) | <img src="image/n-gold-box.svg" alt="N" width="20"> | Parenthesis mean the right letter but at the wrong position. 
--U- | <img src="image/u-gray-box.svg" alt="U" width="20"> | Dashes mean the letter is not used (multiple occurrences of the same letter are not honored). It's similar to the syntax used  in some Wikis to cross out words.
+-U- | <img src="image/u-gray-box.svg" alt="U" width="20"> | Dashes mean the letter is not used (also when there are too many occurrences of a letter). It's similar to the syntax used  in some Wikis to cross out words.
 
 
 ## Single Guess via Table Function `wordle.play`
