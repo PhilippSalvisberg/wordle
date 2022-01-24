@@ -119,7 +119,7 @@ select word
 
       open l_actual for
          select text
-           from (select rownum as row_num, column_value as text from wordle.play(201, 'abcdef', 'annal', 'noise'))
+           from (select rownum as row_num, column_value as text from wordle.play(201, 'abcde', 'annal', 'noise'))
           where row_num < 7
              or row_num = 8;
 
@@ -127,7 +127,7 @@ select word
          select 'reduced input due to the following errors:' as text
            from dual
          union all
-         select '- abcdef is not in word list.'
+         select '- abcde is not in word list.'
            from dual
          union all
          select '- noise does not contain letter A (2 times).'
