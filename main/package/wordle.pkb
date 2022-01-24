@@ -396,7 +396,7 @@ create or replace package body wordle is
          end if;
       end remove_and_save_invalid_guesses;
       --
-      procedure print_errors (in_errors in word_ct) is
+      procedure print_errors(in_errors in word_ct) is
       begin
          if in_errors.count > 0 then
             append('reduced input due to the following errors:');
