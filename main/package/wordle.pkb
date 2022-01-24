@@ -6,6 +6,7 @@ create or replace package body wordle is
    g_ansiconsole  boolean          := false;
    g_suggestions  integer          := 10;
    g_show_query   boolean          := true;
+   g_hard_mode    boolean          := false;
    co_max_guesses constant integer := 50; -- just limit them as a fail safe to reduce risk of endless loops
 
    -- -----------------------------------------------------------------------------------------------------------------
@@ -206,6 +207,14 @@ create or replace package body wordle is
    begin
       g_show_query := in_show_query;
    end set_show_query;
+   
+   -- -----------------------------------------------------------------------------------------------------------------
+   -- set_hard_mode (public)
+   -- -----------------------------------------------------------------------------------------------------------------
+   procedure set_hard_mode(in_hard_mode boolean default false) is
+   begin
+      g_hard_mode := in_hard_mode;
+   end set_hard_mode;
 
    -- -----------------------------------------------------------------------------------------------------------------
    -- play (public)
@@ -288,20 +297,107 @@ create or replace package body wordle is
          end loop populate_query_predicate_input;
       end add_matches;
       --
+      procedure remove_and_save_unknown_words(io_errors in out word_ct) is
+         t_sanitised_input word_ct := word_ct();
+      begin
+         for r in (
+            select i.column_value as input_word, w.word
+              from table(t_words) i
+              left join words w
+                on w.word = lower(i.column_value)
+             where i.column_value is not null
+         )
+         loop
+            if r.word is null then
+               io_errors.extend;
+               io_errors(io_errors.count) := r.input_word || ' is not in word list.';
+            else
+               t_sanitised_input.extend;
+               t_sanitised_input(t_sanitised_input.count) := r.word;
+            end if;
+         end loop;
+         t_words := t_sanitised_input;
+      end remove_and_save_unknown_words;
+      --
+      procedure remove_and_save_invalid_guesses(io_errors in out word_ct) is
+         t_sanitised_input word_ct := word_ct();
+      t_guesses         word_ct := word_ct();
+         t_patterns        word_ct := word_ct();
+         l_match           varchar2(1);
+         l_char            varchar2(1);
+         l_error           boolean := false;
+      begin
+         if g_hard_mode then
+            <<words>>
+            for i in 1..t_words.count
+            loop
+               <<guesses>>
+               for j in 1..t_guesses.count
+               loop
+                  <<letters>>
+                  for k in 1..5
+                  loop
+                     l_match := substr(t_patterns(j), k, 1);
+                     l_char  := substr(t_guesses(j), k, 1);
+                     if l_match = 2 and l_char != substr(t_words(i), k, 1) then
+                        io_errors.extend;
+                        io_errors(io_errors.count) := t_words(i)
+                                                    || '''s letter #'
+                                                    || k
+                                                    || ' is not a '
+                                                    || upper(l_char)
+                                                    || '.';
+                        l_error := true;                        
+                     elsif l_match = 1 and regexp_count(t_words(i), l_char) < regexp_count(t_guesses(j), l_char) then
+                        io_errors.extend;
+                        io_errors(io_errors.count) := t_words(i)
+                                                    || ' does not contain letter '
+                                                    || upper(l_char)
+                                                    || ' ('
+                                                    || regexp_count(t_guesses(j), l_char)
+                                                    || ' times).';
+                        l_error := true;
+                     end if;
+                  end loop letters;
+               end loop guesses;
+               if not l_error then
+                  t_guesses.extend;
+                  t_guesses(t_guesses.count)                 := t_words(i);
+                  t_patterns.extend;
+                  t_patterns(t_patterns.count)               := pattern(l_solution, t_words(i));
+                  t_sanitised_input.extend;
+                  t_sanitised_input(t_sanitised_input.count) := t_words(i);
+               end if;
+               l_error := false;
+            end loop words;
+            t_words := t_sanitised_input;
+         end if;
+      end remove_and_save_invalid_guesses;
+      --
+      procedure print_errors (in_errors in word_ct) is
+      begin
+         if in_errors.count > 0 then
+            append('reduced input due to the following errors:');
+            for i in 1..in_errors.count
+            loop
+               append('- ' || in_errors(i));
+            end loop;
+            append(null);
+         end if;
+      end print_errors;
+      --
       procedure evaluate_guesses is
          l_pattern words.word%type;
          t_temp    word_ct;
+         t_errors  word_ct := word_ct();
       begin
          if l_game_number is null then
             l_game_number := game_number();
          end if;
          l_solution := solution(l_game_number);
-         -- ensure that only known words are used, ignore wrong ones
-         select w.word bulk collect into t_temp
-           from table(t_words) i
-           join words w
-             on w.word = lower(i.column_value);
-         t_words    := t_temp;
+         remove_and_save_unknown_words(t_errors);
+         remove_and_save_invalid_guesses(t_errors);
+         print_errors(t_errors);
          <<process_guesses>>
          for i in 1..t_words.count
          loop
