@@ -79,7 +79,7 @@ create or replace package body test_wordle is
 select word
   from words
  where word like '__o_y'
-   and word like '%r%'
+   and instr(word, 'r', 1, 1) > 0
    and word not like '___r_'
    and word not like '%g%'
    and word not like '%l%'
@@ -260,6 +260,41 @@ select word
    end play_consider_wrong_positions_in_suggestions;
    
    -- -----------------------------------------------------------------------------------------------------------------
+   -- play_number_of_letters_in_suggestions, see issue #6
+   -- -----------------------------------------------------------------------------------------------------------------
+   procedure play_consider_number_of_letters_in_suggestions is
+      l_actual   sys_refcursor;
+      l_expected sys_refcursor;
+   begin
+      -- arrange
+      wordle.set_ansiconsole(false);
+      wordle.set_show_query(false);
+      wordle.set_suggestions(10);
+      
+      -- act
+      open l_actual for
+         select text
+           from (select rownum as row_num, column_value as text from wordle.play(201, 'annal'))
+          where row_num = 1
+             or row_num between 5 and 7;
+      
+      -- assert suggestion, must contain two 'a'
+      open l_expected for
+         select '(A) -N- .N. .A. .L.' as text
+           from dual
+         union all
+         select 'banal'
+           from dual
+         union all
+         select 'canal'
+           from dual
+         union all
+         select 'fanal'
+           from dual;
+      ut.expect(l_actual).to_equal(l_expected);
+   end play_consider_number_of_letters_in_suggestions;
+
+   -- -----------------------------------------------------------------------------------------------------------------
    -- play_consider_wrong_positions_in_suggestions_for_repeated_letters, see issue #8
    -- -----------------------------------------------------------------------------------------------------------------
    procedure play_consider_wrong_positions_in_suggestions_for_repeated_letters is
@@ -291,13 +326,13 @@ select word
    -- play_consider_occurrences_of_repeated_letters, see issue #5
    -- -----------------------------------------------------------------------------------------------------------------
    procedure play_consider_occurrences_of_repeated_letters is
-       l_actual varchar2(1000);
+      l_actual varchar2(1000);
    begin
-       -- arrange
-       wordle.set_ansiconsole(false);
+      -- arrange
+      wordle.set_ansiconsole(false);
        
-       -- act
-       select text
+      -- act
+      select text
         into l_actual
         from (select rownum as row_num, column_value as text from wordle.play(217, 'aback', 'cinch'))
        where row_num = 2;
