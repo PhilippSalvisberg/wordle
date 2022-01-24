@@ -326,13 +326,13 @@ select word
    -- play_consider_occurrences_of_repeated_letters, see issue #5
    -- -----------------------------------------------------------------------------------------------------------------
    procedure play_consider_occurrences_of_repeated_letters is
-       l_actual varchar2(1000);
+      l_actual varchar2(1000);
    begin
-       -- arrange
-       wordle.set_ansiconsole(false);
+      -- arrange
+      wordle.set_ansiconsole(false);
        
-       -- act
-       select text
+      -- act
+      select text
         into l_actual
         from (select rownum as row_num, column_value as text from wordle.play(217, 'aback', 'cinch'))
        where row_num = 2;
