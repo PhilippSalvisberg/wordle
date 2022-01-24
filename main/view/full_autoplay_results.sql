@@ -5,6 +5,7 @@ with
       wordle.set_ansiconsole(false);
       wordle.set_suggestions(1);
       wordle.set_show_query(true);
+      wordle.set_hard_mode(false);
       return 1;
    end;
    function input_from_evaluation_result(
@@ -44,7 +45,7 @@ with
        where text like 'Bravo!%'
    ),
    plays_detail as (
-      select a.line,
+      select /*+ ordered use_hash(b) use_hash(q) */ a.line,
              a.game_number,
              a.solution,
              a.guesses,

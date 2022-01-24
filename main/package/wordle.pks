@@ -4,6 +4,8 @@ create or replace package wordle is
    procedure set_suggestions(in_suggestions integer default 10);
 
    procedure set_show_query(in_show_query boolean default true);
+   
+   procedure set_hard_mode(in_hard_mode boolean default false);
 
    function play(
       in_game_number in words.game_number%type,

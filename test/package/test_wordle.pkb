@@ -1,4 +1,16 @@
 create or replace package body test_wordle is
+
+   -- -----------------------------------------------------------------------------------------------------------------
+   -- reset_package_config
+   -- -----------------------------------------------------------------------------------------------------------------
+   procedure reset_package_config is
+   begin
+      wordle.set_ansiconsole(false);
+      wordle.set_suggestions(10);
+      wordle.set_show_query(true);
+      wordle.set_hard_mode(false);
+   end reset_package_config;
+
    -- -----------------------------------------------------------------------------------------------------------------
    -- set_ansiconsole
    -- -----------------------------------------------------------------------------------------------------------------
@@ -29,7 +41,6 @@ create or replace package body test_wordle is
       l_expected sys_refcursor;
    begin
       -- arrage
-      wordle.set_ansiconsole(false);
       wordle.set_show_query(false);
       
       -- act
@@ -63,7 +74,6 @@ create or replace package body test_wordle is
       l_expected sys_refcursor;
    begin
       -- arrange
-      wordle.set_ansiconsole(false);
       wordle.set_suggestions(2);
       
       -- act
@@ -96,7 +106,47 @@ select word
 
       ut.expect(l_actual).to_equal(l_expected);
    end set_show_query;
+   
+   -- -----------------------------------------------------------------------------------------------------------------
+   -- set_hard_mode
+   -- -----------------------------------------------------------------------------------------------------------------
+   procedure set_hard_mode is
+      l_actual   sys_refcursor;
+      l_expected sys_refcursor;
+   begin
+      -- act
+      wordle.set_hard_mode(true);
 
+      open l_actual for
+         select text
+           from (select rownum as row_num, column_value as text from wordle.play(201, 'abcdef', 'annal', 'noise'))
+          where row_num < 7
+             or row_num = 8;
+
+      open l_expected for
+         select 'reduced input due to the following errors:' as text
+           from dual
+         union all
+         select '- abcdef is not in word list.'
+           from dual
+         union all
+         select '- noise does not contain letter A (2 times).'
+           from dual
+         union all
+         select '- noise''s letter #3 is not a N.'
+           from dual
+         union all
+         select '- noise''s letter #4 is not a A.'
+           from dual
+         union all
+         select '- noise''s letter #5 is not a L.'
+           from dual
+         union all
+         select '(A) -N- .N. .A. .L.'
+           from dual;
+      ut.expect(l_actual).to_equal(l_expected);
+   end set_hard_mode;
+   
    -- -----------------------------------------------------------------------------------------------------------------
    -- play_213_1
    -- -----------------------------------------------------------------------------------------------------------------
@@ -104,9 +154,6 @@ select word
       l_actual   sys_refcursor;
       l_expected sys_refcursor;
    begin
-      -- arrange
-      wordle.set_ansiconsole(false);
-
       -- act
       open l_actual for select column_value from wordle.play(213, word_ct('noise')) where rownum = 1;
       
@@ -122,9 +169,6 @@ select word
       l_actual   sys_refcursor;
       l_expected sys_refcursor;
    begin
-      -- arrange
-      wordle.set_ansiconsole(false);
-
       -- act
       open l_actual for select column_value from wordle.play(213, word_ct('noise', 'jumbo')) where rownum < 3;
       
@@ -145,9 +189,6 @@ select word
       l_actual   sys_refcursor;
       l_expected sys_refcursor;
    begin
-      -- arrange
-      wordle.set_ansiconsole(false);
-
       -- act
       open l_actual for select column_value from wordle.play(213, 'noise', 'jumbo', 'octad') where rownum < 4;
       
@@ -171,9 +212,6 @@ select word
       l_actual   sys_refcursor;
       l_expected sys_refcursor;
    begin
-      -- arrange
-      wordle.set_ansiconsole(false);
-
       -- act
       open l_actual for select column_value from wordle.play(213, 'noise', 'jumbo', 'octad', 'glory') where rownum < 5;
       
@@ -200,9 +238,6 @@ select word
       l_actual   sys_refcursor;
       l_expected sys_refcursor;
    begin
-      -- arrange
-      wordle.set_ansiconsole(false);
-
       -- act
       open l_actual for select column_value from wordle.play(213, 'noise', 'jumbo', 'octad', 'glory', 'proxy');
       
@@ -239,7 +274,6 @@ select word
       l_first_suggestion varchar2(1000);
    begin
       -- arrange
-      wordle.set_ansiconsole(false);
       wordle.set_show_query(false);
       wordle.set_suggestions(1);
       
@@ -267,9 +301,7 @@ select word
       l_expected sys_refcursor;
    begin
       -- arrange
-      wordle.set_ansiconsole(false);
       wordle.set_show_query(false);
-      wordle.set_suggestions(10);
       
       -- act
       open l_actual for
@@ -302,7 +334,6 @@ select word
       l_first_suggestion varchar2(1000);
    begin
       -- arrange
-      wordle.set_ansiconsole(false);
       wordle.set_show_query(false);
       wordle.set_suggestions(1);
       
@@ -328,9 +359,6 @@ select word
    procedure play_consider_occurrences_of_repeated_letters is
       l_actual varchar2(1000);
    begin
-      -- arrange
-      wordle.set_ansiconsole(false);
-       
       -- act
       select text
         into l_actual

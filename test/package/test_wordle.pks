@@ -1,6 +1,9 @@
 create or replace package test_wordle is
    --%suite
    
+   --%beforeeach
+   procedure reset_package_config;
+   
    --%context(configuration)
 
    --%test(enable ANSI console and start play)
@@ -11,6 +14,9 @@ create or replace package test_wordle is
 
    --%test(show query to retrieve suggestions)
    procedure set_show_query;
+   
+   --%test(force reuse of known letters in hard mode)
+   procedure set_hard_mode;
    
    --%endcontext
    
