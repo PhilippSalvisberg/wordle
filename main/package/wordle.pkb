@@ -7,7 +7,7 @@ create or replace package body wordle is
    g_suggestions  integer          := 10;
    g_show_query   boolean          := true;
    g_hard_mode    boolean          := false;
-   co_max_guesses constant integer := 50; -- just limit them as a fail safe to reduce risk of endless loops
+   co_max_guesses constant integer := 20; -- just limit them as a fail safe to reduce risk of endless loops
 
    -- -----------------------------------------------------------------------------------------------------------------
    -- encode (private)
@@ -229,6 +229,7 @@ create or replace package body wordle is
       t_words             word_ct                := in_words;
       t_rows              word_ct                := word_ct();
       l_first_suggestion  words.word%type;
+      l_loop_counter      integer                := 0;
       -- 
       type t_exact_type is table of varchar2(1) index by pls_integer;
       t_exact_matches     t_exact_type           := t_exact_type(1 => null, 2 => null, 3 => null, 4 => null, 5 => null);
@@ -573,6 +574,7 @@ create or replace package body wordle is
    begin
       <<autoplay_loop>>
       loop
+         l_loop_counter := l_loop_counter + 1;
          evaluate_guesses;
          if completed() then
             append(null);
@@ -585,7 +587,7 @@ create or replace package body wordle is
             populate_suggestions;
             auto_extend_word_list;
          end if;
-         exit autoplay_loop when completed() or in_autoplay != 1 or t_words.count > co_max_guesses;
+         exit autoplay_loop when completed() or in_autoplay != 1 or l_loop_counter > co_max_guesses;
       end loop autoplay_loop;
       return t_rows;
    end play;
