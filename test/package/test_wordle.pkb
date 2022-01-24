@@ -1,4 +1,16 @@
 create or replace package body test_wordle is
+
+   -- -----------------------------------------------------------------------------------------------------------------
+   -- reset_package_config
+   -- -----------------------------------------------------------------------------------------------------------------
+   procedure reset_package_config is
+   begin
+      wordle.set_ansiconsole(false);
+      wordle.set_suggestions(10);
+      wordle.set_show_query(true);
+      wordle.set_hard_mode(false);
+   end reset_package_config;
+
    -- -----------------------------------------------------------------------------------------------------------------
    -- set_ansiconsole
    -- -----------------------------------------------------------------------------------------------------------------
@@ -29,7 +41,6 @@ create or replace package body test_wordle is
       l_expected sys_refcursor;
    begin
       -- arrage
-      wordle.set_ansiconsole(false);
       wordle.set_show_query(false);
       
       -- act
@@ -63,7 +74,6 @@ create or replace package body test_wordle is
       l_expected sys_refcursor;
    begin
       -- arrange
-      wordle.set_ansiconsole(false);
       wordle.set_suggestions(2);
       
       -- act
@@ -104,9 +114,6 @@ select word
       l_actual   sys_refcursor;
       l_expected sys_refcursor;
    begin
-      -- arrange
-      wordle.set_ansiconsole(false);
-
       -- act
       open l_actual for select column_value from wordle.play(213, word_ct('noise')) where rownum = 1;
       
@@ -122,9 +129,6 @@ select word
       l_actual   sys_refcursor;
       l_expected sys_refcursor;
    begin
-      -- arrange
-      wordle.set_ansiconsole(false);
-
       -- act
       open l_actual for select column_value from wordle.play(213, word_ct('noise', 'jumbo')) where rownum < 3;
       
@@ -145,9 +149,6 @@ select word
       l_actual   sys_refcursor;
       l_expected sys_refcursor;
    begin
-      -- arrange
-      wordle.set_ansiconsole(false);
-
       -- act
       open l_actual for select column_value from wordle.play(213, 'noise', 'jumbo', 'octad') where rownum < 4;
       
@@ -171,9 +172,6 @@ select word
       l_actual   sys_refcursor;
       l_expected sys_refcursor;
    begin
-      -- arrange
-      wordle.set_ansiconsole(false);
-
       -- act
       open l_actual for select column_value from wordle.play(213, 'noise', 'jumbo', 'octad', 'glory') where rownum < 5;
       
@@ -200,9 +198,6 @@ select word
       l_actual   sys_refcursor;
       l_expected sys_refcursor;
    begin
-      -- arrange
-      wordle.set_ansiconsole(false);
-
       -- act
       open l_actual for select column_value from wordle.play(213, 'noise', 'jumbo', 'octad', 'glory', 'proxy');
       
@@ -239,7 +234,6 @@ select word
       l_first_suggestion varchar2(1000);
    begin
       -- arrange
-      wordle.set_ansiconsole(false);
       wordle.set_show_query(false);
       wordle.set_suggestions(1);
       
@@ -267,9 +261,7 @@ select word
       l_expected sys_refcursor;
    begin
       -- arrange
-      wordle.set_ansiconsole(false);
       wordle.set_show_query(false);
-      wordle.set_suggestions(10);
       
       -- act
       open l_actual for
@@ -302,7 +294,6 @@ select word
       l_first_suggestion varchar2(1000);
    begin
       -- arrange
-      wordle.set_ansiconsole(false);
       wordle.set_show_query(false);
       wordle.set_suggestions(1);
       
@@ -328,9 +319,6 @@ select word
    procedure play_consider_occurrences_of_repeated_letters is
       l_actual varchar2(1000);
    begin
-      -- arrange
-      wordle.set_ansiconsole(false);
-       
       -- act
       select text
         into l_actual

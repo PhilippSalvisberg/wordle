@@ -1,6 +1,9 @@
 create or replace package test_wordle is
    --%suite
    
+   --%beforeeach
+   procedure reset_package_config;
+   
    --%context(configuration)
 
    --%test(enable ANSI console and start play)
