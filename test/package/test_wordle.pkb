@@ -260,6 +260,41 @@ select word
    end play_consider_wrong_positions_in_suggestions;
    
    -- -----------------------------------------------------------------------------------------------------------------
+   -- play_number_of_letters_in_suggestions, see issue #6
+   -- -----------------------------------------------------------------------------------------------------------------
+   procedure play_consider_number_of_letters_in_suggestions is
+      l_actual   sys_refcursor;
+      l_expected sys_refcursor;
+   begin
+      -- arrange
+      wordle.set_ansiconsole(false);
+      wordle.set_show_query(false);
+      wordle.set_suggestions(10);
+      
+      -- act
+      open l_actual for
+         select text
+           from (select rownum as row_num, column_value as text from wordle.play(201, 'annal'))
+          where row_num = 1
+             or row_num between 5 and 7;
+      
+      -- assert suggestion, must contain two 'a'
+      open l_expected for
+         select '(A) -N- .N. .A. .L.' as text
+           from dual
+         union all
+         select 'banal'
+           from dual
+         union all
+         select 'canal'
+           from dual
+         union all
+         select 'fanal'
+           from dual;
+      ut.expect(l_actual).to_equal(l_expected);
+   end play_consider_number_of_letters_in_suggestions;
+
+   -- -----------------------------------------------------------------------------------------------------------------
    -- play_consider_wrong_positions_in_suggestions_for_repeated_letters, see issue #8
    -- -----------------------------------------------------------------------------------------------------------------
    procedure play_consider_wrong_positions_in_suggestions_for_repeated_letters is

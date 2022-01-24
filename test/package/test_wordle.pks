@@ -33,11 +33,18 @@ create or replace package test_wordle is
    
    --%endcontext
 
-   --%context(fetatures and bug fixes)
+   --%context(fetatures)
 
    --%test(consider wrong positions in suggestions)
    procedure play_consider_wrong_positions_in_suggestions;
    
+   --%test(consider number of letters in suggestions)
+   procedure play_consider_number_of_letters_in_suggestions;
+
+   --%endcontext
+
+   --%context(bug fixes)
+
    --%test(consider wrong positions in suggestions for repeated letters)
    procedure play_consider_wrong_positions_in_suggestions_for_repeated_letters;
 
