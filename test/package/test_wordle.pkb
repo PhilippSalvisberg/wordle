@@ -106,7 +106,47 @@ select word
 
       ut.expect(l_actual).to_equal(l_expected);
    end set_show_query;
+   
+   -- -----------------------------------------------------------------------------------------------------------------
+   -- set_hard_mode
+   -- -----------------------------------------------------------------------------------------------------------------
+   procedure set_hard_mode is
+      l_actual   sys_refcursor;
+      l_expected sys_refcursor;
+   begin
+      -- act
+      wordle.set_hard_mode(true);
 
+      open l_actual for
+         select text
+           from (select rownum as row_num, column_value as text from wordle.play(201, 'abcdef', 'annal', 'noise'))
+          where row_num < 7
+             or row_num = 8;
+
+      open l_expected for
+         select 'reduced input due to the following errors:' as text
+           from dual
+         union all
+         select '- abcdef is not in word list.'
+           from dual
+         union all
+         select '- noise does not contain letter A (2 times).'
+           from dual
+         union all
+         select '- noise''s letter #3 is not a N.'
+           from dual
+         union all
+         select '- noise''s letter #4 is not a A.'
+           from dual
+         union all
+         select '- noise''s letter #5 is not a L.'
+           from dual
+         union all
+         select '(A) -N- .N. .A. .L.'
+           from dual;
+      ut.expect(l_actual).to_equal(l_expected);
+   end set_hard_mode;
+   
    -- -----------------------------------------------------------------------------------------------------------------
    -- play_213_1
    -- -----------------------------------------------------------------------------------------------------------------
