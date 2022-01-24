@@ -216,6 +216,7 @@ create or replace package body wordle is
       in_autoplay    in integer default 0
    ) return word_ct is
       l_game_number       words.game_number%type := in_game_number;
+      l_solution          words.word%type;
       t_words             word_ct                := in_words;
       t_rows              word_ct                := word_ct();
       l_first_suggestion  words.word%type;
@@ -288,9 +289,8 @@ create or replace package body wordle is
       end add_matches;
       --
       procedure evaluate_guesses is
-         l_solution words.word%type;
-         l_pattern  words.word%type;
-         t_temp     word_ct;
+         l_pattern words.word%type;
+         t_temp    word_ct;
       begin
          if l_game_number is null then
             l_game_number := game_number();
@@ -354,9 +354,11 @@ create or replace package body wordle is
          loop
             l_pred     := l_pred
                           || chr(10)
-                          || '               and word like ''%'
+                          || '               and instr(word, '''
                           || l_char
-                          || '%''';
+                          || ''', 1, '
+                          || regexp_count(l_solution, l_char)
+                          || ') > 0';
             t_num_list := t_wrong_pos_matches(l_char);
             for i in 1..t_num_list.count
             loop
