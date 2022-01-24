@@ -79,7 +79,7 @@ create or replace package body test_wordle is
 select word
   from words
  where word like '__o_y'
-   and word like '%r%'
+   and instr(word, 'r', 1, 1) > 0
    and word not like '___r_'
    and word not like '%g%'
    and word not like '%l%'
