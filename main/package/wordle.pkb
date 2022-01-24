@@ -320,9 +320,28 @@ create or replace package body wordle is
          t_words := t_sanitised_input;
       end remove_and_save_unknown_words;
       --
+      function number_of_chars_in_guess(
+         in_guess   in varchar2,
+         in_pattern in varchar2,
+         in_char    in varchar2
+      ) return integer is
+         i_count integer := 0;
+      begin
+         <<positions>>
+         for i in 1..5
+         loop
+            if substr(in_guess, i, 1) = in_char then
+               if substr(in_pattern, i, 1) in ('2', '1') then
+                  i_count := i_count + 1;
+               end if;
+            end if;
+         end loop positions;
+         return i_count;
+      end number_of_chars_in_guess;
+      --
       procedure remove_and_save_invalid_guesses(io_errors in out word_ct) is
          t_sanitised_input word_ct := word_ct();
-      t_guesses         word_ct := word_ct();
+         t_guesses         word_ct := word_ct();
          t_patterns        word_ct := word_ct();
          l_match           varchar2(1);
          l_char            varchar2(1);
@@ -343,21 +362,23 @@ create or replace package body wordle is
                      if l_match = 2 and l_char != substr(t_words(i), k, 1) then
                         io_errors.extend;
                         io_errors(io_errors.count) := t_words(i)
-                                                    || '''s letter #'
-                                                    || k
-                                                    || ' is not a '
-                                                    || upper(l_char)
-                                                    || '.';
-                        l_error := true;                        
-                     elsif l_match = 1 and regexp_count(t_words(i), l_char) < regexp_count(t_guesses(j), l_char) then
+                                                      || '''s letter #'
+                                                      || k
+                                                      || ' is not a '
+                                                      || upper(l_char)
+                                                      || '.';
+                        l_error                    := true;
+                     elsif l_match = 1 and regexp_count(t_words(i), l_char)
+                        < number_of_chars_in_guess(t_guesses(j), t_patterns(j), l_char)
+                     then
                         io_errors.extend;
                         io_errors(io_errors.count) := t_words(i)
-                                                    || ' does not contain letter '
-                                                    || upper(l_char)
-                                                    || ' ('
-                                                    || regexp_count(t_guesses(j), l_char)
-                                                    || ' times).';
-                        l_error := true;
+                                                      || ' does not contain letter '
+                                                      || upper(l_char)
+                                                      || ' ('
+                                                      || regexp_count(t_guesses(j), l_char)
+                                                      || ' times).';
+                        l_error                    := true;
                      end if;
                   end loop letters;
                end loop guesses;
