@@ -20,6 +20,17 @@
 <ownDataTypeParameters>1 CHAR,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
+<Column name="OCCURRENCES" id="A860654B-33B3-AAFE-DFEB-18C615102561">
+<createdBy>phs</createdBy>
+<createdTime>2022-01-25 01:28:45 UTC</createdTime>
+<ownerDesignName>wordle</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>*</dataTypePrecision>
+<ownDataTypeParameters>,*,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
 <Column name="IS_VOWEL" id="6E3491E3-23D1-C0C8-544F-AC78AEFBD549">
 <createdBy>phs</createdBy>
 <createdTime>2022-01-20 19:01:49 UTC</createdTime>
