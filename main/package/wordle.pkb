@@ -429,6 +429,38 @@ create or replace package body wordle is
          end loop process_guesses;
       end evaluate_guesses;
       --
+      function all_letters return varchar2 is
+         t_letters t_char_type := t_char_type();
+         l_pred varchar2(1000);
+         l_char varchar2(1);
+         l_first boolean := true;
+      begin
+         if t_words.count > 0 then
+            l_pred := chr(10) || '                   where cw.character not in (';
+            <<words>>
+            for i in 1 .. t_words.count loop
+               <<letters>>
+               for j in 1 .. 5 loop
+                  t_letters(substr(t_words(i), j, 1)) := null;
+               end loop letters;
+            end loop words;
+            l_char := t_letters.first;
+            <<add_pred>>
+            while l_char is not null
+            loop
+                if l_first then
+                   l_first := false;
+                else 
+                   l_pred := l_pred || ',';
+                end if;
+                l_pred := l_pred || '''' || l_char || '''';
+                l_char := t_letters.next(l_char);
+            end loop add_pred;
+            l_pred := l_pred || ')';
+         end if;
+         return l_pred;
+      end all_letters;
+      --
       function exact_matches return varchar2 is
          l_pred varchar2(5 char);
       begin
@@ -472,7 +504,7 @@ create or replace package body wordle is
          loop
             l_pred     := l_pred
                           || chr(10)
-                          || '               and instr(word, '''
+                          || '                     and instr(word, '''
                           || l_char
                           || ''', 1, '
                           || regexp_count(l_solution, l_char)
@@ -482,7 +514,7 @@ create or replace package body wordle is
             loop
                l_pred := l_pred
                          || chr(10)
-                         || '               and word not like '''
+                         || '                     and word not like '''
                          || wrong_pos_pattern(l_char, t_num_list(i))
                          || '''';
             end loop;
@@ -501,7 +533,7 @@ create or replace package body wordle is
          loop
             l_pred := l_pred
                       || chr(10)
-                      || '               and word not like ''%'
+                      || '                     and word not like ''%'
                       || l_char
                       || '%''';
             l_char := t_no_matches.next(l_char);
@@ -515,7 +547,7 @@ create or replace package body wordle is
          if t_words.count > 0 then
             l_pred := l_pred
                       || chr(10)
-                      || '               and word not in (';
+                      || '                     and word not in (';
             <<add_not_in_predicate>>
             for i in 1..t_words.count
             loop
@@ -533,17 +565,59 @@ create or replace package body wordle is
       end guess_list;
       --
       procedure populate_suggestions is
-         l_query_template varchar2(32767 byte) := q'[
-            select word
-              from words
-             where word like '#EXACT_MATCHES#'#WRONG_POS_MATCHES##NO_MATCHES##GUESS_LIST#
-             order by case when game_number is not null then 0 else 1 end, word
-             fetch first #SUGGESTIONS# rows only]';
+         l_query_normal varchar2(32767 byte) := q'[
+            with
+               other_letters as (
+                  select w.word
+                    from words w
+                    join char_in_words cw
+                      on cw.word = w.word
+                    join chars c
+                      on c.character = cw.character#ALL_LETTERS#
+                   group by w.word
+                  having count(*) >= 4
+                   order by count(*) desc, sum(c.is_vowel) desc, sum(c.occurrences) desc, w.word
+                   fetch first 1 row only
+               ),
+               hard_mode as (
+                  select word
+                    from words
+                   where word like '#EXACT_MATCHES#'#WRONG_POS_MATCHES##NO_MATCHES##GUESS_LIST#
+                   order by case when game_number is not null then 0 else 1 end, word
+                   fetch first #SUGGESTIONS# rows only
+               ),
+               all_matcher as (
+                  select word
+                    from other_letters 
+                    union all 
+                  select word
+                    from hard_mode
+               )
+            select word 
+              from all_matcher
+             fetch first #SUGGESTIONS# rows only]';       
+         l_query_hard varchar2(32767 byte) := q'[
+            with
+               hard_mode as (
+                  select word
+                    from words
+                   where word like '#EXACT_MATCHES#'#WRONG_POS_MATCHES##NO_MATCHES##GUESS_LIST#
+                   order by case when game_number is not null then 0 else 1 end, word
+               )
+            select word 
+              from hard_mode
+             fetch first #SUGGESTIONS# rows only]';       
          l_query          varchar2(32767 byte);
          c_cursor         sys_refcursor;
          l_word           words.word%type;
       begin
-         l_query := replace(l_query_template, '#EXACT_MATCHES#', exact_matches());
+         if not g_hard_mode and t_words.count <= 3 then
+            l_query := l_query_normal;
+            l_query := replace(l_query, '#ALL_LETTERS#', all_letters());
+         else
+            l_query := l_query_hard;
+         end if;
+         l_query := replace(l_query, '#EXACT_MATCHES#', exact_matches());
          l_query := replace(l_query, '#WRONG_POS_MATCHES#', wrong_pos_matches());
          l_query := replace(l_query, '#NO_MATCHES#', no_matches());
          l_query := replace(l_query, '#SUGGESTIONS#', g_suggestions);
