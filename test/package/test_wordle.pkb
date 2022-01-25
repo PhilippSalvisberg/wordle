@@ -44,7 +44,7 @@ create or replace package body test_wordle is
       wordle.set_show_query(false);
       
       -- act
-      wordle.set_suggestions(1);
+      wordle.set_suggestions(2);
 
       -- assert
       open l_actual for select column_value from wordle.play(213, 'noise');
@@ -59,6 +59,9 @@ create or replace package body test_wordle is
            from dual
          union all
          select null
+           from dual
+         union all
+         select 'ultra'
            from dual
          union all
          select 'abbot'
@@ -86,22 +89,48 @@ create or replace package body test_wordle is
            from dual
          union all
          select q'[
-select word
-  from words
- where word like '__o_y'
-   and instr(word, 'r', 1, 1) > 0
-   and word not like '___r_'
-   and word not like '%g%'
-   and word not like '%l%'
-   and word not in ('glory')
- order by case when game_number is not null then 0 else 1 end, word
+with
+   other_letters as (
+      select w.word
+        from words w
+        join char_in_words cw
+          on cw.word = w.word
+        join chars c
+          on c.character = cw.character
+       where cw.character not in ('g','l','o','r','y')
+       group by w.word
+      having count(*) >= 4
+       order by count(*) desc, sum(c.is_vowel) desc, sum(c.occurrences) desc, w.word
+       fetch first 1 row only
+   ),
+   hard_mode as (
+      select word
+        from words
+       where word like '__o_y'
+         and instr(word, 'r', 1, 1) > 0
+         and word not like '___r_'
+         and word not like '%g%'
+         and word not like '%l%'
+         and word not in ('glory')
+       order by case when game_number is not null then 0 else 1 end, word
+       fetch first 2 rows only
+   ),
+   all_matcher as (
+      select word
+        from other_letters 
+        union all 
+      select word
+        from hard_mode
+   )
+select word 
+  from all_matcher
  fetch first 2 rows only]'
            from dual
          union all
-         select 'crony'
+         select 'adieu'
            from dual
          union all
-         select 'irony'
+         select 'crony'
            from dual;
 
       ut.expect(l_actual).to_equal(l_expected);
@@ -315,13 +344,13 @@ select word
          select '(A) -N- .N. .A. .L.' as text
            from dual
          union all
+         select 'ourie'
+           from dual
+         union all
          select 'banal'
            from dual
          union all
          select 'canal'
-           from dual
-         union all
-         select 'fanal'
            from dual;
       ut.expect(l_actual).to_equal(l_expected);
    end play_consider_number_of_letters_in_suggestions;
