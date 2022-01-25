@@ -137,7 +137,7 @@ brawn
 
 In the first part the guess is evaluated. `(N) -O- -I- -S- -E-` is shown.
 
-In the second part the guesses are used to produce a query for suggestions. In this example a query in normal mode is shown. That's the default. You can call `exec wordle.set_hard_mode(true);` to reuse known letters. 
+In the second part the guesses are used to produce a query for suggestions. In this example a query in normal mode is shown. That's the default. You can call `exec wordle.set_hard_mode(true);` to enforce reusing known letters.
 
 In the third part some suggestions are shown. `10` is the default. You may change that by calling `exec wordle.set_suggestions(...);`. Another option is to copy und paste the query and run it.
 
@@ -357,19 +357,6 @@ autoplay added: dampy (3)
 -D- .A. -M- -P- .Y.
 
 with
-   other_letters as (
-      select w.word
-        from words w
-        join char_in_words cw
-          on cw.word = w.word
-        join chars c
-          on c.character = cw.character
-       where cw.character not in ('a','d','e','i','l','m','n','o','p','r','s','t','u','y')
-       group by w.word
-      having count(*) >= 4
-       order by count(*) desc, sum(c.is_vowel) desc, sum(c.occurrences) desc, w.word
-       fetch first 1 row only
-   ),
    hard_mode as (
       select word
         from words
@@ -392,20 +379,11 @@ with
          and word not like '%u%'
          and word not in ('aurei', 'stoln', 'dampy')
        order by case when game_number is not null then 0 else 1 end, word
-       fetch first 10 rows only
-   ),
-   all_matcher as (
-      select word
-        from other_letters 
-        union all 
-      select word
-        from hard_mode
    )
 select word 
-  from all_matcher
+  from hard_mode
  fetch first 10 rows only
 
-chawk
 tangy
 tawny
 banty
@@ -416,66 +394,19 @@ tanky
 tanty
 wanty
 
-autoplay added: chawk (4)
+autoplay added: tangy (4)
 
 (A) -U- -R- -E- -I-
 -S- (T) -O- -L- (N)
 -D- .A. -M- -P- .Y.
--C- -H- (A) -W- -K-
-
-with
-   hard_mode as (
-      select word
-        from words
-       where word like '_a__y'
-         and instr(word, 'a', 1, 1) > 0
-         and word not like 'a____'
-         and word not like '__a__'
-         and instr(word, 'n', 1, 1) > 0
-         and word not like '____n'
-         and instr(word, 't', 1, 1) > 0
-         and word not like '_t___'
-         and word not like '%c%'
-         and word not like '%d%'
-         and word not like '%e%'
-         and word not like '%h%'
-         and word not like '%i%'
-         and word not like '%k%'
-         and word not like '%l%'
-         and word not like '%m%'
-         and word not like '%o%'
-         and word not like '%p%'
-         and word not like '%r%'
-         and word not like '%s%'
-         and word not like '%u%'
-         and word not like '%w%'
-         and word not in ('aurei', 'stoln', 'dampy', 'chawk')
-       order by case when game_number is not null then 0 else 1 end, word
-   )
-select word 
-  from hard_mode
- fetch first 10 rows only
-
-tangy
-banty
-janty
-natty
-tanty
-
-autoplay added: tangy (5)
-
-(A) -U- -R- -E- -I-
--S- (T) -O- -L- (N)
--D- .A. -M- -P- .Y.
--C- -H- (A) -W- -K-
 .T. .A. .N. .G. .Y.
 
-Bravo! You completed Wordle 209 5/6
+Bravo! You completed Wordle 209 4/6
 
-82 rows selected.
+67 rows selected. 
 ```
 
-In this case no guess was used as starting point. This works. `autoplay` always chooses the first suggestion, also for the very first guess. This process is repeated until a solution is found. It does not matter how many guesses are necessary. In 99.3 percent of the cases a solution is found within 6 guesses in normal mode (94.7 percent in hard mode).
+In this case no guess was used as starting point. This works. `autoplay` always chooses the first suggestion, also for the very first guess. This process is repeated until a solution is found. It does not matter how many guesses are necessary. In 99.4 percent of the cases a solution is found within 6 guesses in normal mode (94.7 percent in hard mode).
 
 ### Signatures
 
