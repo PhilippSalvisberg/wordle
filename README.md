@@ -40,8 +40,7 @@ The installation scripts creates and populates this database model:
 
 ![Data Model](model/data-model.png)
 
-The only table used for Wordle is `WORDS`. It contains `12972` accepted words. `2315` of these words are used as solutions. They have an assosciated `GAME_NUMBER` and `GAME_ON` date. As a result they are used only once. The last Wordle game #2314 is scheduled for 2027-10-20.
-
+The main table is `WORDS`. It contains `12972` accepted words. `2315` of these words are used as solutions. They have an assosciated `GAME_NUMBER` and `GAME_ON` date. As a result they are used only once. The last Wordle game #2314 is scheduled for 2027-10-20.
 
 ## Semantic
 
@@ -79,22 +78,50 @@ select * from wordle.play(209, 'noise');
 produces this result:
 
 ```
-Result Sequence                                                                                     
+Result Sequence
 ----------------------------------------------------------------------------------------------------
 (N) -O- -I- -S- -E-
 
-select word
-  from words
- where word like '_____'
-   and word like '%n%'
-   and word not like '%e%'
-   and word not like '%i%'
-   and word not like '%o%'
-   and word not like '%s%'
-   and word not in ('noise')
- order by case when game_number is not null then 0 else 1 end, word
+with
+   other_letters as (
+      select w.word
+        from words w
+        join char_in_words cw
+          on cw.word = w.word
+        join chars c
+          on c.character = cw.character
+       where cw.character not in ('e','i','n','o','s')
+       group by w.word
+      having count(*) >= 4
+       order by count(*) desc, sum(c.is_vowel) desc, sum(c.occurrences) desc, w.word
+       fetch first 1 row only
+   ),
+   hard_mode as (
+      select word
+        from words
+       where word like '_____'
+         and instr(word, 'n', 1, 1) > 0
+         and word not like 'n____'
+         and word not like '%e%'
+         and word not like '%i%'
+         and word not like '%o%'
+         and word not like '%s%'
+         and word not in ('noise')
+       order by case when game_number is not null then 0 else 1 end, word
+       fetch first 10 rows only
+   ),
+   all_matcher as (
+      select word
+        from other_letters 
+        union all 
+      select word
+        from hard_mode
+   )
+select word 
+  from all_matcher
  fetch first 10 rows only
 
+ultra
 angry
 annul
 aunty
@@ -104,14 +131,13 @@ blank
 blunt
 brand
 brawn
-brunt
 
 12 rows selected. 
 ```
 
 In the first part the guess is evaluated. `(N) -O- -I- -S- -E-` is shown.
 
-In the second part the guesses are used to produce a query for suggestions. For a single guess the query is quite simple. 
+In the second part the guesses are used to produce a query for suggestions. In this example a query in normal mode is shown. That's the default. You can call `exec wordle.set_hard_mode(true);` to enforce reusing known letters.
 
 In the third part some suggestions are shown. `10` is the default. You may change that by calling `exec wordle.set_suggestions(...);`. Another option is to copy und paste the query and run it.
 
@@ -166,12 +192,38 @@ produces this result:
 Result Sequence
 ----------------------------------------------------------------------------------------------------
 
-select word
-  from words
- where word like '_____'
- order by case when game_number is not null then 0 else 1 end, word
+with
+   other_letters as (
+      select w.word
+        from words w
+        join char_in_words cw
+          on cw.word = w.word
+        join chars c
+          on c.character = cw.character
+       group by w.word
+      having count(*) >= 4
+       order by count(*) desc, sum(c.is_vowel) desc, sum(c.occurrences) desc, w.word
+       fetch first 1 row only
+   ),
+   hard_mode as (
+      select word
+        from words
+       where word like '_____'
+       order by case when game_number is not null then 0 else 1 end, word
+       fetch first 10 rows only
+   ),
+   all_matcher as (
+      select word
+        from other_letters 
+        union all 
+      select word
+        from hard_mode
+   )
+select word 
+  from all_matcher
  fetch first 10 rows only
 
+aurei
 aback
 abase
 abate
@@ -181,175 +233,180 @@ abhor
 abide
 abled
 abode
-abort
 
-autoplay added: aback (1)
+autoplay added: aurei (1)
 
-(A) -B- -A- -C- -K-
+(A) -U- -R- -E- -I-
 
-select word
-  from words
- where word like '_____'
-   and word like '%a%'
-   and word not like 'a____'
-   and word not like '%b%'
-   and word not like '%c%'
-   and word not like '%k%'
-   and word not in ('aback')
- order by case when game_number is not null then 0 else 1 end, word
+with
+   other_letters as (
+      select w.word
+        from words w
+        join char_in_words cw
+          on cw.word = w.word
+        join chars c
+          on c.character = cw.character
+       where cw.character not in ('a','e','i','r','u')
+       group by w.word
+      having count(*) >= 4
+       order by count(*) desc, sum(c.is_vowel) desc, sum(c.occurrences) desc, w.word
+       fetch first 1 row only
+   ),
+   hard_mode as (
+      select word
+        from words
+       where word like '_____'
+         and instr(word, 'a', 1, 1) > 0
+         and word not like 'a____'
+         and word not like '%e%'
+         and word not like '%i%'
+         and word not like '%r%'
+         and word not like '%u%'
+         and word not in ('aurei')
+       order by case when game_number is not null then 0 else 1 end, word
+       fetch first 10 rows only
+   ),
+   all_matcher as (
+      select word
+        from other_letters 
+        union all 
+      select word
+        from hard_mode
+   )
+select word 
+  from all_matcher
  fetch first 10 rows only
 
-daddy
-daily
-dairy
-daisy
-dally
-dandy
-datum
-daunt
-dealt
-death
+stoln
+bacon
+badly
+baggy
+balmy
+banal
+banjo
+basal
+batch
+baton
 
-autoplay added: daddy (2)
+autoplay added: stoln (2)
 
-(A) -B- -A- -C- -K-
--D- .A. -D- -D- .Y.
+(A) -U- -R- -E- -I-
+-S- (T) -O- -L- (N)
 
-select word
-  from words
- where word like '_a__y'
-   and word like '%a%'
-   and word not like 'a____'
-   and word not like '%b%'
-   and word not like '%c%'
-   and word not like '%d%'
-   and word not like '%k%'
-   and word not in ('aback', 'daddy')
- order by case when game_number is not null then 0 else 1 end, word
+with
+   other_letters as (
+      select w.word
+        from words w
+        join char_in_words cw
+          on cw.word = w.word
+        join chars c
+          on c.character = cw.character
+       where cw.character not in ('a','e','i','l','n','o','r','s','t','u')
+       group by w.word
+      having count(*) >= 4
+       order by count(*) desc, sum(c.is_vowel) desc, sum(c.occurrences) desc, w.word
+       fetch first 1 row only
+   ),
+   hard_mode as (
+      select word
+        from words
+       where word like '_____'
+         and instr(word, 'a', 1, 1) > 0
+         and word not like 'a____'
+         and instr(word, 'n', 1, 1) > 0
+         and word not like '____n'
+         and instr(word, 't', 1, 1) > 0
+         and word not like '_t___'
+         and word not like '%e%'
+         and word not like '%i%'
+         and word not like '%l%'
+         and word not like '%o%'
+         and word not like '%r%'
+         and word not like '%s%'
+         and word not like '%u%'
+         and word not in ('aurei', 'stoln')
+       order by case when game_number is not null then 0 else 1 end, word
+       fetch first 10 rows only
+   ),
+   all_matcher as (
+      select word
+        from other_letters 
+        union all 
+      select word
+        from hard_mode
+   )
+select word 
+  from all_matcher
  fetch first 10 rows only
 
-early
-fairy
-fanny
-fatty
-gaily
-gassy
-gayly
-hairy
-happy
-harpy
-
-autoplay added: early (3)
-
-(A) -B- -A- -C- -K-
--D- .A. -D- -D- .Y.
--E- .A. -R- -L- .Y.
-
-select word
-  from words
- where word like '_a__y'
-   and word like '%a%'
-   and word not like 'a____'
-   and word not like '%b%'
-   and word not like '%c%'
-   and word not like '%d%'
-   and word not like '%e%'
-   and word not like '%k%'
-   and word not like '%l%'
-   and word not like '%r%'
-   and word not in ('aback', 'daddy', 'early')
- order by case when game_number is not null then 0 else 1 end, word
- fetch first 10 rows only
-
-fanny
-fatty
-gassy
-happy
-hasty
-jazzy
-mammy
-mangy
-nanny
-nasty
-
-autoplay added: fanny (4)
-
-(A) -B- -A- -C- -K-
--D- .A. -D- -D- .Y.
--E- .A. -R- -L- .Y.
--F- .A. .N. -N- .Y.
-
-select word
-  from words
- where word like '_an_y'
-   and word like '%a%'
-   and word not like 'a____'
-   and word not like '%b%'
-   and word not like '%c%'
-   and word not like '%d%'
-   and word not like '%e%'
-   and word not like '%f%'
-   and word not like '%k%'
-   and word not like '%l%'
-   and word not like '%r%'
-   and word not in ('aback', 'daddy', 'early', 'fanny')
- order by case when game_number is not null then 0 else 1 end, word
- fetch first 10 rows only
-
-mangy
-nanny
-pansy
+dampy
+chant
 tangy
-janny
+tawny
+thank
+twang
+banty
+canty
+daynt
 janty
-manty
-panty
-tansy
-tanty
 
-autoplay added: mangy (5)
+autoplay added: dampy (3)
 
-(A) -B- -A- -C- -K-
--D- .A. -D- -D- .Y.
--E- .A. -R- -L- .Y.
--F- .A. .N. -N- .Y.
--M- .A. .N. .G. .Y.
+(A) -U- -R- -E- -I-
+-S- (T) -O- -L- (N)
+-D- .A. -M- -P- .Y.
 
-select word
-  from words
- where word like '_angy'
-   and word like '%a%'
-   and word not like 'a____'
-   and word not like '%b%'
-   and word not like '%c%'
-   and word not like '%d%'
-   and word not like '%e%'
-   and word not like '%f%'
-   and word not like '%k%'
-   and word not like '%l%'
-   and word not like '%m%'
-   and word not like '%r%'
-   and word not in ('aback', 'daddy', 'early', 'fanny', 'mangy')
- order by case when game_number is not null then 0 else 1 end, word
+with
+   hard_mode as (
+      select word
+        from words
+       where word like '_a__y'
+         and instr(word, 'a', 1, 1) > 0
+         and word not like 'a____'
+         and instr(word, 'n', 1, 1) > 0
+         and word not like '____n'
+         and instr(word, 't', 1, 1) > 0
+         and word not like '_t___'
+         and word not like '%d%'
+         and word not like '%e%'
+         and word not like '%i%'
+         and word not like '%l%'
+         and word not like '%m%'
+         and word not like '%o%'
+         and word not like '%p%'
+         and word not like '%r%'
+         and word not like '%s%'
+         and word not like '%u%'
+         and word not in ('aurei', 'stoln', 'dampy')
+       order by case when game_number is not null then 0 else 1 end, word
+   )
+select word 
+  from hard_mode
  fetch first 10 rows only
 
 tangy
+tawny
+banty
+canty
+janty
+natty
+tanky
+tanty
+wanty
 
-autoplay added: tangy (6)
+autoplay added: tangy (4)
 
-(A) -B- -A- -C- -K-
--D- .A. -D- -D- .Y.
--E- .A. -R- -L- .Y.
--F- .A. .N. -N- .Y.
--M- .A. .N. .G. .Y.
+(A) -U- -R- -E- -I-
+-S- (T) -O- -L- (N)
+-D- .A. -M- -P- .Y.
 .T. .A. .N. .G. .Y.
 
-Bravo! You completed Wordle 209 6/6
+Bravo! You completed Wordle 209 4/6
 
-98 rows selected. 
+67 rows selected. 
 ```
 
-In this case no guess was used as starting point. This works. `autoplay` always chooses the first suggestion, also for the very first guess. This process is repeated until a solution is found. It does not matter how many guesses are necessary. Currently in a bit more than 94 percent of the cases a solution is found within 6 guesses. In two cases 9 guesses are necessary. This could and should be improved.
+In this case no guess was used as starting point. This works. `autoplay` always chooses the first suggestion, also for the very first guess. This process is repeated until a solution is found. It does not matter how many guesses are necessary. In 99.4 percent of the cases a solution is found within 6 guesses in normal mode (94.7 percent in hard mode).
 
 ### Signatures
 
