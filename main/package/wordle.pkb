@@ -611,7 +611,7 @@ create or replace package body wordle is
          c_cursor         sys_refcursor;
          l_word           words.word%type;
       begin
-         if not g_hard_mode and t_words.count <= 3 then
+         if not g_hard_mode and t_words.count < 3 then
             l_query := l_query_normal;
             l_query := replace(l_query, '#ALL_LETTERS#', all_letters());
          else
