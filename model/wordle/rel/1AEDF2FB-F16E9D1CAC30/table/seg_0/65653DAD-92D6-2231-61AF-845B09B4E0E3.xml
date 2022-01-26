@@ -17,7 +17,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>1 CHAR</dataTypeSize>
-<ownDataTypeParameters>1 CHAR,,</ownDataTypeParameters>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
 <colAssociation fkAssociation="6259DF18-5A6B-23D4-F1BD-251CAE084C15" referredColumn="54394324-8D02-0507-0E58-004B9B6C3292"/>
@@ -32,7 +32,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>5 CHAR</dataTypeSize>
-<ownDataTypeParameters>5 CHAR,,</ownDataTypeParameters>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
 <colAssociation fkAssociation="BB0139A6-1991-795E-3625-66C3EB159E28" referredColumn="E0BE83D2-CDBD-59CA-AE04-D1595D41A8F2"/>
@@ -64,6 +64,17 @@
 <indexColumnUsage>
 <colUsage columnID="7F7D99E8-9A35-8768-C885-2B4AD4DCB10F"/>
 <colUsage columnID="BD9804AC-9955-3D8D-E78D-579BFD664615"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="2C16D572-901E-857C-E5C8-1DC7AB8291D3" name="CHAR_IN_WORDS_UK">
+<createdBy>phs</createdBy>
+<createdTime>2022-01-26 07:43:43 UTC</createdTime>
+<ownerDesignName>wordle</ownerDesignName>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="BD9804AC-9955-3D8D-E78D-579BFD664615"/>
+<colUsage columnID="7F7D99E8-9A35-8768-C885-2B4AD4DCB10F"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK id="EB7B66CD-85CC-B106-B736-8E024380742F" name="CHAR_IN_WORDS_PK">
