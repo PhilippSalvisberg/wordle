@@ -66,6 +66,136 @@ create or replace package body wordle is
    begin
       g_hard_mode := in_hard_mode;
    end set_hard_mode;
+   
+   -- -----------------------------------------------------------------------------------------------------------------
+   -- bulkplay (public)
+   -- -----------------------------------------------------------------------------------------------------------------
+   function bulkplay(
+      in_from_game_id in integer default null,
+      in_to_game_id   in integer default null
+   ) return xmltype is
+      t_games game_ct := game_ct();
+      --
+      procedure solve(in_solution in varchar2) is
+         o_game         game_ot;
+         t_suggestions  text_ct;
+         l_loop_counter integer := 0;
+      begin
+         o_game                 := game_ot(in_solution, util.bool_to_int(g_hard_mode), text_ct());
+         <<autoplay_loop>>
+         loop
+            l_loop_counter := l_loop_counter + 1;
+            t_suggestions  := o_game.suggestions(g_suggestions);
+            if t_suggestions.count > 0 then
+               o_game.add_guess(t_suggestions(1));
+            end if;
+            exit when o_game.is_completed() = 1 or l_loop_counter > co_max_guesses;
+         end loop autoplay_loop;
+         t_games.extend;
+         t_games(t_games.count) := o_game;
+      end solve;
+      --
+      function create_xmldoc return xmltype is
+         l_doc xmltype;
+      begin
+         with
+            games as (
+               select w.game_id,
+                      g.solution,
+                      g.hard_mode,
+                      g.is_completed() as is_completed,
+                      (select count(*) from g.valid_guesses()) as number_of_guesses,
+                      g.guesses as guesses,
+                      g.object_value as game
+                 from table(t_games) g
+                 join words w
+                   on w.word = g.solution
+            ),
+            aggr as (
+               select max(hard_mode) as hard_mode,
+                      count(*) as number_of_games,
+                      sum(is_completed) as number_of_completed_games,
+                      sum(case
+                            when number_of_guesses > 6 then
+                               1
+                            else
+                               0
+                         end) as games_with_too_many_tries
+                 from games
+            ),
+            calc as (
+               select hard_mode,
+                      number_of_games,
+                      number_of_completed_games,
+                      games_with_too_many_tries,
+                      round(100 * (number_of_completed_games - games_with_too_many_tries) / number_of_games, 2) as solved_games_percent
+                 from aggr
+            )
+         select xmltype(
+                   xmlserialize(
+                      document xmlelement("bulkplay",
+                         xmlelement("hard_mode", hard_mode),
+                         xmlelement("number_of_games", number_of_games),
+                         xmlelement("number_of_completed_games", number_of_completed_games),
+                         xmlelement("games_with_too_many_tries", games_with_too_many_tries),
+                         xmlelement("solved_games_percent", solved_games_percent),
+                         xmlelement("games",
+                            (
+                               select xmlagg(
+                                         xmlelement("game",
+                                            xmlelement("game_id", game_id),
+                                            xmlelement("number_of_guesses", number_of_guesses),
+                                            xmlelement("is_completed", is_completed),
+                                            xmlelement("guesses",
+                                               (
+                                                  select xmlagg(
+                                                            xmlelement("guess", util.encode(g.word, g.pattern, 0))
+                                                         )
+                                                    from table(guesses) g
+                                               )
+                                            ),
+                                            xmlelement("queryBeforeLastAttempt",
+                                               case
+                                                  when g.number_of_guesses > 6 then
+                                                     xmlcdata(chr(10)
+                                                        || g.game.suggestions_query(10, 5)
+                                                        || chr(10))
+                                                  else
+                                                      null
+                                               end
+                                            )
+                                         ) order by number_of_guesses desc, game_id
+                                      )
+                                 from games g
+                            )
+                         )
+                      ) as clob indent size = 4
+                   )
+                ) as doc
+           into l_doc
+           from calc;
+         return l_doc;
+      end create_xmldoc;
+   begin
+      -- main 
+      <<games>>
+      for r_game in (
+         with
+            boundaries as (
+               select min(game_id) as min_game_id,
+                      max(game_id) as max_game_id
+                 from words
+            )
+         select words.word
+           from words
+          cross join boundaries
+          where game_id between coalesce(in_from_game_id, min_game_id) and coalesce(in_to_game_id, max_game_id)
+      )
+      loop
+         solve(r_game.word);
+      end loop games;
+      return create_xmldoc;
+   end bulkplay;
 
    -- -----------------------------------------------------------------------------------------------------------------
    -- play (public)
