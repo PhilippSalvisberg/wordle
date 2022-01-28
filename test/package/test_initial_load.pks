@@ -3,15 +3,15 @@ create or replace package test_initial_load is
    --%suitepath(install)
 
    --%test(load all tables when empty)
-   --%tag(slow)
+   --%tags(slow)
    procedure load;
 
    --%test(delete data in all tables)
-   --%tag(slow)
+   --%tags(slow)
    procedure cleanup;
 
    --%test(delete and load all tables)
-   --%tag(slow)
+   --%tags(slow)
    procedure reload;
 end test_initial_load;
 /
