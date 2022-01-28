@@ -11,18 +11,37 @@ prompt =========================================================================
 @main/table/char_in_words.sql
 
 prompt ================================================================================================================
-prompt install object types
+prompt install object type specifications
 prompt ================================================================================================================
 
-@main/type/word_ct.sql
+@main/type/text_ct.tps
+@main/type/guess_ot.tps
+@main/type/guess_ct.tps
+@main/type/game_ot.tps
+@main/type/game_ct.tps
+
 
 prompt ================================================================================================================
-prompt install PL/SQL packages
+prompt install PL/SQL package specifications
 prompt ================================================================================================================
 
+@main/package/util.pks
 @main/package/initial_load.pks
-@main/package/initial_load.pkb
 @main/package/wordle.pks
+
+prompt ================================================================================================================
+prompt install PL/SQL type bodies
+prompt ================================================================================================================
+
+@main/type/guess_ot.tpb
+@main/type/game_ot.tpb
+
+prompt ================================================================================================================
+prompt install PL/SQL package bodies
+prompt ================================================================================================================
+
+@main/package/util.pkb
+@main/package/initial_load.pkb
 @main/package/wordle.pkb
 
 prompt ================================================================================================================
