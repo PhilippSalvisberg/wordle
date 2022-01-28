@@ -14,8 +14,11 @@ create or replace package util is
    function encode(
       in_word        in varchar2,
       in_pattern     in varchar2,
-      in_ansiconsole in boolean
+      in_ansiconsole in integer
    ) return varchar2
+      deterministic;
+
+   function bool_to_int(in_bool in boolean) return integer
       deterministic;
 
    procedure add_text_ct(

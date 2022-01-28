@@ -102,7 +102,7 @@ create or replace package body util is
    function encode(
       in_word        in varchar2,
       in_pattern     in varchar2,
-      in_ansiconsole in boolean
+      in_ansiconsole in integer
    ) return varchar2
       deterministic
    is
@@ -126,7 +126,7 @@ create or replace package body util is
          in_match in varchar2
       ) is
       begin
-         if in_ansiconsole then
+         if in_ansiconsole = 1 then
             append(co_fg);
             case in_match
                when '2' then
@@ -168,6 +168,21 @@ create or replace package body util is
       end loop process_pattern_positions;
       return l_result;
    end encode;
+
+   -- -----------------------------------------------------------------------------------------------------------------
+   -- bool_to_int
+   -- -----------------------------------------------------------------------------------------------------------------
+   function bool_to_int(in_bool in boolean) return integer
+      deterministic
+   is
+   begin
+      return (case
+            when in_bool then
+               1
+            else
+               0
+         end);
+   end bool_to_int;
 
    -- -----------------------------------------------------------------------------------------------------------------
    -- add_text_ct
