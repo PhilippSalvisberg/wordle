@@ -79,9 +79,9 @@ create or replace package body test_initial_load is
    end cleanup;
 
    procedure reload is
-      l_actual integer;
-      l_expected_chars integer;
-      l_expected_words integer;
+      l_actual                 integer;
+      l_expected_chars         integer;
+      l_expected_words         integer;
       l_expected_char_in_words integer;
    begin
       -- arrange
@@ -92,8 +92,10 @@ create or replace package body test_initial_load is
       select count(*) into l_expected_chars from chars;
       select count(*) into l_expected_words from words;
       select count(*) into l_expected_char_in_words from char_in_words;
-      delete from char_in_words where word in ('shire', 'lolly') or character = 'a';
-      delete from words where word in ('shire', 'lolly'); 
+      delete from char_in_words
+       where word in ('shire', 'lolly')
+          or character = 'a';
+      delete from words where word in ('shire', 'lolly');
       delete from chars where character = 'a';
       
       -- act
