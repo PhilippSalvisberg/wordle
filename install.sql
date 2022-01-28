@@ -6,9 +6,9 @@ prompt =========================================================================
 prompt install data model
 prompt ================================================================================================================
 
-@main/table/chars.sql
+@main/table/letters.sql
 @main/table/words.sql
-@main/table/char_in_words.sql
+@main/table/letter_in_words.sql
 
 prompt ================================================================================================================
 prompt install object type specifications

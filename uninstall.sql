@@ -24,6 +24,6 @@ drop type game_ot force;
 drop type guess_ct force;
 drop type guess_ot force;
 drop type text_ct force;
-drop table char_in_words purge;
+drop table letter_in_words purge;
 drop table words purge;
-drop table chars purge;
+drop table letters purge;

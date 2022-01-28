@@ -16,7 +16,7 @@ prompt =========================================================================
 @test/package/test_wordle.pkb
 
 prompt ================================================================================================================
-prompt execute all utPLSQL tests in current schema
+prompt execute utPLSQL tests (suitepath wordle only to slow initial load tests)
 prompt ================================================================================================================
 
 set serveroutput on size unlimited

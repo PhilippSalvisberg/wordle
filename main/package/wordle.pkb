@@ -81,29 +81,29 @@ create or replace package body wordle is
    end encode;
 
    -- -----------------------------------------------------------------------------------------------------------------
-   -- game_number (private)
+   -- game_id (private)
    -- -----------------------------------------------------------------------------------------------------------------
-   function game_number(in_game_on in date default trunc(sysdate)) return integer is
-      l_game_number integer;
+   function game_id(in_game_date in date default trunc(sysdate)) return integer is
+      l_game_id integer;
    begin
-      select game_number
-        into l_game_number
+      select game_id
+        into l_game_id
         from words
-       where game_on = in_game_on
+       where game_date = in_game_date
          and rownum = 1;
-      return l_game_number;
-   end game_number;
+      return l_game_id;
+   end game_id;
 
    -- -----------------------------------------------------------------------------------------------------------------
    -- solution (private)
    -- -----------------------------------------------------------------------------------------------------------------
-   function solution(in_game_number in integer) return varchar2 is
+   function solution(in_game_id in integer) return varchar2 is
       l_solution varchar2(5);
    begin
       select word
         into l_solution
         from words
-       where game_number = in_game_number;
+       where game_id = in_game_id;
       return l_solution;
    end solution;
    
@@ -143,12 +143,12 @@ create or replace package body wordle is
    -- play (public)
    -- -----------------------------------------------------------------------------------------------------------------
    function play(
-      in_game_number in integer,
+      in_game_id in integer,
       in_words       in text_ct,
       in_autoplay    in integer default 0
    ) return text_ct is
       l_loop_counter integer := 0;
-      l_game_number  integer := in_game_number;
+      l_game_id  integer := in_game_id;
       o_game         game_ot;
       t_rows         text_ct := text_ct();
       t_suggestions  text_ct;
@@ -208,7 +208,7 @@ create or replace package body wordle is
          append();
          append(
             'Bravo! You completed Wordle '
-            || l_game_number
+            || l_game_id
             || ' '
             || o_game.valid_guesses().count
             || '/6');
@@ -228,11 +228,11 @@ create or replace package body wordle is
          end if;
       end autoguess;
    begin
-      if l_game_number is null then
-         l_game_number := game_number();
+      if l_game_id is null then
+         l_game_id := game_id();
       end if;
       o_game := game_ot(
-                   solution(l_game_number),
+                   solution(l_game_id),
                    case
                       when g_hard_mode then
                          1
@@ -265,7 +265,7 @@ create or replace package body wordle is
    -- play (public, convenience)
    -- -----------------------------------------------------------------------------------------------------------------
    function play(
-      in_game_number in integer,
+      in_game_id in integer,
       in_word1       in varchar2,
       in_word2       in varchar2 default null,
       in_word3       in varchar2 default null,
@@ -274,7 +274,7 @@ create or replace package body wordle is
       in_word6       in varchar2 default null
    ) return text_ct is
    begin
-      return play(in_game_number, text_ct(in_word1, in_word2, in_word3, in_word4, in_word5, in_word6));
+      return play(in_game_id, text_ct(in_word1, in_word2, in_word3, in_word4, in_word5, in_word6));
    end play;
 
    -- -----------------------------------------------------------------------------------------------------------------
@@ -296,7 +296,7 @@ create or replace package body wordle is
    -- autoplay (public, convenience)
    -- -----------------------------------------------------------------------------------------------------------------
    function autoplay(
-      in_game_number in integer,
+      in_game_id in integer,
       in_word1       in varchar2 default null,
       in_word2       in varchar2 default null,
       in_word3       in varchar2 default null,
@@ -305,7 +305,7 @@ create or replace package body wordle is
       in_word6       in varchar2 default null
    ) return text_ct is
    begin
-      return play(in_game_number, text_ct(in_word1, in_word2, in_word3, in_word4, in_word5, in_word6), 1);
+      return play(in_game_id, text_ct(in_word1, in_word2, in_word3, in_word4, in_word5, in_word6), 1);
    end autoplay;
 
    -- -----------------------------------------------------------------------------------------------------------------

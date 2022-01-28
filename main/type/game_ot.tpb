@@ -198,20 +198,20 @@ create or replace type body game_ot is
    other_letters as (
       select w.word
         from words w
-        join char_in_words cw
-          on cw.word = w.word
-        join chars c
-          on c.character = cw.character#ALL_LETTERS#
+        join letter_in_words lw
+          on lw.word = w.word
+        join letters l
+          on l.letter = lw.letter#ALL_LETTERS#
        group by w.word
       having count(*) >= 4
-       order by count(*) desc, sum(c.is_vowel) desc, sum(c.occurrences) desc, w.word
+       order by count(*) desc, sum(l.is_vowel) desc, sum(l.occurrences) desc, w.word
        fetch first 1 row only
    ),
    hard_mode as (
       select word
         from words
        where word like '#LIKE_PATTER#'#NOT_LIKE_PATTERNS##WRONG_POS_MATCHES##NO_MATCHES##GUESS_LIST#
-       order by case when game_number is not null then 0 else 1 end, word
+       order by case when game_id is not null then 0 else 1 end, word
        fetch first #SUGGESTIONS# rows only
    ),
    all_matcher as (
@@ -229,7 +229,7 @@ select word
       select word
         from words
        where word like '#LIKE_PATTER#'#NOT_LIKE_PATTERNS##WRONG_POS_MATCHES##NO_MATCHES##GUESS_LIST#
-       order by case when game_number is not null then 0 else 1 end, word
+       order by case when game_id is not null then 0 else 1 end, word
    )
 select word 
   from hard_mode
@@ -245,7 +245,7 @@ select word
             l_list         := self.containing_letters;
             util.add_text_ct(io_text_ct => l_list, in_text_ct => self.missing_letters);
             l_where_clause := chr(10)
-                              || '       where cw.character not in ('
+                              || '       where lw.letter not in ('
                               || util.to_csv(l_list)
                               || ')';
          end if;

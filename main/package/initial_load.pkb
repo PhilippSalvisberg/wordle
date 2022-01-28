@@ -11,45 +11,45 @@ create or replace package body initial_load is
       -- @formatter:on
    begin
       -- insert solution words in the past, present and future. First Wordle game was #0 on 19th June 2021
-      insert into words (word, game_number, game_on) select column_value, rownum - 1, DATE '2021-06-19' + rownum - 1 from table(l_words_la);
+      insert into words (word, game_id, game_date) select column_value, rownum - 1, DATE '2021-06-19' + rownum - 1 from table(l_words_la);
       -- insert words that are valid, but never forseen as a solution
       insert into words (word) select column_value from table(l_words_ta);
    end load_words;
 
    -- -----------------------------------------------------------------------------------------------------------------
-   -- load_chars (private)
+   -- load_letters (private)
    -- -----------------------------------------------------------------------------------------------------------------
-   procedure load_chars is
+   procedure load_letters is
    begin
-      insert into chars (character, occurrences)
+      insert into letters (letter, occurrences)
       with
-         chars as (
-            select chr(96 + rownum) as character
+         letters as (
+            select chr(96 + rownum) as letter
               from dual
            connect by rownum <= 26
          )
-      select chars.character, sum(regexp_count(words.word, chars.character)) as occurrences
-        from chars
+      select letters.letter, sum(regexp_count(words.word, letters.letter)) as occurrences
+        from letters
        cross join words
-       group by chars.character;
-   end load_chars;
+       group by letters.letter;
+   end load_letters;
 
    -- -----------------------------------------------------------------------------------------------------------------
-   -- load_chars_in_words (private)
+   -- load_letter_in_words (private)
    -- -----------------------------------------------------------------------------------------------------------------
-   procedure load_chars_in_words is
+   procedure load_letter_in_words is
    begin
-      insert into char_in_words (character, word, occurrences)
+      insert into letter_in_words (letter, word, occurrences)
       with
          base as (
-            select character, word, regexp_count(word, character) as occurrences
-              from chars
+            select letter, word, regexp_count(word, letter) as occurrences
+              from letters
              cross join words
          )
-      select character, word, occurrences
+      select letter, word, occurrences
         from base
        where occurrences > 0;
-   end load_chars_in_words;
+   end load_letter_in_words;
 
    -- -----------------------------------------------------------------------------------------------------------------
    -- load (public)
@@ -57,8 +57,8 @@ create or replace package body initial_load is
    procedure load is
    begin
       load_words;
-      load_chars;
-      load_chars_in_words;
+      load_letters;
+      load_letter_in_words;
    end load;
 
    -- -----------------------------------------------------------------------------------------------------------------
@@ -66,8 +66,8 @@ create or replace package body initial_load is
    -- -----------------------------------------------------------------------------------------------------------------
    procedure cleanup is
    begin
-      delete from char_in_words;
-      delete from chars;
+      delete from letter_in_words;
+      delete from letters;
       delete from words;
    end cleanup;
 
