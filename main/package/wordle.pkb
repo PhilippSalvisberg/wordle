@@ -9,78 +9,6 @@ create or replace package body wordle is
    co_max_guesses constant integer := 20; -- just limit them as a fail safe to reduce risk of endless loops
 
    -- -----------------------------------------------------------------------------------------------------------------
-   -- encode (private)
-   -- -----------------------------------------------------------------------------------------------------------------
-   function encode(
-      in_word    in varchar2,
-      in_pattern in varchar2
-   ) return varchar2
-      deterministic
-   is
-      -- ANSI console escape sequences, defined with RGB values
-      -- see also https://stackoverflow.com/questions/4842424/list-of-ansi-color-escape-sequences
-      co_fg       constant varchar2(30 char) := chr(27) || '[38;2;255;255;255m';
-      co_bg_green constant varchar2(30 char) := chr(27) || '[48;2;104;171;63m';
-      co_bg_gold  constant varchar2(30 char) := chr(27) || '[48;2;198;181;94m';
-      co_bg_gray  constant varchar2(30 char) := chr(27) || '[48;2;120;124;126m';
-      co_reset    constant varchar2(30 char) := chr(27) || '[0m';
-      --
-      l_result    varchar2(1000 char);
-      --
-      procedure append(in_value in varchar2) is
-      begin
-         l_result := l_result || in_value;
-      end append;
-      -- 
-      procedure append_char(
-         in_char  in varchar2,
-         in_match in varchar2
-      ) is
-      begin
-         if g_ansiconsole then
-            append(co_fg);
-            case in_match
-               when '2' then
-                  append(co_bg_green);
-               when '1' then
-                  append(co_bg_gold);
-               else
-                  append(co_bg_gray);
-            end case;
-            append(' ');
-            append(in_char);
-            append(' ');
-            append(co_reset);
-         else
-            case in_match
-               when '2' then
-                  append('.');
-                  append(in_char);
-                  append('.');
-               when '1' then
-                  append('(');
-                  append(in_char);
-                  append(')');
-               else
-                  append('-');
-                  append(in_char);
-                  append('-');
-            end case;
-         end if;
-      end append_char;
-   begin
-      <<process_pattern_positions>>
-      for i in 1..length(in_word)
-      loop
-         append_char(upper(substr(in_word, i, 1)), substr(in_pattern, i, 1));
-         if i < 5 then
-            append(' '); -- character separator
-         end if;
-      end loop process_pattern_positions;
-      return l_result;
-   end encode;
-
-   -- -----------------------------------------------------------------------------------------------------------------
    -- game_id (private)
    -- -----------------------------------------------------------------------------------------------------------------
    function game_id(in_game_date in date default trunc(sysdate)) return integer is
@@ -182,7 +110,7 @@ create or replace package body wordle is
             <<guesses>>
             for i in 1..t_guesses.count
             loop
-               append(encode(t_guesses(i).word, t_guesses(i).pattern));
+               append(util.encode(t_guesses(i).word, t_guesses(i).pattern, g_ansiconsole));
             end loop guesses;
          end if;
       end print_evaluation;

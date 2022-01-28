@@ -11,6 +11,13 @@ create or replace package util is
    ) return varchar2
       deterministic;
 
+   function encode(
+      in_word        in varchar2,
+      in_pattern     in varchar2,
+      in_ansiconsole in boolean
+   ) return varchar2
+      deterministic;
+
    procedure add_text_ct(
       io_text_ct in out text_ct,
       in_text_ct in     text_ct
