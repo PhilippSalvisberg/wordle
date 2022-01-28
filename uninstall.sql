@@ -15,7 +15,6 @@ prompt =========================================================================
 prompt uninstall all other objects
 prompt ================================================================================================================
 
-drop view full_autoplay_results;
 drop package wordle;
 drop package util;
 drop package initial_load;
