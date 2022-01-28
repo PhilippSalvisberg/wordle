@@ -1,0 +1,21 @@
+create or replace package util is
+   function contains(
+      in_text_ct in text_ct,
+      in_entry   in varchar2
+   ) return boolean
+      deterministic;
+
+   function pattern(
+      in_solution in varchar2,
+      in_guess    in varchar2
+   ) return varchar2
+      deterministic;
+
+   procedure add_text_ct(
+      io_text_ct in out text_ct,
+      in_text_ct in     text_ct
+   );
+
+   function to_csv(in_list in text_ct) return varchar2;
+end util;
+/
