@@ -110,7 +110,7 @@ create or replace package body wordle is
             <<guesses>>
             for i in 1..t_guesses.count
             loop
-               append(util.encode(t_guesses(i).word, t_guesses(i).pattern, g_ansiconsole));
+               append(util.encode(t_guesses(i).word, t_guesses(i).pattern, util.bool_to_int(g_ansiconsole)));
             end loop guesses;
          end if;
       end print_evaluation;
@@ -159,16 +159,7 @@ create or replace package body wordle is
       if l_game_id is null then
          l_game_id := game_id();
       end if;
-      o_game := game_ot(
-                   solution(l_game_id),
-                   case
-                      when g_hard_mode then
-                         1
-                      else
-                         0
-                   end,
-                   in_words
-                );
+      o_game := game_ot(solution(l_game_id), util.bool_to_int(g_hard_mode), in_words);
       print_errors;
       <<autoplay_loop>>
       loop
