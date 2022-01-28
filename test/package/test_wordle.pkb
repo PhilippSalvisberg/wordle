@@ -73,8 +73,7 @@ create or replace package body test_wordle is
    -- set_show_query
    -- -----------------------------------------------------------------------------------------------------------------
    procedure set_show_query is
-      l_actual   sys_refcursor;
-      l_expected sys_refcursor;
+      l_actual varchar2(4000 byte);
    begin
       -- arrange
       wordle.set_suggestions(2);
@@ -83,57 +82,10 @@ create or replace package body test_wordle is
       wordle.set_show_query(true);
 
       -- assert
-      open l_actual for select column_value from wordle.play(213, 'glory');
-      open l_expected for
-         select '-G- -L- .O. (R) .Y.' as column_value
-           from dual
-         union all
-         select q'[
-with
-   other_letters as (
-      select w.word
-        from words w
-        join char_in_words cw
-          on cw.word = w.word
-        join chars c
-          on c.character = cw.character
-       where cw.character not in ('g','l','o','r','y')
-       group by w.word
-      having count(*) >= 4
-       order by count(*) desc, sum(c.is_vowel) desc, sum(c.occurrences) desc, w.word
-       fetch first 1 row only
-   ),
-   hard_mode as (
-      select word
-        from words
-       where word like '__o_y'
-         and instr(word, 'r', 1, 1) > 0
-         and word not like '___r_'
-         and word not like '%g%'
-         and word not like '%l%'
-         and word not in ('glory')
-       order by case when game_number is not null then 0 else 1 end, word
-       fetch first 2 rows only
-   ),
-   all_matcher as (
-      select word
-        from other_letters 
-        union all 
-      select word
-        from hard_mode
-   )
-select word 
-  from all_matcher
- fetch first 2 rows only]'
-           from dual
-         union all
-         select 'adieu'
-           from dual
-         union all
-         select 'crony'
-           from dual;
-
-      ut.expect(l_actual).to_equal(l_expected);
+      select column_value into l_actual
+        from wordle.play(213, 'glory')
+       where column_value like 'with%select%';
+      ut.expect(l_actual).to_match('^with.*fetch first 1 row only', 'n');
    end set_show_query;
    
    -- -----------------------------------------------------------------------------------------------------------------
