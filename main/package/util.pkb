@@ -121,9 +121,9 @@ create or replace package body util is
          l_result := l_result || in_value;
       end append;
       -- 
-      procedure append_char(
-         in_char  in varchar2,
-         in_match in varchar2
+      procedure append_letter(
+         in_letter in varchar2,
+         in_match  in varchar2
       ) is
       begin
          if in_ansiconsole = 1 then
@@ -137,31 +137,31 @@ create or replace package body util is
                   append(co_bg_gray);
             end case;
             append(' ');
-            append(in_char);
+            append(in_letter);
             append(' ');
             append(co_reset);
          else
             case in_match
                when '2' then
                   append('.');
-                  append(in_char);
+                  append(in_letter);
                   append('.');
                when '1' then
                   append('(');
-                  append(in_char);
+                  append(in_letter);
                   append(')');
                else
                   append('-');
-                  append(in_char);
+                  append(in_letter);
                   append('-');
             end case;
          end if;
-      end append_char;
+      end append_letter;
    begin
       <<process_pattern_positions>>
       for i in 1..length(in_word)
       loop
-         append_char(upper(substr(in_word, i, 1)), substr(in_pattern, i, 1));
+         append_letter(upper(substr(in_word, i, 1)), substr(in_pattern, i, 1));
          if i < 5 then
             append(' '); -- character separator
          end if;

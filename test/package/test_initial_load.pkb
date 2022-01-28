@@ -11,7 +11,7 @@ create or replace package body test_initial_load is
       -- act
       initial_load.load;
       
-      -- assert chars
+      -- assert letters
       open c_actual for select letter, is_vowel from letters where letter in ('a', 'z') order by letter;
       open c_expected for select 'a' as letter, 1 as is_vowel from dual union all select 'z', 0 from dual;
       ut.expect(c_actual).to_equal(c_expected);
@@ -21,7 +21,7 @@ create or replace package body test_initial_load is
       open c_expected for select 'shire' as word, date '2022-01-17' as game_date from dual;
       ut.expect(c_actual).to_equal(c_expected);
       
-      -- assert char_in_words
+      -- assert letter_in_words
       open c_actual for
          select word, letter, occurrences
            from letter_in_words
@@ -65,7 +65,7 @@ create or replace package body test_initial_load is
       -- act
       initial_load.cleanup;
       
-      -- assert chars
+      -- assert letters
       select count(*) into l_actual from letters;
       ut.expect(l_actual).to_equal(0);
 
@@ -73,7 +73,7 @@ create or replace package body test_initial_load is
       select count(*) into l_actual from words;
       ut.expect(l_actual).to_equal(0);
       
-      -- assert char_in_words
+      -- assert letter_in_words
       select count(*) into l_actual from letter_in_words;
       ut.expect(l_actual).to_equal(0);
    end cleanup;
@@ -101,7 +101,7 @@ create or replace package body test_initial_load is
       -- act
       initial_load.reload;
       
-      -- assert chars
+      -- assert letters
       ut.expect(l_expected_letters).to_be_greater_than(0);
       select count(*) into l_actual from letters;
       ut.expect(l_actual).to_equal(l_expected_letters);
@@ -111,7 +111,7 @@ create or replace package body test_initial_load is
       select count(*) into l_actual from words;
       ut.expect(l_actual).to_equal(l_expected_words);
       
-      -- assert char_in_words
+      -- assert letter_in_words
       ut.expect(l_expected_letter_in_words).to_be_greater_than(0);
       select count(*) into l_actual from letter_in_words;
       ut.expect(l_actual).to_equal(l_expected_letter_in_words);
