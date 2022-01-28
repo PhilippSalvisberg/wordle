@@ -184,7 +184,7 @@ select word
       l_expected sys_refcursor;
    begin
       -- act
-      open l_actual for select column_value from wordle.play(213, word_ct('noise')) where rownum = 1;
+      open l_actual for select column_value from wordle.play(213, text_ct('noise')) where rownum = 1;
       
       -- assert
       open l_expected for select '-N- (O) -I- -S- -E-' as column_value from dual;
@@ -199,7 +199,7 @@ select word
       l_expected sys_refcursor;
    begin
       -- act
-      open l_actual for select column_value from wordle.play(213, word_ct('noise', 'jumbo')) where rownum < 3;
+      open l_actual for select column_value from wordle.play(213, text_ct('noise', 'jumbo')) where rownum < 3;
       
       -- assert
       open l_expected for
