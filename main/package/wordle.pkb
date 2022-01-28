@@ -71,12 +71,12 @@ create or replace package body wordle is
    -- play (public)
    -- -----------------------------------------------------------------------------------------------------------------
    function play(
-      in_game_id in integer,
-      in_words       in text_ct,
-      in_autoplay    in integer default 0
+      in_game_id  in integer,
+      in_words    in text_ct,
+      in_autoplay in integer default 0
    ) return text_ct is
       l_loop_counter integer := 0;
-      l_game_id  integer := in_game_id;
+      l_game_id      integer := in_game_id;
       o_game         game_ot;
       t_rows         text_ct := text_ct();
       t_suggestions  text_ct;
@@ -194,12 +194,12 @@ create or replace package body wordle is
    -- -----------------------------------------------------------------------------------------------------------------
    function play(
       in_game_id in integer,
-      in_word1       in varchar2,
-      in_word2       in varchar2 default null,
-      in_word3       in varchar2 default null,
-      in_word4       in varchar2 default null,
-      in_word5       in varchar2 default null,
-      in_word6       in varchar2 default null
+      in_word1   in varchar2,
+      in_word2   in varchar2 default null,
+      in_word3   in varchar2 default null,
+      in_word4   in varchar2 default null,
+      in_word5   in varchar2 default null,
+      in_word6   in varchar2 default null
    ) return text_ct is
    begin
       return play(in_game_id, text_ct(in_word1, in_word2, in_word3, in_word4, in_word5, in_word6));
@@ -225,12 +225,12 @@ create or replace package body wordle is
    -- -----------------------------------------------------------------------------------------------------------------
    function autoplay(
       in_game_id in integer,
-      in_word1       in varchar2 default null,
-      in_word2       in varchar2 default null,
-      in_word3       in varchar2 default null,
-      in_word4       in varchar2 default null,
-      in_word5       in varchar2 default null,
-      in_word6       in varchar2 default null
+      in_word1   in varchar2 default null,
+      in_word2   in varchar2 default null,
+      in_word3   in varchar2 default null,
+      in_word4   in varchar2 default null,
+      in_word5   in varchar2 default null,
+      in_word6   in varchar2 default null
    ) return text_ct is
    begin
       return play(in_game_id, text_ct(in_word1, in_word2, in_word3, in_word4, in_word5, in_word6), 1);
