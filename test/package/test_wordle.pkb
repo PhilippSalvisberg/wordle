@@ -61,7 +61,7 @@ create or replace package body test_wordle is
          select null
            from dual
          union all
-         select 'ultra'
+         select 'crypt'
            from dual
          union all
          select 'abbot'
@@ -296,7 +296,7 @@ create or replace package body test_wordle is
          select '(A) -N- .N. .A. .L.' as text
            from dual
          union all
-         select 'ourie'
+         select 'tryps'
            from dual
          union all
          select 'banal'
