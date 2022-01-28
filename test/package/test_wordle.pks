@@ -22,6 +22,9 @@ create or replace package test_wordle is
    --%endcontext
    
    --%context(play)
+   
+   --%test(produce XML document with statistics)
+   procedure bulkplay;
 
    --%test(play Wordle 213 first attempt)
    procedure play_213_1;

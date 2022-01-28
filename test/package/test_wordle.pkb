@@ -129,6 +129,22 @@ create or replace package body test_wordle is
    end set_hard_mode;
    
    -- -----------------------------------------------------------------------------------------------------------------
+   -- bulkplay
+   -- -----------------------------------------------------------------------------------------------------------------
+   procedure bulkplay is
+      l_actual varchar2(4000 byte);
+   begin
+      -- arrange
+      wordle.set_hard_mode(true);
+      
+      -- act
+      l_actual := wordle.bulkplay(130, 132).getstringval();
+      
+      -- assert
+      ut.expect(l_actual).to_match('^<bulkplay>.*<solved_games_percent>66.67</.*10 rows only', 'n');
+   end bulkplay;
+   
+   -- -----------------------------------------------------------------------------------------------------------------
    -- play_213_1
    -- -----------------------------------------------------------------------------------------------------------------
    procedure play_213_1 is
