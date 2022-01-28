@@ -17,7 +17,10 @@ create or replace type game_ot force as object (
    member function missing_letters return text_ct,
    member function like_pattern return varchar2,
    member function not_like_patterns return text_ct,
-   member function suggestions_query(in_rows in integer default 10) return varchar2,
+   member function suggestions_query(
+      in_rows      in integer default 10,
+      in_for_guess in integer default null
+   ) return varchar2,
    member function suggestions(in_rows in integer default 10) return text_ct
 );
 /

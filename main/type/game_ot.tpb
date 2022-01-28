@@ -193,7 +193,10 @@ create or replace type body game_ot is
    -- -----------------------------------------------------------------------------------------------------------------
    -- suggestions_query (member)
    -- -----------------------------------------------------------------------------------------------------------------
-   member function suggestions_query(in_rows in integer default 10) return varchar2 is
+   member function suggestions_query(
+      in_rows      in integer default 10,
+      in_for_guess in integer default null
+   ) return varchar2 is
       l_template_normal varchar2(4000 byte) := q'[with
    other_letters as (
       select w.word
@@ -236,6 +239,7 @@ select word
  fetch first #SUGGESTIONS# rows only]';
       l_query           varchar2(4000 byte);
       t_valid_guesses   guess_ct;
+      o_game            game_ot;
       --
       function all_letters return varchar2 is
          l_list         text_ct;
@@ -329,18 +333,24 @@ select word
       end guess_list;
    begin
       t_valid_guesses := self.valid_guesses;
-      if self.hard_mode = 0 and t_valid_guesses.count < 3 then
-         l_query := l_template_normal;
-         l_query := replace(l_query, '#ALL_LETTERS#', all_letters());
+      if (in_for_guess is not null and t_valid_guesses.count > in_for_guess) then
+         t_valid_guesses.trim(t_valid_guesses.count - in_for_guess);
+         o_game  := game_ot(self.solution, self.hard_mode, t_valid_guesses);
+         l_query := o_game.suggestions_query(in_rows);
       else
-         l_query := l_template_hard;
+         if self.hard_mode = 0 and t_valid_guesses.count < 3 then
+            l_query := l_template_normal;
+            l_query := replace(l_query, '#ALL_LETTERS#', all_letters());
+         else
+            l_query := l_template_hard;
+         end if;
+         l_query := replace(l_query, '#LIKE_PATTER#', self.like_pattern);
+         l_query := replace(l_query, '#NOT_LIKE_PATTERNS#', not_like_patterns);
+         l_query := replace(l_query, '#WRONG_POS_MATCHES#', wrong_pos_matches());
+         l_query := replace(l_query, '#NO_MATCHES#', no_matches());
+         l_query := replace(l_query, '#SUGGESTIONS#', in_rows);
+         l_query := replace(l_query, '#GUESS_LIST#', guess_list());
       end if;
-      l_query         := replace(l_query, '#LIKE_PATTER#', self.like_pattern);
-      l_query         := replace(l_query, '#NOT_LIKE_PATTERNS#', not_like_patterns);
-      l_query         := replace(l_query, '#WRONG_POS_MATCHES#', wrong_pos_matches());
-      l_query         := replace(l_query, '#NO_MATCHES#', no_matches());
-      l_query         := replace(l_query, '#SUGGESTIONS#', in_rows);
-      l_query         := replace(l_query, '#GUESS_LIST#', guess_list());
       return l_query;
    end suggestions_query;
 
