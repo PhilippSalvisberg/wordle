@@ -143,6 +143,8 @@ In the second part the guesses are used to produce a query for suggestions. In t
 
 In the third part some suggestions are shown. `10` is the default. You may change that by calling `exec wordle.set_suggestions(...);`. Another option is to copy und paste the query and run it with adapted limits.
 
+You can call `exec wordle.set_show_query(false);` to suppress the display of the suggestions query.
+
 ### Signatures
 
 Here are the relevant signaturs of the PL/SQL package `wordle` for the `play` functions.
