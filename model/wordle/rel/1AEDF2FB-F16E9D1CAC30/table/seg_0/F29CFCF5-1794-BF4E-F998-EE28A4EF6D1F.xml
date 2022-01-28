@@ -20,7 +20,7 @@
 <ownDataTypeParameters>5 CHAR,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column name="GAME_NUMBER" id="2D74EE46-CBC6-28A3-AD23-2181F396D93A">
+<Column name="GAME_ID" id="2D74EE46-CBC6-28A3-AD23-2181F396D93A">
 <createdBy>phs</createdBy>
 <createdTime>2022-01-20 19:01:49 UTC</createdTime>
 <ownerDesignName>wordle</ownerDesignName>
@@ -28,13 +28,11 @@
 <nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
-<logicalDatatype>LOGDT019</logicalDatatype>
-<dataTypePrecision>*</dataTypePrecision>
-<dataTypeScale>0</dataTypeScale>
-<ownDataTypeParameters>,*,0</ownDataTypeParameters>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column name="GAME_ON" id="0CE9A17E-0E27-BB00-9360-9337D2A9ED9E">
+<Column name="GAME_DATE" id="0CE9A17E-0E27-BB00-9360-9337D2A9ED9E">
 <createdBy>phs</createdBy>
 <createdTime>2022-01-20 19:01:49 UTC</createdTime>
 <ownerDesignName>wordle</ownerDesignName>
@@ -43,8 +41,7 @@
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT007</logicalDatatype>
-<dataTypeSize>7</dataTypeSize>
-<ownDataTypeParameters>7,,</ownDataTypeParameters>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
 </columns>
@@ -56,17 +53,6 @@
 <importedID>D5FE6CA7-B954-FADC-97F0-3C94FB88AC60</importedID>
 <pk>true</pk>
 <indexState>Primary Constraint</indexState>
-<isSurrogateKey>false</isSurrogateKey>
-<indexColumnUsage>
-<colUsage columnID="E0BE83D2-CDBD-59CA-AE04-D1595D41A8F2"/>
-</indexColumnUsage>
-</ind_PK_UK>
-<ind_PK_UK id="71C475AE-FDAD-623A-8AC8-2CD465363B28" name="WORDS_PK">
-<createdBy>phs</createdBy>
-<createdTime>2022-01-20 19:01:49 UTC</createdTime>
-<ownerDesignName>wordle</ownerDesignName>
-<importedID>8BF8F06B-C534-E1F4-1FE2-A6B0D0092E18</importedID>
-<indexState>Unique Plain Index</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
 <colUsage columnID="E0BE83D2-CDBD-59CA-AE04-D1595D41A8F2"/>

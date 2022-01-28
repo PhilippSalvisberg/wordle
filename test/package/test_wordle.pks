@@ -1,5 +1,6 @@
 create or replace package test_wordle is
-   --%suite
+   --%suite(wordle)
+   --%suitepath(wordle.api)
    
    --%beforeeach
    procedure reset_package_config;
@@ -21,6 +22,9 @@ create or replace package test_wordle is
    --%endcontext
    
    --%context(play)
+   
+   --%test(produce XML document with statistics)
+   procedure bulkplay;
 
    --%test(play Wordle 213 first attempt)
    procedure play_213_1;
@@ -58,6 +62,5 @@ create or replace package test_wordle is
    procedure play_consider_occurrences_of_repeated_letters;
    
    --%endcontext
-
 end test_wordle;
 /

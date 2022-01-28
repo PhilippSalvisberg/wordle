@@ -6,33 +6,55 @@ prompt =========================================================================
 prompt install data model
 prompt ================================================================================================================
 
-@main/table/chars.sql
+@main/table/letters.sql
 @main/table/words.sql
-@main/table/char_in_words.sql
+@main/table/letter_in_words.sql
 
 prompt ================================================================================================================
-prompt install object types
+prompt install object type specifications
 prompt ================================================================================================================
 
-@main/type/word_ct.sql
+@main/type/text_ct.tps
+@main/type/guess_ot.tps
+@main/type/guess_ct.tps
+@main/type/game_ot.tps
+@main/type/game_ct.tps
+
 
 prompt ================================================================================================================
-prompt install PL/SQL packages
+prompt install PL/SQL package specifications
 prompt ================================================================================================================
 
+@main/package/util.pks
 @main/package/initial_load.pks
-@main/package/initial_load.pkb
 @main/package/wordle.pks
+
+prompt ================================================================================================================
+prompt install PL/SQL type bodies
+prompt ================================================================================================================
+
+@main/type/guess_ot.tpb
+@main/type/game_ot.tpb
+
+prompt ================================================================================================================
+prompt install PL/SQL package bodies
+prompt ================================================================================================================
+
+@main/package/util.pkb
+@main/package/initial_load.pkb
 @main/package/wordle.pkb
-
-prompt ================================================================================================================
-prompt install views
-prompt ================================================================================================================
-
-@main/view/full_autoplay_results.sql
 
 prompt ================================================================================================================
 prompt intial load
 prompt ================================================================================================================
 
 exec initial_load.load;
+
+prompt ================================================================================================================
+prompt gather statistics
+prompt ================================================================================================================
+
+begin
+   dbms_stats.gather_schema_stats(user);
+end;
+/

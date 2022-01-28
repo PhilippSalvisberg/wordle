@@ -11,8 +11,8 @@
 <gridEnabled>false</gridEnabled>
 <showGrid>false</showGrid>
 <diagramColor>-1</diagramColor>
-<legendPosX>625</legendPosX>
-<legendPosY>282</legendPosY>
+<legendPosX>624</legendPosX>
+<legendPosY>265</legendPosY>
 <legendAttributes>12</legendAttributes>
 <display>false</display>
 <notation>1</notation>
@@ -21,19 +21,19 @@
 <objectViews>
 <OView class="oracle.dbtools.crest.swingui.TVLegend" oid="5DEF1B2C-75A3-1F1F-297E-EB9663BBBBC8" otype="Legend" vid="2F55F3CA-D04F-BA5E-89F0-765D510E19F9">
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
-<bounds x="625" y="282" width="226" height="56"/>
+<bounds x="624" y="265" width="226" height="56"/>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.relational.TVTable" oid="65653DAD-92D6-2231-61AF-845B09B4E0E3" otype="Table" vid="3333AFAF-5487-542D-46BC-5CB186638B70">
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
-<bounds x="2" y="4" width="243" height="134"/>
+<bounds x="2" y="4" width="243" height="149"/>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.relational.TVTable" oid="7B9E3D0B-301C-9FD2-C5C9-53AC810563DA" otype="Table" vid="358375EF-61DA-381C-4684-71BC2AA61343">
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
-<bounds x="461" y="5" width="396" height="110"/>
+<bounds x="461" y="5" width="396" height="92"/>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.relational.TVTable" oid="F29CFCF5-1794-BF4E-F998-EE28A4EF6D1F" otype="Table" vid="1465BDB1-801D-5B6F-792D-6F3F41575F2A">
 <hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
-<bounds x="11" y="242" width="230" height="102"/>
+<bounds x="11" y="242" width="230" height="87"/>
 </OView>
 </objectViews>
 <connectors>
@@ -48,8 +48,8 @@
 <noForegroundColor>true</noForegroundColor>
 </centerLabel>
 <points>
-<point x="461" y="60"/>
-<point x="245" y="60"/>
+<point x="461" y="51"/>
+<point x="245" y="51"/>
 </points>
 </Connector>
 <Connector class="oracle.dbtools.crest.swingui.relational.TVFKRelation" oid="BB0139A6-1991-795E-3625-66C3EB159E28" otype="FKIndexAssociation" vid_source="1465BDB1-801D-5B6F-792D-6F3F41575F2A" vid_target="3333AFAF-5487-542D-46BC-5CB186638B70">
@@ -64,7 +64,7 @@
 </centerLabel>
 <points>
 <point x="126" y="242"/>
-<point x="126" y="138"/>
+<point x="126" y="153"/>
 </points>
 </Connector>
 </connectors>

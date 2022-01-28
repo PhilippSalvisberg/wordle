@@ -61,7 +61,7 @@ create or replace package body test_wordle is
          select null
            from dual
          union all
-         select 'ultra'
+         select 'crypt'
            from dual
          union all
          select 'abbot'
@@ -73,8 +73,7 @@ create or replace package body test_wordle is
    -- set_show_query
    -- -----------------------------------------------------------------------------------------------------------------
    procedure set_show_query is
-      l_actual   sys_refcursor;
-      l_expected sys_refcursor;
+      l_actual varchar2(4000 byte);
    begin
       -- arrange
       wordle.set_suggestions(2);
@@ -83,57 +82,10 @@ create or replace package body test_wordle is
       wordle.set_show_query(true);
 
       -- assert
-      open l_actual for select column_value from wordle.play(213, 'glory');
-      open l_expected for
-         select '-G- -L- .O. (R) .Y.' as column_value
-           from dual
-         union all
-         select q'[
-with
-   other_letters as (
-      select w.word
-        from words w
-        join char_in_words cw
-          on cw.word = w.word
-        join chars c
-          on c.character = cw.character
-       where cw.character not in ('g','l','o','r','y')
-       group by w.word
-      having count(*) >= 4
-       order by count(*) desc, sum(c.is_vowel) desc, sum(c.occurrences) desc, w.word
-       fetch first 1 row only
-   ),
-   hard_mode as (
-      select word
-        from words
-       where word like '__o_y'
-         and instr(word, 'r', 1, 1) > 0
-         and word not like '___r_'
-         and word not like '%g%'
-         and word not like '%l%'
-         and word not in ('glory')
-       order by case when game_number is not null then 0 else 1 end, word
-       fetch first 2 rows only
-   ),
-   all_matcher as (
-      select word
-        from other_letters 
-        union all 
-      select word
-        from hard_mode
-   )
-select word 
-  from all_matcher
- fetch first 2 rows only]'
-           from dual
-         union all
-         select 'adieu'
-           from dual
-         union all
-         select 'crony'
-           from dual;
-
-      ut.expect(l_actual).to_equal(l_expected);
+      select column_value into l_actual
+        from wordle.play(213, 'glory')
+       where column_value like 'with%select%';
+      ut.expect(l_actual).to_match('^with.*fetch first 1 row only', 'n');
    end set_show_query;
    
    -- -----------------------------------------------------------------------------------------------------------------
@@ -177,6 +129,22 @@ select word
    end set_hard_mode;
    
    -- -----------------------------------------------------------------------------------------------------------------
+   -- bulkplay
+   -- -----------------------------------------------------------------------------------------------------------------
+   procedure bulkplay is
+      l_actual varchar2(4000 byte);
+   begin
+      -- arrange
+      wordle.set_hard_mode(true);
+      
+      -- act
+      l_actual := wordle.bulkplay(130, 132).getstringval();
+      
+      -- assert
+      ut.expect(l_actual).to_match('^<bulkplay>.*<solved_games_percent>66.67</.*10 rows only', 'n');
+   end bulkplay;
+   
+   -- -----------------------------------------------------------------------------------------------------------------
    -- play_213_1
    -- -----------------------------------------------------------------------------------------------------------------
    procedure play_213_1 is
@@ -184,7 +152,7 @@ select word
       l_expected sys_refcursor;
    begin
       -- act
-      open l_actual for select column_value from wordle.play(213, word_ct('noise')) where rownum = 1;
+      open l_actual for select column_value from wordle.play(213, text_ct('noise')) where rownum = 1;
       
       -- assert
       open l_expected for select '-N- (O) -I- -S- -E-' as column_value from dual;
@@ -199,7 +167,7 @@ select word
       l_expected sys_refcursor;
    begin
       -- act
-      open l_actual for select column_value from wordle.play(213, word_ct('noise', 'jumbo')) where rownum < 3;
+      open l_actual for select column_value from wordle.play(213, text_ct('noise', 'jumbo')) where rownum < 3;
       
       -- assert
       open l_expected for
@@ -344,7 +312,7 @@ select word
          select '(A) -N- .N. .A. .L.' as text
            from dual
          union all
-         select 'ourie'
+         select 'tryps'
            from dual
          union all
          select 'banal'

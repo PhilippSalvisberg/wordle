@@ -1,14 +1,15 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="7B9E3D0B-301C-9FD2-C5C9-53AC810563DA" name="CHARS">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="7B9E3D0B-301C-9FD2-C5C9-53AC810563DA" name="LETTERS">
 <createdBy>phs</createdBy>
 <createdTime>2022-01-20 19:01:49 UTC</createdTime>
 <ownerDesignName>wordle</ownerDesignName>
 <importedID>DF032257-B62C-A78B-87E0-661042F0D354</importedID>
+<ordsAlias>chars</ordsAlias>
 <allowColumnReorder>false</allowColumnReorder>
 <existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
 <parsed>true</parsed>
 <columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
-<Column name="CHARACTER" id="54394324-8D02-0507-0E58-004B9B6C3292">
+<Column name="LETTER" id="54394324-8D02-0507-0E58-004B9B6C3292">
 <createdBy>phs</createdBy>
 <createdTime>2022-01-20 19:01:49 UTC</createdTime>
 <ownerDesignName>wordle</ownerDesignName>
@@ -26,9 +27,8 @@
 <ownerDesignName>wordle</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
-<logicalDatatype>LOGDT019</logicalDatatype>
-<dataTypePrecision>*</dataTypePrecision>
-<ownDataTypeParameters>,*,</ownDataTypeParameters>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
 <Column name="IS_VOWEL" id="6E3491E3-23D1-C0C8-544F-AC78AEFBD549">
@@ -36,7 +36,7 @@
 <createdTime>2022-01-20 19:01:49 UTC</createdTime>
 <ownerDesignName>wordle</ownerDesignName>
 <importedID>C5D676C6-02D2-2C4D-F928-B63B3B063A06</importedID>
-<formulaDesc>case when character in (&apos;a&apos;, &apos;e&apos;, &apos;i&apos;, &apos;o&apos;, &apos;u&apos;) then 1 else 0 end</formulaDesc>
+<formulaDesc>case when letter in (&apos;a&apos;, &apos;e&apos;, &apos;i&apos;, &apos;o&apos;, &apos;u&apos;) then 1 else 0 end</formulaDesc>
 <nullsAllowed>true</nullsAllowed>
 <sourceType>Derived</sourceType>
 <useDomainConstraints>false</useDomainConstraints>
@@ -48,24 +48,13 @@
 </Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
-<ind_PK_UK id="FDE9F647-A623-EE5F-2694-8FAB49A9B5B6" name="CHARS_PK">
+<ind_PK_UK id="FDE9F647-A623-EE5F-2694-8FAB49A9B5B6" name="LETTERS_PK">
 <createdBy>phs</createdBy>
 <createdTime>2022-01-20 19:01:49 UTC</createdTime>
 <ownerDesignName>wordle</ownerDesignName>
 <importedID>318665E3-7B4F-0EAA-1D46-5EA68791A952</importedID>
 <pk>true</pk>
 <indexState>Primary Constraint</indexState>
-<isSurrogateKey>false</isSurrogateKey>
-<indexColumnUsage>
-<colUsage columnID="54394324-8D02-0507-0E58-004B9B6C3292"/>
-</indexColumnUsage>
-</ind_PK_UK>
-<ind_PK_UK id="ACD991DA-7F61-EA22-CA9C-3D55A7122DA0" name="CHARS_PK">
-<createdBy>phs</createdBy>
-<createdTime>2022-01-20 19:01:49 UTC</createdTime>
-<ownerDesignName>wordle</ownerDesignName>
-<importedID>091D2A6A-3248-7A2D-1BB6-621EC1B9877D</importedID>
-<indexState>Unique Plain Index</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
 <colUsage columnID="54394324-8D02-0507-0E58-004B9B6C3292"/>
