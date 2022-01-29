@@ -58,5 +58,25 @@
 <colUsage columnID="E0BE83D2-CDBD-59CA-AE04-D1595D41A8F2"/>
 </indexColumnUsage>
 </ind_PK_UK>
+<ind_PK_UK id="F00441B1-2ED2-4FA8-BB58-5DAD2519A12D" name="WORDS_UK1">
+<createdBy>phs</createdBy>
+<createdTime>2022-01-29 10:10:15 UTC</createdTime>
+<ownerDesignName>wordle</ownerDesignName>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="2D74EE46-CBC6-28A3-AD23-2181F396D93A"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="CD3AB2ED-2D44-63B7-2235-13690E69CFAA" name="WORDS_UK2">
+<createdBy>phs</createdBy>
+<createdTime>2022-01-29 10:10:15 UTC</createdTime>
+<ownerDesignName>wordle</ownerDesignName>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="0CE9A17E-0E27-BB00-9360-9337D2A9ED9E"/>
+</indexColumnUsage>
+</ind_PK_UK>
 </indexes>
 </Table>
