@@ -18,7 +18,7 @@ As a database fanboy I wanted to query possible candidates via SQL, to more effi
 
 ## Installation
 
-1. Create a user `wordle2` in the Oracle Database. See [create_user.sql](main/user/create_user.sql) for an example.
+1. Create a user in the Oracle Database. See [create_user.sql](main/user/create_user.sql) for an example.
 
 2. Clone or download this GitHub repsitory.
 
