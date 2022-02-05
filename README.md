@@ -73,7 +73,7 @@ The idea is to call this function per guess. The following call:
 
 ```sql
 set pagesize 1000
-set linesize 100
+set linesize 120
 select * from wordle.play(209, 'noise');
 ```
 
@@ -81,7 +81,7 @@ produces this result:
 
 ```
 Result Sequence 
-----------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
 (N) -O- -I- -S- -E-
 
 with
@@ -95,7 +95,7 @@ with
        where lw.letter not in ('n', 'o', 'i', 's', 'e')
        group by w.word
       having count(*) >= 4
-       order by count(*) desc, sum(l.is_vowel), sum(l.occurrences) desc, w.word
+       order by count(*) desc, sum(l.is_vowel), sum(lw.occurrences * l.occurrences) desc, w.word
        fetch first 1 row only
    ),
    hard_mode as (
@@ -109,7 +109,7 @@ with
          and word not like '%s%'
          and word not like '%e%'
          and word not in ('noise')
-       order by case when game_id is not null then 0 else 1 end, word
+       order by case when game_id is not null then 0 else 1 end, distinct_letters desc, occurrences desc, word
        fetch first 10 rows only
    ),
    all_matcher as (
@@ -124,15 +124,15 @@ select word
  fetch first 10 rows only
 
 crypt
-angry
-annul
-aunty
-banal
-bland
-blank
-blunt
+lunar
+grant
+plant
+randy
+urban
+daunt
+grand
 brand
-brawn
+drank
 
 13 rows selected. 
 ```
@@ -188,7 +188,7 @@ The idea is to set a starting point and let the machine do the guessing. The fol
 
 ```sql
 set pagesize 1000
-set linesize 100
+set linesize 120
 select * from wordle.autoplay(209);
 ```
 
@@ -196,7 +196,7 @@ produces this result:
 
 ```
 Result Sequence 
-----------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
 
 with
    other_letters as (
@@ -208,14 +208,14 @@ with
           on l.letter = lw.letter
        group by w.word
       having count(*) >= 4
-       order by count(*) desc, sum(l.is_vowel), sum(l.occurrences) desc, w.word
+       order by count(*) desc, sum(l.is_vowel), sum(lw.occurrences * l.occurrences) desc, w.word
        fetch first 1 row only
    ),
    hard_mode as (
       select word
         from words
        where word like '_____'
-       order by case when game_id is not null then 0 else 1 end, word
+       order by case when game_id is not null then 0 else 1 end, distinct_letters desc, occurrences desc, word
        fetch first 10 rows only
    ),
    all_matcher as (
@@ -230,15 +230,15 @@ select word
  fetch first 10 rows only
 
 rynds
-aback
-abase
-abate
-abbey
-abbot
-abhor
-abide
-abled
-abode
+arose
+arise
+raise
+stare
+aisle
+saner
+snare
+least
+slate
 
 autoplay added: rynds (1)
 
@@ -255,7 +255,7 @@ with
        where lw.letter not in ('y', 'n', 'r', 'd', 's')
        group by w.word
       having count(*) >= 4
-       order by count(*) desc, sum(l.is_vowel), sum(l.occurrences) desc, w.word
+       order by count(*) desc, sum(l.is_vowel), sum(lw.occurrences * l.occurrences) desc, w.word
        fetch first 1 row only
    ),
    hard_mode as (
@@ -269,7 +269,7 @@ with
          and word not like '%d%'
          and word not like '%s%'
          and word not in ('rynds')
-       order by case when game_id is not null then 0 else 1 end, word
+       order by case when game_id is not null then 0 else 1 end, distinct_letters desc, occurrences desc, word
        fetch first 10 rows only
    ),
    all_matcher as (
@@ -284,15 +284,15 @@ select word
  fetch first 10 rows only
 
 clept
-annoy
-aunty
+money
+honey
 boney
-bunny
-canny
-fancy
-fanny
-funky
-funny
+piney
+aunty
+manly
+tangy
+lanky
+mangy
 
 autoplay added: clept (2)
 
@@ -310,7 +310,7 @@ with
        where lw.letter not in ('y', 'n', 't', 'r', 'd', 's', 'c', 'l', 'e', 'p')
        group by w.word
       having count(*) >= 4
-       order by count(*) desc, sum(l.is_vowel), sum(l.occurrences) desc, w.word
+       order by count(*) desc, sum(l.is_vowel), sum(lw.occurrences * l.occurrences) desc, w.word
        fetch first 1 row only
    ),
    hard_mode as (
@@ -330,7 +330,7 @@ with
          and word not like '%e%'
          and word not like '%p%'
          and word not in ('rynds', 'clept')
-       order by case when game_id is not null then 0 else 1 end, word
+       order by case when game_id is not null then 0 else 1 end, distinct_letters desc, occurrences desc, word
        fetch first 10 rows only
    ),
    all_matcher as (
@@ -346,14 +346,14 @@ select word
 
 ogham
 aunty
-minty
 tangy
-banty
-bunty
-janty
-jonty
+minty
 manty
+banty
+tanky
+wanty
 monty
+janty
 
 autoplay added: ogham (3)
 
@@ -386,7 +386,7 @@ with
          and word not like '%h%'
          and word not like '%m%'
          and word not in ('rynds', 'clept', 'ogham')
-       order by case when game_id is not null then 0 else 1 end, word
+       order by case when game_id is not null then 0 else 1 end, distinct_letters desc, occurrences desc, word
    )
 select word 
   from hard_mode
@@ -406,7 +406,7 @@ Bravo! You completed Wordle 209 4/6
 63 rows selected. 
 ```
 
-In this case no guess was used as starting point. This works. `autoplay` always chooses the first suggestion, also for the very first guess. This process is repeated until a solution is found. It does not matter how many guesses are necessary. In 99.96 percent of the cases a solution is found within 6 guesses in normal mode (95.51 percent in hard mode).
+In this case no guess was used as starting point. This works. `autoplay` always chooses the first suggestion, also for the very first guess. This process is repeated until a solution is found. It does not matter how many guesses are necessary. In 99.96 percent of the cases a solution is found within 6 guesses in normal mode (99.27 percent in hard mode).
 
 ### Signatures
 

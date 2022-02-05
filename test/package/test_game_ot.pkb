@@ -200,5 +200,26 @@ create or replace package body test_game_ot is
          anydata.convertcollection(text_ct('proxy', 'frowy'))
       ).unordered;
    end suggestions;
+
+   -- -----------------------------------------------------------------------------------------------------------------
+   -- first_suggestion
+   -- -----------------------------------------------------------------------------------------------------------------
+   procedure first_suggestion is
+      o_game   game_ot;
+      l_actual integer;
+   begin
+      -- arrange
+      o_game := game_ot('proxy', 1, text_ct());
+      
+      -- act
+      select distinct_letters
+        into l_actual
+        from words w
+        join table(o_game.suggestions(1)) s
+          on s.column_value = w.word;
+      
+      -- assert
+      ut.expect(l_actual).to_equal(5);
+   end first_suggestion;
 end test_game_ot;
 /

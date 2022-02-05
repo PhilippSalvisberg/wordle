@@ -20,6 +20,26 @@
 <ownDataTypeParameters>5 CHAR,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
+<Column name="DISTINCT_LETTERS" id="5B3DEBF7-07AD-F057-6CB4-23D7B286A534">
+<createdBy>phs</createdBy>
+<createdTime>2022-02-05 12:21:34 UTC</createdTime>
+<ownerDesignName>wordle</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="OCCURRENCES" id="B5B9A694-3252-AACD-CA51-8BF5242C629A">
+<createdBy>phs</createdBy>
+<createdTime>2022-02-05 12:20:37 UTC</createdTime>
+<ownerDesignName>wordle</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
 <Column name="GAME_ID" id="2D74EE46-CBC6-28A3-AD23-2181F396D93A">
 <createdBy>phs</createdBy>
 <createdTime>2022-01-20 19:01:49 UTC</createdTime>

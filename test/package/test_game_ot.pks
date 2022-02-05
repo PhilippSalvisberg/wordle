@@ -45,6 +45,9 @@ create or replace package test_game_ot is
    --%test(return list of suggestions)
    procedure suggestions;
 
+   --%test(return first suggestion with 5 different letters)
+   procedure first_suggestion;
+
    --%endcontext
 end test_game_ot;
 /
