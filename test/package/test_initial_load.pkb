@@ -1,4 +1,7 @@
 create or replace package body test_initial_load is
+   -- -----------------------------------------------------------------------------------------------------------------
+   -- load
+   -- -----------------------------------------------------------------------------------------------------------------
    procedure load is
       c_actual   sys_refcursor;
       c_expected sys_refcursor;
@@ -53,6 +56,9 @@ create or replace package body test_initial_load is
       ut.expect(c_actual).to_equal(c_expected).unordered;
    end load;
 
+   -- -----------------------------------------------------------------------------------------------------------------
+   -- cleanup
+   -- -----------------------------------------------------------------------------------------------------------------
    procedure cleanup is
       l_actual integer;
    begin
@@ -78,10 +84,13 @@ create or replace package body test_initial_load is
       ut.expect(l_actual).to_equal(0);
    end cleanup;
 
+   -- -----------------------------------------------------------------------------------------------------------------
+   -- reload
+   -- -----------------------------------------------------------------------------------------------------------------
    procedure reload is
-      l_actual                 integer;
-      l_expected_letters integer;
-      l_expected_words         integer;
+      l_actual                   integer;
+      l_expected_letters         integer;
+      l_expected_words           integer;
       l_expected_letter_in_words integer;
    begin
       -- arrange
@@ -116,6 +125,5 @@ create or replace package body test_initial_load is
       select count(*) into l_actual from letter_in_words;
       ut.expect(l_actual).to_equal(l_expected_letter_in_words);
    end reload;
-
 end test_initial_load;
 /
