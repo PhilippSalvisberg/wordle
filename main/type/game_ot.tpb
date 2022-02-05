@@ -207,7 +207,7 @@ create or replace type body game_ot is
           on l.letter = lw.letter#ALL_LETTERS#
        group by w.word
       having count(*) >= 4
-       order by count(*) desc, sum(l.is_vowel), sum(l.occurrences) desc, w.word
+       order by count(*) desc, sum(l.is_vowel), sum(lw.occurrences * l.occurrences) desc, w.word
        fetch first 1 row only
    ),
    hard_mode as (
