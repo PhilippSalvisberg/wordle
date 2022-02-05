@@ -214,7 +214,7 @@ create or replace type body game_ot is
       select word
         from words
        where word like '#LIKE_PATTER#'#NOT_LIKE_PATTERNS##WRONG_POS_MATCHES##NO_MATCHES##GUESS_LIST#
-       order by case when game_id is not null then 0 else 1 end, word
+       order by case when game_id is not null then 0 else 1 end, distinct_letters desc, occurrences desc, word
        fetch first #SUGGESTIONS# rows only
    ),
    all_matcher as (
@@ -232,7 +232,7 @@ select word
       select word
         from words
        where word like '#LIKE_PATTER#'#NOT_LIKE_PATTERNS##WRONG_POS_MATCHES##NO_MATCHES##GUESS_LIST#
-       order by case when game_id is not null then 0 else 1 end, word
+       order by case when game_id is not null then 0 else 1 end, distinct_letters desc, occurrences desc, word
    )
 select word 
   from hard_mode
