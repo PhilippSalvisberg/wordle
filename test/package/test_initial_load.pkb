@@ -20,8 +20,8 @@ create or replace package body test_initial_load is
       ut.expect(c_actual).to_equal(c_expected);
       
       -- assert words
-      open c_actual for select word, game_date from words where game_id = 212;
-      open c_expected for select 'shire' as word, date '2022-01-17' as game_date from dual;
+      open c_actual for select word, distinct_letters, game_date from words where game_id = 212;
+      open c_expected for select 'shire' as word, 5 as distinct_letters, date '2022-01-17' as game_date from dual;
       ut.expect(c_actual).to_equal(c_expected);
       
       -- assert letter_in_words
