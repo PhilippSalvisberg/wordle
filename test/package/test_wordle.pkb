@@ -64,7 +64,7 @@ create or replace package body test_wordle is
          select 'crypt'
            from dual
          union all
-         select 'abbot'
+         select 'carol'
            from dual;
       ut.expect(l_actual).to_equal(l_expected);
    end set_suggestions;
@@ -138,7 +138,7 @@ create or replace package body test_wordle is
       wordle.set_hard_mode(true);
       
       -- act
-      l_actual := wordle.bulkplay(130, 132).getstringval();
+      l_actual := wordle.bulkplay(136, 138).getstringval();
       
       -- assert
       ut.expect(l_actual).to_match('^<bulkplay>.*<solved_games_percent>66.67</.*10 rows only', 'n');
@@ -315,10 +315,10 @@ create or replace package body test_wordle is
          select 'tryps'
            from dual
          union all
-         select 'banal'
+         select 'canal'
            from dual
          union all
-         select 'canal'
+         select 'banal'
            from dual;
       ut.expect(l_actual).to_equal(l_expected);
    end play_consider_number_of_letters_in_suggestions;
