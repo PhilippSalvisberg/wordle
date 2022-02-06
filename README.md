@@ -73,55 +73,19 @@ The idea is to call this function per guess. The following call:
 
 ```sql
 set pagesize 1000
-set linesize 120
+set linesize 100
+set feedback off
 select * from wordle.play(209, 'noise');
 ```
 
 produces this result:
 
 ```
-Result Sequence 
-------------------------------------------------------------------------------------------------------------------------
+Result Sequence                            
+----------------------------------------------------------------------------------------------------
 (N) -O- -I- -S- -E-
 
-with
-   other_letters as (
-      select w.word
-        from words w
-        join letter_in_words lw
-          on lw.word = w.word
-        join letters l
-          on l.letter = lw.letter
-       where lw.letter not in ('n', 'o', 'i', 's', 'e')
-       group by w.word
-      having count(*) >= 4
-       order by count(*) desc, sum(l.is_vowel), sum(lw.occurrences * l.occurrences) desc, w.word
-       fetch first 1 row only
-   ),
-   hard_mode as (
-      select word
-        from words
-       where word like '_____'
-         and word not like 'n____'
-         and instr(word, 'n', 1, 1) > 0
-         and word not like '%o%'
-         and word not like '%i%'
-         and word not like '%s%'
-         and word not like '%e%'
-         and word not in ('noise')
-       order by case when game_id is not null then 0 else 1 end, distinct_letters desc, occurrences desc, word
-       fetch first 10 rows only
-   ),
-   all_matcher as (
-      select word
-        from other_letters 
-      union all 
-      select word
-        from hard_mode
-   )
-select word 
-  from all_matcher
- fetch first 10 rows only
+suggestions:
 
 crypt
 lunar
@@ -133,23 +97,91 @@ daunt
 grand
 brand
 drank
-
-13 rows selected. 
 ```
 
 In the first part the guess is evaluated. `(N) -O- -I- -S- -E-` is shown.
 
 In the second part the guesses are used to produce a query for suggestions. In this example a query in normal mode is shown. That's the default. You can call `exec wordle.set_hard_mode(true);` to enforce reusing known letters.
 
-In the third part some suggestions are shown. `10` is the default. You may change that by calling `exec wordle.set_suggestions(...);`. Another option is to copy und paste the query and run it with adapted limits.
+In the second part some suggestions are shown. The first suggestion is `crypt`, which does not contain a letter `n`, even if we know that the solution contains a letter `n`. This is a strategy to eliminate as many letters as possible in the first guesses. This is only allowed in normal mode. The other suggestions are compatible with hard mode. This means they use revealed letters and knowledge about positions. In this case the suggested words do not start with a `n` but the words contain the letter `n`.
 
-You can call `exec wordle.set_show_query(false);` to suppress the display of the suggestions query.
+Let's continue the game in hard mode, reduce the number of suggestions to `5` and show the query to find the suggestions.
+
+```sql
+exec wordle.set_hard_mode(true);
+exec wordle.set_suggestions(5);
+exec wordle.set_show_query(true);
+select * from wordle.play(209, 'noise', 'lunar');
+```
+
+```
+Result Sequence                            
+----------------------------------------------------------------------------------------------------
+(N) -O- -I- -S- -E-
+-L- -U- .N. (A) -R-
+
+with
+   hard_mode as (
+      select word
+        from words
+       where word like '__n__'
+         and word not like 'n____'
+         and word not like '___a_'
+         and instr(word, 'n', 1, 1) > 0
+         and instr(word, 'a', 1, 1) > 0
+         and word not like '%o%'
+         and word not like '%i%'
+         and word not like '%s%'
+         and word not like '%e%'
+         and word not like '%l%'
+         and word not like '%u%'
+         and word not like '%r%'
+         and word not in ('noise', 'lunar')
+       order by case when game_id is not null then 0 else 1 end,
+             distinct_letters desc,
+             occurrences desc,
+             word
+   )
+select word 
+  from hard_mode
+ fetch first 5 rows only
+
+tangy
+candy
+handy
+mangy
+fancy
+```
+
+Now the first suggestion is `tangy`. The third letter is `n` and it contains the letter `a` but not on the fourth position. Let's add this word to the list.
+
+```sql
+select * from wordle.play(209, 'noise', 'lunar', 'tangy');
+```
+
+```
+Result Sequence
+----------------------------------------------------------------------------------------------------
+(N) -O- -I- -S- -E-
+-L- -U- .N. (A) -R-
+.T. .A. .N. .G. .Y.
+
+Bravo! You completed Wordle 209 3/6
+```
 
 ### Signatures
 
 Here are the relevant signaturs of the PL/SQL package `wordle` for the `play` functions.
 
 ```sql
+procedure set_ansiconsole(in_ansiconsole boolean default true);
+
+procedure set_suggestions(in_suggestions integer default 10);
+
+procedure set_show_query(in_show_query boolean default false);
+
+procedure set_hard_mode(in_hard_mode boolean default false);
+
 function play(
   in_game_id  in integer,
   in_words    in text_ct,
@@ -188,46 +220,18 @@ The idea is to set a starting point and let the machine do the guessing. The fol
 
 ```sql
 set pagesize 1000
-set linesize 120
+set linesize 100
+set feedback off
 select * from wordle.autoplay(209);
 ```
 
 produces this result:
 
 ```
-Result Sequence 
-------------------------------------------------------------------------------------------------------------------------
+Result Sequence
+----------------------------------------------------------------------------------------------------
 
-with
-   other_letters as (
-      select w.word
-        from words w
-        join letter_in_words lw
-          on lw.word = w.word
-        join letters l
-          on l.letter = lw.letter
-       group by w.word
-      having count(*) >= 4
-       order by count(*) desc, sum(l.is_vowel), sum(lw.occurrences * l.occurrences) desc, w.word
-       fetch first 1 row only
-   ),
-   hard_mode as (
-      select word
-        from words
-       where word like '_____'
-       order by case when game_id is not null then 0 else 1 end, distinct_letters desc, occurrences desc, word
-       fetch first 10 rows only
-   ),
-   all_matcher as (
-      select word
-        from other_letters 
-      union all 
-      select word
-        from hard_mode
-   )
-select word 
-  from all_matcher
- fetch first 10 rows only
+suggestions:
 
 rynds
 arose
@@ -244,44 +248,7 @@ autoplay added: rynds (1)
 
 -R- (Y) .N. -D- -S-
 
-with
-   other_letters as (
-      select w.word
-        from words w
-        join letter_in_words lw
-          on lw.word = w.word
-        join letters l
-          on l.letter = lw.letter
-       where lw.letter not in ('y', 'n', 'r', 'd', 's')
-       group by w.word
-      having count(*) >= 4
-       order by count(*) desc, sum(l.is_vowel), sum(lw.occurrences * l.occurrences) desc, w.word
-       fetch first 1 row only
-   ),
-   hard_mode as (
-      select word
-        from words
-       where word like '__n__'
-         and word not like '_y___'
-         and instr(word, 'y', 1, 1) > 0
-         and instr(word, 'n', 1, 1) > 0
-         and word not like '%r%'
-         and word not like '%d%'
-         and word not like '%s%'
-         and word not in ('rynds')
-       order by case when game_id is not null then 0 else 1 end, distinct_letters desc, occurrences desc, word
-       fetch first 10 rows only
-   ),
-   all_matcher as (
-      select word
-        from other_letters 
-      union all 
-      select word
-        from hard_mode
-   )
-select word 
-  from all_matcher
- fetch first 10 rows only
+suggestions:
 
 clept
 money
@@ -299,50 +266,7 @@ autoplay added: clept (2)
 -R- (Y) .N. -D- -S-
 -C- -L- -E- -P- (T)
 
-with
-   other_letters as (
-      select w.word
-        from words w
-        join letter_in_words lw
-          on lw.word = w.word
-        join letters l
-          on l.letter = lw.letter
-       where lw.letter not in ('y', 'n', 't', 'r', 'd', 's', 'c', 'l', 'e', 'p')
-       group by w.word
-      having count(*) >= 4
-       order by count(*) desc, sum(l.is_vowel), sum(lw.occurrences * l.occurrences) desc, w.word
-       fetch first 1 row only
-   ),
-   hard_mode as (
-      select word
-        from words
-       where word like '__n__'
-         and word not like '_y___'
-         and word not like '____t'
-         and instr(word, 'y', 1, 1) > 0
-         and instr(word, 'n', 1, 1) > 0
-         and instr(word, 't', 1, 1) > 0
-         and word not like '%r%'
-         and word not like '%d%'
-         and word not like '%s%'
-         and word not like '%c%'
-         and word not like '%l%'
-         and word not like '%e%'
-         and word not like '%p%'
-         and word not in ('rynds', 'clept')
-       order by case when game_id is not null then 0 else 1 end, distinct_letters desc, occurrences desc, word
-       fetch first 10 rows only
-   ),
-   all_matcher as (
-      select word
-        from other_letters 
-      union all 
-      select word
-        from hard_mode
-   )
-select word 
-  from all_matcher
- fetch first 10 rows only
+suggestions:
 
 ogham
 aunty
@@ -361,36 +285,7 @@ autoplay added: ogham (3)
 -C- -L- -E- -P- (T)
 -O- (G) -H- (A) -M-
 
-with
-   hard_mode as (
-      select word
-        from words
-       where word like '__n__'
-         and word not like '_y___'
-         and word not like '____t'
-         and word not like '_g___'
-         and word not like '___a_'
-         and instr(word, 'y', 1, 1) > 0
-         and instr(word, 'n', 1, 1) > 0
-         and instr(word, 't', 1, 1) > 0
-         and instr(word, 'g', 1, 1) > 0
-         and instr(word, 'a', 1, 1) > 0
-         and word not like '%r%'
-         and word not like '%d%'
-         and word not like '%s%'
-         and word not like '%c%'
-         and word not like '%l%'
-         and word not like '%e%'
-         and word not like '%p%'
-         and word not like '%o%'
-         and word not like '%h%'
-         and word not like '%m%'
-         and word not in ('rynds', 'clept', 'ogham')
-       order by case when game_id is not null then 0 else 1 end, distinct_letters desc, occurrences desc, word
-   )
-select word 
-  from hard_mode
- fetch first 10 rows only
+suggestions:
 
 tangy
 
@@ -402,8 +297,6 @@ autoplay added: tangy (4)
 .T. .A. .N. .G. .Y.
 
 Bravo! You completed Wordle 209 4/6
-
-63 rows selected. 
 ```
 
 In this case no guess was used as starting point. This works. `autoplay` always chooses the first suggestion, also for the very first guess. This process is repeated until a solution is found. It does not matter how many guesses are necessary. In 99.96 percent of the cases a solution is found within 6 guesses in normal mode (99.27 percent in hard mode).
@@ -413,6 +306,14 @@ In this case no guess was used as starting point. This works. `autoplay` always 
 Here are the relevant signaturs of the PL/SQL package `wordle` for the `autoplay` functions.
 
 ```sql
+procedure set_ansiconsole(in_ansiconsole boolean default true);
+
+procedure set_suggestions(in_suggestions integer default 10);
+
+procedure set_show_query(in_show_query boolean default false);
+
+procedure set_hard_mode(in_hard_mode boolean default false);
+
 function play(
   in_game_id  in integer,
   in_words    in text_ct,
