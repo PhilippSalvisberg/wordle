@@ -176,7 +176,7 @@ procedure set_ansiconsole(in_ansiconsole boolean default true);
 
 procedure set_suggestions(in_suggestions integer default 10);
 
-procedure set_show_query(in_show_query boolean default false);
+procedure set_show_query(in_show_query boolean default true);
 
 procedure set_hard_mode(in_hard_mode boolean default true);
 
@@ -308,7 +308,7 @@ procedure set_ansiconsole(in_ansiconsole boolean default true);
 
 procedure set_suggestions(in_suggestions integer default 10);
 
-procedure set_show_query(in_show_query boolean default false);
+procedure set_show_query(in_show_query boolean default true);
 
 procedure set_hard_mode(in_hard_mode boolean default true);
 
