@@ -106,9 +106,9 @@ In the second part some suggestions are shown. The first suggestion is `crypt`, 
 Let's continue the game in hard mode, reduce the number of suggestions to `5` and show the query to find the suggestions.
 
 ```sql
-exec wordle.set_hard_mode(true);
+exec wordle.set_hard_mode;
 exec wordle.set_suggestions(5);
-exec wordle.set_show_query(true);
+exec wordle.set_show_query;
 select * from wordle.play(209, 'noise', 'lunar');
 ```
 
@@ -178,7 +178,7 @@ procedure set_suggestions(in_suggestions integer default 10);
 
 procedure set_show_query(in_show_query boolean default false);
 
-procedure set_hard_mode(in_hard_mode boolean default false);
+procedure set_hard_mode(in_hard_mode boolean default true);
 
 function play(
   in_game_id  in integer,
@@ -310,7 +310,7 @@ procedure set_suggestions(in_suggestions integer default 10);
 
 procedure set_show_query(in_show_query boolean default false);
 
-procedure set_hard_mode(in_hard_mode boolean default false);
+procedure set_hard_mode(in_hard_mode boolean default true);
 
 function play(
   in_game_id  in integer,

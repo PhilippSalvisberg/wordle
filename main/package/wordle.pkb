@@ -54,7 +54,7 @@ create or replace package body wordle is
    -- -----------------------------------------------------------------------------------------------------------------
    -- set_show_query (public)
    -- -----------------------------------------------------------------------------------------------------------------
-   procedure set_show_query(in_show_query in boolean default false) is
+   procedure set_show_query(in_show_query in boolean default true) is
    begin
       g_show_query := in_show_query;
    end set_show_query;
@@ -62,7 +62,7 @@ create or replace package body wordle is
    -- -----------------------------------------------------------------------------------------------------------------
    -- set_hard_mode (public)
    -- -----------------------------------------------------------------------------------------------------------------
-   procedure set_hard_mode(in_hard_mode boolean default false) is
+   procedure set_hard_mode(in_hard_mode boolean default true) is
    begin
       g_hard_mode := in_hard_mode;
    end set_hard_mode;

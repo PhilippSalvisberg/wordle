@@ -3,9 +3,9 @@ create or replace package wordle is
 
    procedure set_suggestions(in_suggestions integer default 10);
 
-   procedure set_show_query(in_show_query boolean default false);
+   procedure set_show_query(in_show_query boolean default true);
 
-   procedure set_hard_mode(in_hard_mode boolean default false);
+   procedure set_hard_mode(in_hard_mode boolean default true);
    
    function bulkplay(
       in_from_game_id in integer default null,
