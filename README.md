@@ -101,8 +101,6 @@ drank
 
 In the first part the guess is evaluated. `(N) -O- -I- -S- -E-` is shown.
 
-In the second part the guesses are used to produce a query for suggestions. In this example a query in normal mode is shown. That's the default. You can call `exec wordle.set_hard_mode(true);` to enforce reusing known letters.
-
 In the second part some suggestions are shown. The first suggestion is `crypt`, which does not contain a letter `n`, even if we know that the solution contains a letter `n`. This is a strategy to eliminate as many letters as possible in the first guesses. This is only allowed in normal mode. The other suggestions are compatible with hard mode. This means they use revealed letters and knowledge about positions. In this case the suggested words do not start with a `n` but the words contain the letter `n`.
 
 Let's continue the game in hard mode, reduce the number of suggestions to `5` and show the query to find the suggestions.
