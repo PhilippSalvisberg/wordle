@@ -86,7 +86,7 @@
 <colUsage columnID="7F7D99E8-9A35-8768-C885-2B4AD4DCB10F"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK id="59488E3A-0293-3E57-7C5D-E8975ACD6965" name="LETTER_IN_WORDS_WORD_FK">
+<ind_PK_UK id="59488E3A-0293-3E57-7C5D-E8975ACD6965" name="LETTER_IN_WORDS_WORDS_FK">
 <createdBy>phs</createdBy>
 <createdTime>2022-01-20 19:01:49 UTC</createdTime>
 <ownerDesignName>wordle</ownerDesignName>
