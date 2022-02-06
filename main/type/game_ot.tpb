@@ -207,14 +207,20 @@ create or replace type body game_ot is
           on l.letter = lw.letter#ALL_LETTERS#
        group by w.word
       having count(*) >= 4
-       order by count(*) desc, sum(l.is_vowel), sum(lw.occurrences * l.occurrences) desc, w.word
+       order by count(*) desc,
+             sum(l.is_vowel),
+             sum(lw.occurrences * l.occurrences) desc,
+             w.word
        fetch first 1 row only
    ),
    hard_mode as (
       select word
         from words
-       where word like '#LIKE_PATTER#'#NOT_LIKE_PATTERNS##WRONG_POS_MATCHES##NO_MATCHES##GUESS_LIST#
-       order by case when game_id is not null then 0 else 1 end, distinct_letters desc, occurrences desc, word
+       where word like '#LIKE_PATTERN#'#NOT_LIKE_PATTERNS##WRONG_POS_MATCHES##NO_MATCHES##GUESS_LIST#
+       order by case when game_id is not null then 0 else 1 end,
+             distinct_letters desc,
+             occurrences desc,
+             word
        fetch first #SUGGESTIONS# rows only
    ),
    all_matcher as (
@@ -231,8 +237,11 @@ select word
    hard_mode as (
       select word
         from words
-       where word like '#LIKE_PATTER#'#NOT_LIKE_PATTERNS##WRONG_POS_MATCHES##NO_MATCHES##GUESS_LIST#
-       order by case when game_id is not null then 0 else 1 end, distinct_letters desc, occurrences desc, word
+       where word like '#LIKE_PATTERN#'#NOT_LIKE_PATTERNS##WRONG_POS_MATCHES##NO_MATCHES##GUESS_LIST#
+       order by case when game_id is not null then 0 else 1 end,
+             distinct_letters desc,
+             occurrences desc,
+             word
    )
 select word 
   from hard_mode
@@ -344,7 +353,7 @@ select word
          else
             l_query := l_template_hard;
          end if;
-         l_query := replace(l_query, '#LIKE_PATTER#', self.like_pattern);
+         l_query := replace(l_query, '#LIKE_PATTERN#', self.like_pattern);
          l_query := replace(l_query, '#NOT_LIKE_PATTERNS#', not_like_patterns);
          l_query := replace(l_query, '#WRONG_POS_MATCHES#', wrong_pos_matches());
          l_query := replace(l_query, '#NO_MATCHES#', no_matches());

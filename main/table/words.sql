@@ -1,6 +1,6 @@
 create table words (
    word             varchar2(5 char)   not null constraint words_pk primary key,
-   distinct_letters integer default -1 not null ,
+   distinct_letters integer default -1 not null,
    occurrences      integer default -1 not null,
    game_id          integer,
    game_date        date,

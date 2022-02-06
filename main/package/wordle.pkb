@@ -4,7 +4,7 @@ create or replace package body wordle is
    -- -----------------------------------------------------------------------------------------------------------------
    g_ansiconsole  boolean          := false;
    g_suggestions  integer          := 10;
-   g_show_query   boolean          := true;
+   g_show_query   boolean          := false;
    g_hard_mode    boolean          := false;
    co_max_guesses constant integer := 20; -- just limit them as a fail safe to reduce risk of endless loops
 
@@ -54,7 +54,7 @@ create or replace package body wordle is
    -- -----------------------------------------------------------------------------------------------------------------
    -- set_show_query (public)
    -- -----------------------------------------------------------------------------------------------------------------
-   procedure set_show_query(in_show_query in boolean default true) is
+   procedure set_show_query(in_show_query in boolean default false) is
    begin
       g_show_query := in_show_query;
    end set_show_query;
