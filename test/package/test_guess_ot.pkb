@@ -199,13 +199,13 @@ create or replace package body test_guess_ot is
       t_expected text_ct;
    begin
       -- arrange
-      o_guess    := guess_ot('bobby', '10101', null);
+      o_guess    := guess_ot('abcde', '10101', null);
       
       -- act
-      t_actual   := o_guess.not_like_patterns;
+      t_actual   := o_guess.not_like_patterns('.ace.');
       
       -- assert
-      t_expected := text_ct('b____', '__b__', '____y');
+      t_expected := text_ct('a____', '__c__', '____e');
       ut.expect(anydata.convertcollection(t_actual)).to_equal(anydata.convertcollection(t_expected));
    end not_like_patterns;
    
