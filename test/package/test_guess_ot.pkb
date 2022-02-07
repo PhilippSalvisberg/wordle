@@ -208,5 +208,24 @@ create or replace package body test_guess_ot is
       t_expected := text_ct('b____', '__b__', '____y');
       ut.expect(anydata.convertcollection(t_actual)).to_equal(anydata.convertcollection(t_expected));
    end not_like_patterns;
+   
+   -- -----------------------------------------------------------------------------------------------------------------
+   -- not_like_pattern_successive_same_letters (see also issue #20)
+   -- -----------------------------------------------------------------------------------------------------------------
+   procedure not_like_pattern_successive_same_letters is
+      o_guess    guess_ot;
+      t_actual   text_ct;
+      t_expected text_ct;
+   begin
+      -- arrange
+      o_guess    := guess_ot('dully', 'pulpy', null, 1);
+      
+      -- act
+      t_actual := o_guess.not_like_patterns('pulpy');
+      
+      -- assert
+      t_expected := text_ct('___l_');
+      ut.expect(anydata.convertcollection(t_actual)).to_equal(anydata.convertcollection(t_expected));
+   end not_like_pattern_successive_same_letters;
 end test_guess_ot;
 /
