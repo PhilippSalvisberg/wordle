@@ -13,6 +13,6 @@ create or replace type guess_ot force as object (
    member function containing_letters return text_ct,
    member function missing_letters(in_solution in varchar2) return text_ct,
    member function like_pattern return varchar2,
-   member function not_like_patterns return text_ct
+   member function not_like_patterns(in_solution in varchar2) return text_ct
 );
 /
