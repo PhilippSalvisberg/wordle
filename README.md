@@ -297,7 +297,7 @@ autoplay added: tangy (4)
 Bravo! You completed Wordle 209 4/6
 ```
 
-In this case no guess was used as starting point. This works. `autoplay` always chooses the first suggestion, also for the very first guess. This process is repeated until a solution is found. It does not matter how many guesses are necessary. In 99.96 percent of the cases a solution is found within 6 guesses in normal mode (99.27 percent in hard mode).
+In this case no guess was used as starting point. This works. `autoplay` always chooses the first suggestion, also for the very first guess. This process is repeated until a solution is found. It does not matter how many guesses are necessary. In 100 percent of the cases a solution is found within 6 guesses in normal mode (99.31 percent in hard mode).
 
 ### Signatures
 
