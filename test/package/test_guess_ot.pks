@@ -44,6 +44,9 @@ create or replace package test_guess_ot is
    
    --%test(return a not like pattern for each letter at the wrong position)
    procedure not_like_patterns;
+   
+   --%test(return a not like pattern for successive same letters)
+   procedure not_like_pattern_successive_same_letters;
 
    --%endcontext
 end test_guess_ot;

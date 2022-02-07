@@ -172,13 +172,15 @@ create or replace type body guess_ot as
    -- -----------------------------------------------------------------------------------------------------------------
    -- not_like_patterns (member)
    -- -----------------------------------------------------------------------------------------------------------------
-   member function not_like_patterns return text_ct is
+   member function not_like_patterns(in_solution in varchar2) return text_ct is
       t_result text_ct := text_ct();
    begin
       <<letters>>
       for i in 1..5
       loop
-         if substr(pattern, i, 1) = '1' then --____y_
+         if substr(pattern, i, 1) = '1' 
+            or substr(pattern, i, 1) = '0' and instr(in_solution, substr(word, i, 1)) > 0
+         then
             t_result.extend;
             t_result(t_result.count) := rpad('_', i - 1, '_')
                                         || substr(word, i, 1)
