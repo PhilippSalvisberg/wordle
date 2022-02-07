@@ -185,7 +185,7 @@ create or replace type body game_ot is
       <<combine>>
       for i in 1..t_valid_guesses.count
       loop
-         util.add_text_ct(io_text_ct => t_result, in_text_ct => t_valid_guesses(i).not_like_patterns);
+         util.add_text_ct(io_text_ct => t_result, in_text_ct => t_valid_guesses(i).not_like_patterns(solution));
       end loop combine;
       return t_result;
    end not_like_patterns;
