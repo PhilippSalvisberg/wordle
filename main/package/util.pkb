@@ -29,21 +29,27 @@ create or replace package body util is
       deterministic
    is
       type t_letter_type is table of pls_integer index by varchar2(1);
-      t_solution_letters t_letter_type := t_letter_type();
-      t_guess_letters    t_letter_type := t_letter_type();
-      l_pattern          varchar2(5);
-      l_solution_letter  varchar2(1);
-      l_guess_letter     varchar2(1);
+      t_solution_letters         t_letter_type := t_letter_type();
+      t_rightpos_letters         t_letter_type := t_letter_type();
+      t_running_wrongpos_letters t_letter_type := t_letter_type();
+      l_pattern                  varchar2(5);
+      l_solution_letter          varchar2(1);
+      l_guess_letter             varchar2(1);
       --
       procedure add_letter(
-         io_letters in out t_letter_type,
-         in_letter  in     varchar2
+         io_letters             in out t_letter_type,
+         in_letter              in     varchar2,
+         in_increment_condition in     boolean
       ) is
+         l_increment binary_integer := 0;
       begin
+         if in_increment_condition then
+            l_increment := 1;
+         end if;
          if io_letters.exists(in_letter) then
-            io_letters(in_letter) := io_letters(in_letter) + 1;
+            io_letters(in_letter) := io_letters(in_letter) + l_increment;
          else
-            io_letters(in_letter) := 1;
+            io_letters(in_letter) := l_increment;
          end if;
       end add_letter;
       --
@@ -51,28 +57,14 @@ create or replace package body util is
       begin
          l_pattern := l_pattern || in_match;
       end append;
-      --
-      function number_of_guessed_letter(
-         in_solution in varchar2,
-         in_guess    in varchar2,
-         in_letter   in varchar2
-      ) return integer is
-         l_result integer := 0;
-      begin
-         <<letters>>
-         for i in 1..length(in_solution)
-         loop
-            if substr(in_solution, i, 1) = in_letter and substr(in_guess, i, 1) = in_letter then
-               l_result := l_result + 1;
-            end if;
-         end loop letters;
-         return l_result;
-      end number_of_guessed_letter;
    begin
       <<letters>>
       for i in 1..length(in_solution)
       loop
-         add_letter(t_solution_letters, substr(in_solution, i, 1));
+         l_solution_letter := substr(in_solution, i, 1);
+         l_guess_letter    := substr(in_guess, i, 1);
+         add_letter(t_solution_letters, l_solution_letter, true);
+         add_letter(t_rightpos_letters, l_guess_letter, l_solution_letter = l_guess_letter);
       end loop letters;
 
       <<letters>>
@@ -80,13 +72,14 @@ create or replace package body util is
       loop
          l_solution_letter := substr(in_solution, i, 1);
          l_guess_letter    := substr(in_guess, i, 1);
-         add_letter(t_guess_letters, l_guess_letter);
+         add_letter(t_running_wrongpos_letters, l_guess_letter,
+                    instr(in_solution, l_guess_letter) > 0 and l_solution_letter != l_guess_letter);
          if l_guess_letter = l_solution_letter then
             append('2');
          elsif instr(in_solution, l_guess_letter) > 0
             and (t_solution_letters(l_guess_letter)
-               - number_of_guessed_letter(in_solution, in_guess, l_guess_letter)
-               - t_guess_letters(l_guess_letter) >= 0)
+               - t_running_wrongpos_letters(l_guess_letter)
+               - t_rightpos_letters(l_guess_letter) >= 0)
          then
             append('1');
          else
