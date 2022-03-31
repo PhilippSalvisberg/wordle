@@ -138,7 +138,7 @@ create or replace package body test_wordle is
       wordle.set_hard_mode(true);
       
       -- act
-      l_actual := wordle.bulkplay(883, 885).getstringval();
+      l_actual := wordle.bulkplay(867, 869).getstringval();
       
       -- assert
       ut.expect(l_actual).to_match('^<bulkplay>.*<solved_games_percent>66.67</.*10 rows only', 'n');
