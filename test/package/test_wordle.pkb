@@ -20,7 +20,7 @@ create or replace package body test_wordle is
       -- arrange
       wordle.set_ansiconsole(true);
 
-      -- act
+      -- act (solution is proxy)
       select column_value into l_actual
         from wordle.play(213, 'noise')
        where rownum = 1;
@@ -46,7 +46,7 @@ create or replace package body test_wordle is
       -- act
       wordle.set_suggestions(2);
 
-      -- assert
+      -- assert (solution is proxy)
       open l_actual for select column_value from wordle.play(213, 'noise');
       open l_expected for
          select '-N- (O) -I- -S- -E-' as column_value
@@ -81,7 +81,7 @@ create or replace package body test_wordle is
       -- act
       wordle.set_show_query(true);
 
-      -- assert
+      -- assert (solution is proxy)
       select column_value into l_actual
         from wordle.play(213, 'glory')
        where column_value like 'with%select%';
@@ -98,6 +98,7 @@ create or replace package body test_wordle is
       -- act
       wordle.set_hard_mode(true);
 
+      -- assert (solution is banal)
       open l_actual for
          select text
            from (select rownum as row_num, column_value as text from wordle.play(201, 'abcde', 'annal', 'noise'))
@@ -151,7 +152,7 @@ create or replace package body test_wordle is
       l_actual   sys_refcursor;
       l_expected sys_refcursor;
    begin
-      -- act
+      -- act (solution is proxy)
       open l_actual for select column_value from wordle.play(213, text_ct('noise')) where rownum = 1;
       
       -- assert
@@ -166,7 +167,7 @@ create or replace package body test_wordle is
       l_actual   sys_refcursor;
       l_expected sys_refcursor;
    begin
-      -- act
+      -- act (solution is proxy)
       open l_actual for select column_value from wordle.play(213, text_ct('noise', 'jumbo')) where rownum < 3;
       
       -- assert
@@ -186,7 +187,7 @@ create or replace package body test_wordle is
       l_actual   sys_refcursor;
       l_expected sys_refcursor;
    begin
-      -- act
+      -- act (solution is proxy)
       open l_actual for select column_value from wordle.play(213, 'noise', 'jumbo', 'octad') where rownum < 4;
       
       -- assert
@@ -209,7 +210,7 @@ create or replace package body test_wordle is
       l_actual   sys_refcursor;
       l_expected sys_refcursor;
    begin
-      -- act
+      -- act (solution is proxy)
       open l_actual for select column_value from wordle.play(213, 'noise', 'jumbo', 'octad', 'glory') where rownum < 5;
       
       -- assert
@@ -229,13 +230,13 @@ create or replace package body test_wordle is
    end play_213_4;
 
    -- -----------------------------------------------------------------------------------------------------------------
-   -- play_213_4
+   -- play_213_5
    -- -----------------------------------------------------------------------------------------------------------------
    procedure play_213_5 is
       l_actual   sys_refcursor;
       l_expected sys_refcursor;
    begin
-      -- act
+      -- act (solution is proxy)
       open l_actual for select column_value from wordle.play(213, 'noise', 'jumbo', 'octad', 'glory', 'proxy');
       
       -- assert
@@ -274,7 +275,7 @@ create or replace package body test_wordle is
       wordle.set_show_query(false);
       wordle.set_suggestions(1);
       
-      -- act
+      -- act (solution is tangy)
       select column_value into l_evaluation from wordle.play(209, 'aback') where rownum = 1;
       select text
         into l_first_suggestion
@@ -300,7 +301,7 @@ create or replace package body test_wordle is
       -- arrange
       wordle.set_show_query(false);
       
-      -- act
+      -- act (solution is banal)
       open l_actual for
          select text
            from (select rownum as row_num, column_value as text from wordle.play(201, 'annal'))
@@ -334,7 +335,7 @@ create or replace package body test_wordle is
       wordle.set_show_query(false);
       wordle.set_suggestions(1);
       
-      -- act
+      -- act (solution is store)
       select column_value into l_evaluation from wordle.play(162, 'aback') where rownum = 1;
       select text
         into l_first_suggestion
@@ -356,7 +357,7 @@ create or replace package body test_wordle is
    procedure play_consider_occurrences_of_repeated_letters is
       l_actual varchar2(1000);
    begin
-      -- act
+      -- act (solution is wince)
       select text
         into l_actual
         from (select rownum as row_num, column_value as text from wordle.play(217, 'aback', 'cinch'))
