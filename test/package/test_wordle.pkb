@@ -1,4 +1,5 @@
 create or replace package body test_wordle is
+   subtype vc2_type is varchar2(4000 byte);
 
    -- -----------------------------------------------------------------------------------------------------------------
    -- reset_package_config
@@ -15,7 +16,7 @@ create or replace package body test_wordle is
    -- set_ansiconsole
    -- -----------------------------------------------------------------------------------------------------------------
    procedure set_ansiconsole is
-      l_actual varchar2(1000 byte);
+      l_actual vc2_type;
    begin
       -- arrange
       wordle.set_ansiconsole(true);
@@ -73,7 +74,7 @@ create or replace package body test_wordle is
    -- set_show_query
    -- -----------------------------------------------------------------------------------------------------------------
    procedure set_show_query is
-      l_actual varchar2(4000 byte);
+      l_actual vc2_type;
    begin
       -- arrange
       wordle.set_suggestions(2);
@@ -268,8 +269,8 @@ create or replace package body test_wordle is
    -- play_consider_wrong_positions_in_suggestions, see issue #2
    -- -----------------------------------------------------------------------------------------------------------------
    procedure play_consider_wrong_positions_in_suggestions is
-      l_evaluation       varchar2(1000);
-      l_first_suggestion varchar2(1000);
+      l_evaluation       vc2_type;
+      l_first_suggestion vc2_type;
    begin
       -- arrange
       wordle.set_show_query(false);
@@ -328,8 +329,8 @@ create or replace package body test_wordle is
    -- play_consider_wrong_positions_in_suggestions_for_repeated_letters, see issue #8
    -- -----------------------------------------------------------------------------------------------------------------
    procedure play_consider_wrong_positions_in_suggestions_for_repeated_letters is
-      l_evaluation       varchar2(1000);
-      l_first_suggestion varchar2(1000);
+      l_evaluation       vc2_type;
+      l_first_suggestion vc2_type;
    begin
       -- arrange
       wordle.set_show_query(false);
@@ -355,7 +356,7 @@ create or replace package body test_wordle is
    -- play_consider_occurrences_of_repeated_letters, see issue #5
    -- -----------------------------------------------------------------------------------------------------------------
    procedure play_consider_occurrences_of_repeated_letters is
-      l_actual varchar2(1000);
+      l_actual vc2_type;
    begin
       -- act (solution is wince)
       select text
