@@ -1,4 +1,6 @@
 create or replace package body test_game_ot is
+   subtype vc2_type is varchar2(4000 byte); -- NOSONAR G-2120: keep scope to package
+   
    -- -----------------------------------------------------------------------------------------------------------------
    -- constructor_completed
    -- -----------------------------------------------------------------------------------------------------------------
@@ -160,7 +162,7 @@ create or replace package body test_game_ot is
    -- -----------------------------------------------------------------------------------------------------------------
    procedure like_pattern is
       o_game   game_ot;
-      l_actual varchar2(5);
+      l_actual vc2_type;
    begin
       -- arrange
       o_game   := game_ot(
@@ -206,7 +208,7 @@ create or replace package body test_game_ot is
    -- -----------------------------------------------------------------------------------------------------------------
    procedure suggestions_query is
       o_game   game_ot;
-      l_actual varchar2(4000);
+      l_actual vc2_type;
    begin
       -- arrange
       o_game   := game_ot(
