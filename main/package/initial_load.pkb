@@ -42,7 +42,7 @@ create or replace package body initial_load is
       insert into letter_in_words (letter, word, occurrences)
       with
          base as (
-            select letter, word, regexp_count(word, letter) as occurrences
+            select letters.letter, words.word, regexp_count(words.word, letters.letter) as occurrences
               from letters
              cross join words
          )
