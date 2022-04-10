@@ -37,8 +37,8 @@ create or replace package body test_wordle is
    -- set_suggestions
    -- -----------------------------------------------------------------------------------------------------------------
    procedure set_suggestions is
-      l_actual   sys_refcursor;
-      l_expected sys_refcursor;
+      c_actual   sys_refcursor;
+      c_expected sys_refcursor;
    begin
       -- arrage
       wordle.set_show_query(false);
@@ -47,8 +47,8 @@ create or replace package body test_wordle is
       wordle.set_suggestions(2);
 
       -- assert (solution is proxy)
-      open l_actual for select column_value from wordle.play(213, 'noise');
-      open l_expected for
+      open c_actual for select column_value from wordle.play(213, 'noise');
+      open c_expected for
          select '-N- (O) -I- -S- -E-' as column_value
            from dual
          union all
@@ -66,7 +66,7 @@ create or replace package body test_wordle is
          union all
          select 'carol'
            from dual;
-      ut.expect(l_actual).to_equal(l_expected);
+      ut.expect(c_actual).to_equal(c_expected);
    end set_suggestions;
 
    -- -----------------------------------------------------------------------------------------------------------------
@@ -92,20 +92,20 @@ create or replace package body test_wordle is
    -- set_hard_mode
    -- -----------------------------------------------------------------------------------------------------------------
    procedure set_hard_mode is
-      l_actual   sys_refcursor;
-      l_expected sys_refcursor;
+      c_actual   sys_refcursor;
+      c_expected sys_refcursor;
    begin
       -- act
       wordle.set_hard_mode(true);
 
       -- assert (solution is banal)
-      open l_actual for
+      open c_actual for
          select text
            from (select rownum as row_num, column_value as text from wordle.play(201, 'abcde', 'annal', 'noise'))
           where row_num < 7
              or row_num = 8;
 
-      open l_expected for
+      open c_expected for
          select 'reduced input due to the following errors:' as text
            from dual
          union all
@@ -126,7 +126,7 @@ create or replace package body test_wordle is
          union all
          select '(A) -N- .N. .A. .L.'
            from dual;
-      ut.expect(l_actual).to_equal(l_expected);
+      ut.expect(c_actual).to_equal(c_expected);
    end set_hard_mode;
    
    -- -----------------------------------------------------------------------------------------------------------------
@@ -149,49 +149,49 @@ create or replace package body test_wordle is
    -- play_213_1
    -- -----------------------------------------------------------------------------------------------------------------
    procedure play_213_1 is
-      l_actual   sys_refcursor;
-      l_expected sys_refcursor;
+      c_actual   sys_refcursor;
+      c_expected sys_refcursor;
    begin
       -- act (solution is proxy)
-      open l_actual for select column_value from wordle.play(213, text_ct('noise')) where rownum = 1;
+      open c_actual for select column_value from wordle.play(213, text_ct('noise')) where rownum = 1;
       
       -- assert
-      open l_expected for select '-N- (O) -I- -S- -E-' as column_value from dual;
-      ut.expect(l_actual).to_equal(l_expected);
+      open c_expected for select '-N- (O) -I- -S- -E-' as column_value from dual;
+      ut.expect(c_actual).to_equal(c_expected);
    end play_213_1;
 
    -- -----------------------------------------------------------------------------------------------------------------
    -- play_213_2
    -- -----------------------------------------------------------------------------------------------------------------
    procedure play_213_2 is
-      l_actual   sys_refcursor;
-      l_expected sys_refcursor;
+      c_actual   sys_refcursor;
+      c_expected sys_refcursor;
    begin
       -- act (solution is proxy)
-      open l_actual for select column_value from wordle.play(213, text_ct('noise', 'jumbo')) where rownum < 3;
+      open c_actual for select column_value from wordle.play(213, text_ct('noise', 'jumbo')) where rownum < 3;
       
       -- assert
-      open l_expected for
+      open c_expected for
          select '-N- (O) -I- -S- -E-' as column_value
            from dual
          union all
          select '-J- -U- -M- -B- (O)' as column_value
            from dual;
-      ut.expect(l_actual).to_equal(l_expected);
+      ut.expect(c_actual).to_equal(c_expected);
    end play_213_2;
 
    -- -----------------------------------------------------------------------------------------------------------------
    -- play_213_3
    -- -----------------------------------------------------------------------------------------------------------------
    procedure play_213_3 is
-      l_actual   sys_refcursor;
-      l_expected sys_refcursor;
+      c_actual   sys_refcursor;
+      c_expected sys_refcursor;
    begin
       -- act (solution is proxy)
-      open l_actual for select column_value from wordle.play(213, 'noise', 'jumbo', 'octad') where rownum < 4;
+      open c_actual for select column_value from wordle.play(213, 'noise', 'jumbo', 'octad') where rownum < 4;
       
       -- assert
-      open l_expected for
+      open c_expected for
          select '-N- (O) -I- -S- -E-' as column_value
            from dual
          union all
@@ -200,21 +200,21 @@ create or replace package body test_wordle is
          union all
          select '(O) -C- -T- -A- -D-' as column_value
            from dual;
-      ut.expect(l_actual).to_equal(l_expected);
+      ut.expect(c_actual).to_equal(c_expected);
    end play_213_3;
 
    -- -----------------------------------------------------------------------------------------------------------------
    -- play_213_4
    -- -----------------------------------------------------------------------------------------------------------------
    procedure play_213_4 is
-      l_actual   sys_refcursor;
-      l_expected sys_refcursor;
+      c_actual   sys_refcursor;
+      c_expected sys_refcursor;
    begin
       -- act (solution is proxy)
-      open l_actual for select column_value from wordle.play(213, 'noise', 'jumbo', 'octad', 'glory') where rownum < 5;
+      open c_actual for select column_value from wordle.play(213, 'noise', 'jumbo', 'octad', 'glory') where rownum < 5;
       
       -- assert
-      open l_expected for
+      open c_expected for
          select '-N- (O) -I- -S- -E-' as column_value
            from dual
          union all
@@ -226,21 +226,21 @@ create or replace package body test_wordle is
          union all
          select '-G- -L- .O. (R) .Y.' as column_value
            from dual;
-      ut.expect(l_actual).to_equal(l_expected);
+      ut.expect(c_actual).to_equal(c_expected);
    end play_213_4;
 
    -- -----------------------------------------------------------------------------------------------------------------
    -- play_213_5
    -- -----------------------------------------------------------------------------------------------------------------
    procedure play_213_5 is
-      l_actual   sys_refcursor;
-      l_expected sys_refcursor;
+      c_actual   sys_refcursor;
+      c_expected sys_refcursor;
    begin
       -- act (solution is proxy)
-      open l_actual for select column_value from wordle.play(213, 'noise', 'jumbo', 'octad', 'glory', 'proxy');
+      open c_actual for select column_value from wordle.play(213, 'noise', 'jumbo', 'octad', 'glory', 'proxy');
       
       -- assert
-      open l_expected for
+      open c_expected for
          select '-N- (O) -I- -S- -E-' as column_value
            from dual
          union all
@@ -261,7 +261,7 @@ create or replace package body test_wordle is
          union all
          select 'Bravo! You completed Wordle 213 5/6' as column_value
            from dual;
-      ut.expect(l_actual).to_equal(l_expected);
+      ut.expect(c_actual).to_equal(c_expected);
    end play_213_5;
 
    -- -----------------------------------------------------------------------------------------------------------------
@@ -295,21 +295,21 @@ create or replace package body test_wordle is
    -- play_number_of_letters_in_suggestions, see issue #6
    -- -----------------------------------------------------------------------------------------------------------------
    procedure play_consider_number_of_letters_in_suggestions is
-      l_actual   sys_refcursor;
-      l_expected sys_refcursor;
+      c_actual   sys_refcursor;
+      c_expected sys_refcursor;
    begin
       -- arrange
       wordle.set_show_query(false);
       
       -- act (solution is banal)
-      open l_actual for
+      open c_actual for
          select text
            from (select rownum as row_num, column_value as text from wordle.play(201, 'annal'))
           where row_num = 1
              or row_num between 5 and 7;
       
       -- assert suggestion, must contain two 'a'
-      open l_expected for
+      open c_expected for
          select '(A) -N- .N. .A. .L.' as text
            from dual
          union all
@@ -321,7 +321,7 @@ create or replace package body test_wordle is
          union all
          select 'banal'
            from dual;
-      ut.expect(l_actual).to_equal(l_expected);
+      ut.expect(c_actual).to_equal(c_expected);
    end play_consider_number_of_letters_in_suggestions;
 
    -- -----------------------------------------------------------------------------------------------------------------
