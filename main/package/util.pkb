@@ -13,10 +13,10 @@ create or replace package body util is
       for i in 1..in_text_ct.count
       loop
          if in_text_ct(i) = in_entry then
-            return true;
+            return true; -- NOSONAR G-7430: return a.s.a.p
          end if;
       end loop entries;
-      return false;
+      return false; -- NOSONAR G-7430
    end contains;
 
    -- -----------------------------------------------------------------------------------------------------------------
@@ -41,7 +41,7 @@ create or replace package body util is
          in_letter              in     varchar2,
          in_increment_condition in     boolean
       ) is
-         l_increment binary_integer := 0;
+         l_increment binary_integer := 0; -- NOSONAR: G-2410: no dual meaning (false positive)
       begin
          if in_increment_condition then
             l_increment := 1;
@@ -185,13 +185,14 @@ create or replace package body util is
       in_text_ct in     text_ct
    ) is
    begin
+      <<entries>>
       for i in 1..in_text_ct.count
       loop
          if not contains(io_text_ct, in_text_ct(i)) then
             io_text_ct.extend;
             io_text_ct(io_text_ct.count) := in_text_ct(i);
          end if;
-      end loop;
+      end loop entries;
    end add_text_ct;
    
    -- -----------------------------------------------------------------------------------------------------------------
