@@ -6,7 +6,12 @@ create or replace package body test_guess_ot is
       o_guess guess_ot;
    begin
       -- act
-      o_guess := guess_ot('bobby', 'yabba', null, 0);
+      o_guess := guess_ot(
+                    in_word           => 'bobby',
+                    in_solution       => 'yabba',
+                    in_previous_guess => null,
+                    in_hard_mode      => 0
+                 );
       
       -- assert
       ut.expect(o_guess.word).to_equal('bobby');
@@ -22,7 +27,12 @@ create or replace package body test_guess_ot is
       o_guess guess_ot;
    begin
       -- act
-      o_guess := guess_ot('zzzzz', 'yabba', null, 0);
+      o_guess := guess_ot(
+                    in_word           => 'zzzzz',
+                    in_solution       => 'yabba',
+                    in_previous_guess => null,
+                    in_hard_mode      => 0
+                 );
       
       -- assert
       ut.expect(o_guess.word).to_equal('zzzzz');
@@ -39,7 +49,12 @@ create or replace package body test_guess_ot is
       o_guess guess_ot;
    begin
       -- act
-      o_guess := guess_ot('zzzz', 'yabba', null, 0);
+      o_guess := guess_ot(
+                    in_word           => 'zzzz',
+                    in_solution       => 'yabba',
+                    in_previous_guess => null,
+                    in_hard_mode      => 0
+                 );
       
       -- assert
       ut.expect(o_guess.word).to_equal('zzzz');
@@ -56,7 +71,12 @@ create or replace package body test_guess_ot is
       o_guess guess_ot;
    begin
       -- act, throws a ORA-06502: PL/SQL: numeric or value error: character string buffer too small
-      o_guess := guess_ot('zzzzzz', 'yabba', null, 0); -- NOSONAR: PL/SQL requires assignment
+      o_guess := guess_ot(                          -- NOSONAR: PL/SQL requires assignment
+                    in_word           => 'zzzzzz',
+                    in_solution       => 'yabba',
+                    in_previous_guess => null,
+                    in_hard_mode      => 0
+                 );
    end constructor_long_word;
    
    -- -----------------------------------------------------------------------------------------------------------------
@@ -67,10 +87,19 @@ create or replace package body test_guess_ot is
       o_prev_guess guess_ot;
    begin
       -- arange
-      o_prev_guess := guess_ot('abcde', null, text_ct('some error'));
+      o_prev_guess := guess_ot(
+                         word    => 'abcde',
+                         pattern => null,
+                         errors  => text_ct('some error')
+                      );
       
       -- act
-      o_guess      := guess_ot('bobby', 'yabba', o_prev_guess, 1);
+      o_guess      := guess_ot(
+                         in_word           => 'bobby',
+                         in_solution       => 'yabba',
+                         in_previous_guess => o_prev_guess,
+                         in_hard_mode      => 1
+                      );
       
       -- assert
       ut.expect(o_guess.errors(1)).to_equal('valid previous guess of bobby is required in hard mode.');
@@ -84,10 +113,20 @@ create or replace package body test_guess_ot is
       o_prev_guess guess_ot;
    begin
       -- arange
-      o_prev_guess := guess_ot('bobby', 'yabba', null, 1);
+      o_prev_guess := guess_ot(
+                         in_word           => 'bobby',
+                         in_solution       => 'yabba',
+                         in_previous_guess => null,
+                         in_hard_mode      => 1
+                      );
       
       -- act
-      o_guess      := guess_ot('comfy', 'yabba', o_prev_guess, 1);
+      o_guess      := guess_ot(
+                         in_word           => 'comfy',
+                         in_solution       => 'yabba',
+                         in_previous_guess => o_prev_guess,
+                         in_hard_mode      => 1
+                      );
       
       -- assert
       ut.expect(anydata.convertcollection(o_guess.errors)).to_equal(
@@ -108,10 +147,20 @@ create or replace package body test_guess_ot is
       o_prev_guess guess_ot;
    begin
       -- arange
-      o_prev_guess := guess_ot('bobby', 'yabba', null, 1);
+      o_prev_guess := guess_ot(
+                         in_word           => 'bobby',
+                         in_solution       => 'yabba',
+                         in_previous_guess => null,
+                         in_hard_mode      => 1
+                      );
       
       -- act
-      o_guess      := guess_ot('kibbi', 'yabba', o_prev_guess, 1);
+      o_guess      := guess_ot(
+                         in_word           => 'kibbi',
+                         in_solution       => 'yabba',
+                         in_previous_guess => o_prev_guess,
+                         in_hard_mode      => 1
+                      );
       
       -- assert
       ut.expect(o_guess.errors(1)).to_equal('kibbi does not contain letter Y (1 times).');
@@ -125,10 +174,20 @@ create or replace package body test_guess_ot is
       o_prev_guess guess_ot;
    begin
       -- arange
-      o_prev_guess := guess_ot('bobby', 'yabba', null, 1);
+      o_prev_guess := guess_ot(
+                         in_word           => 'bobby',
+                         in_solution       => 'yabba',
+                         in_previous_guess => null,
+                         in_hard_mode      => 1
+                      );
       
       -- act
-      o_guess      := guess_ot('yobbo', 'yabba', o_prev_guess, 1);
+      o_guess      := guess_ot(
+                         in_word           => 'yobbo',
+                         in_solution       => 'yabba',
+                         in_previous_guess => o_prev_guess,
+                         in_hard_mode      => 1
+                      );
       
       -- assert
       ut.expect(o_guess.is_valid).to_equal(1);
@@ -144,7 +203,11 @@ create or replace package body test_guess_ot is
       t_expected text_ct;
    begin
       -- arrange
-      o_guess    := guess_ot('bobby', '00221', null);
+      o_guess    := guess_ot(
+                       word    => 'bobby',
+                       pattern => '00221',
+                       errors  => null
+                    );
       
       -- act
       t_actual   := o_guess.containing_letters;
@@ -163,7 +226,11 @@ create or replace package body test_guess_ot is
       t_expected text_ct;
    begin
       -- arrange
-      o_guess    := guess_ot('bobby', '00221', null);
+      o_guess    := guess_ot(
+                       word    => 'bobby',
+                       pattern => '00221',
+                       errors  => null
+                    );
       
       -- act
       t_actual   := o_guess.missing_letters('yabba');
@@ -181,7 +248,11 @@ create or replace package body test_guess_ot is
       l_actual varchar2(5);
    begin
       -- arrange
-      o_guess  := guess_ot('bobby', '00221', null);
+      o_guess  := guess_ot(
+                     word    => 'bobby',
+                     pattern => '00221',
+                     errors  => null
+                  );
       
       -- act
       l_actual := o_guess.like_pattern;
@@ -199,7 +270,11 @@ create or replace package body test_guess_ot is
       t_expected text_ct;
    begin
       -- arrange
-      o_guess    := guess_ot('abcde', '10101', null);
+      o_guess    := guess_ot(
+                       word    => 'abcde',
+                       pattern => '10101',
+                       errors  => null
+                    );
       
       -- act
       t_actual   := o_guess.not_like_patterns('.ace.');
@@ -218,10 +293,15 @@ create or replace package body test_guess_ot is
       t_expected text_ct;
    begin
       -- arrange
-      o_guess    := guess_ot('dully', 'pulpy', null, 1);
+      o_guess    := guess_ot(
+                       in_word           => 'dully',
+                       in_solution       => 'pulpy',
+                       in_previous_guess => null,
+                       in_hard_mode      => 1
+                    );
       
       -- act
-      t_actual := o_guess.not_like_patterns('pulpy');
+      t_actual   := o_guess.not_like_patterns('pulpy');
       
       -- assert
       t_expected := text_ct('___l_');

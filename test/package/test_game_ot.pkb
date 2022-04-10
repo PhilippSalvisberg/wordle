@@ -6,7 +6,11 @@ create or replace package body test_game_ot is
       o_game game_ot;
    begin
       -- act
-      o_game := game_ot('proxy', 1, text_ct('noise', 'jumbo', 'octad', 'glory', 'proxy'));
+      o_game := game_ot(
+                   in_solution  => 'proxy',
+                   in_hard_mode => 1,
+                   in_guesses   => text_ct('noise', 'jumbo', 'octad', 'glory', 'proxy')
+                );
       
       -- assert
       ut.expect(o_game.is_initialized).to_equal(1);
@@ -20,7 +24,11 @@ create or replace package body test_game_ot is
       o_game game_ot;
    begin
       -- act
-      o_game := game_ot('proxy', 1, text_ct('noise', 'jumbo', 'octad'));
+      o_game := game_ot(
+                   in_solution  => 'proxy',
+                   in_hard_mode => 1,
+                   in_guesses   => text_ct('noise', 'jumbo', 'octad')
+                );
       
       -- assert
       ut.expect(o_game.is_initialized).to_equal(1);
@@ -35,7 +43,11 @@ create or replace package body test_game_ot is
       t_actual text_ct;
    begin
       -- arrange
-      o_game   := game_ot('proxy', 1, text_ct('ab', 'noise', 'abcde', 'jumbo', 'octad'));
+      o_game   := game_ot(
+                     in_solution  => 'proxy',
+                     in_hard_mode => 1,
+                     in_guesses   => text_ct('ab', 'noise', 'abcde', 'jumbo', 'octad')
+                  );
 
       -- act
       t_actual := o_game.errors;
@@ -60,7 +72,11 @@ create or replace package body test_game_ot is
       o_game game_ot;
    begin
       -- arrange
-      o_game := game_ot('proxy', 1, text_ct('noise', 'jumbo', 'octad'));
+      o_game := game_ot(
+                   in_solution  => 'proxy',
+                   in_hard_mode => 1,
+                   in_guesses   => text_ct('noise', 'jumbo', 'octad')
+                );
 
       -- act
       o_game.add_guess('glory');
@@ -77,7 +93,11 @@ create or replace package body test_game_ot is
       t_actual guess_ct;
    begin
       -- arrange
-      o_game   := game_ot('proxy', 1, text_ct('yyyyy', 'noise', 'abc', 'def', 'jumbo', 'lyart', 'octad'));
+      o_game   := game_ot(
+                     in_solution  => 'proxy',
+                     in_hard_mode => 1,
+                     in_guesses   => text_ct('yyyyy', 'noise', 'abc', 'def', 'jumbo', 'lyart', 'octad')
+                  );
       
       -- act
       t_actual := o_game.valid_guesses;
@@ -97,7 +117,11 @@ create or replace package body test_game_ot is
       t_actual text_ct;
    begin
       -- arrange
-      o_game   := game_ot('proxy', 1, text_ct('noise', 'jumbo'));
+      o_game   := game_ot(
+                     in_solution  => 'proxy',
+                     in_hard_mode => 1,
+                     in_guesses   => text_ct('noise', 'jumbo')
+                  );
 
       -- act
       t_actual := o_game.containing_letters;
@@ -114,7 +138,11 @@ create or replace package body test_game_ot is
       t_actual text_ct;
    begin
       -- arrange
-      o_game   := game_ot('proxy', 1, text_ct('noise', 'jumbo'));
+      o_game   := game_ot(
+                     in_solution  => 'proxy',
+                     in_hard_mode => 1,
+                     in_guesses   => text_ct('noise', 'jumbo')
+                  );
 
       -- act
       t_actual := o_game.missing_letters;
@@ -135,7 +163,11 @@ create or replace package body test_game_ot is
       l_actual varchar2(5);
    begin
       -- arrange
-      o_game   := game_ot('proxy', 1, text_ct('noise', 'jumbo', 'octad', 'glory'));
+      o_game   := game_ot(
+                     in_solution  => 'proxy',
+                     in_hard_mode => 1,
+                     in_guesses   => text_ct('noise', 'jumbo', 'octad', 'glory')
+                  );
       
       -- act
       l_actual := o_game.like_pattern;
@@ -152,7 +184,11 @@ create or replace package body test_game_ot is
       t_actual text_ct;
    begin
       -- arrange
-      o_game   := game_ot('proxy', 1, text_ct('noise', 'jumbo', 'octad', 'glory'));
+      o_game   := game_ot(
+                     in_solution  => 'proxy',
+                     in_hard_mode => 1,
+                     in_guesses   => text_ct('noise', 'jumbo', 'octad', 'glory')
+                  );
 
       -- act
       t_actual := o_game.not_like_patterns;
@@ -173,13 +209,17 @@ create or replace package body test_game_ot is
       l_actual varchar2(4000);
    begin
       -- arrange
-      o_game   := game_ot('proxy', 1, text_ct('noise'));
+      o_game   := game_ot(
+                     in_solution  => 'proxy',
+                     in_hard_mode => 1,
+                     in_guesses   => text_ct('noise')
+                  );
       
       -- act
       l_actual := o_game.suggestions_query;
 
       -- assert
-      ut.expect(l_actual).to_match('^with.*select word.*fetch first 10 rows only$', 'n');
+      ut.expect(l_actual).to_match(a_pattern => '^with.*select word.*fetch first 10 rows only$', a_modifiers => 'n');
    end suggestions_query;
 
    -- -----------------------------------------------------------------------------------------------------------------
@@ -190,7 +230,11 @@ create or replace package body test_game_ot is
       t_actual text_ct;
    begin
       -- arrange
-      o_game   := game_ot('proxy', 1, text_ct('noise', 'jumbo', 'octad', 'glory'));
+      o_game   := game_ot(
+                     in_solution  => 'proxy',
+                     in_hard_mode => 1,
+                     in_guesses   => text_ct('noise', 'jumbo', 'octad', 'glory')
+                  );
       
       -- act
       t_actual := o_game.suggestions;
@@ -209,7 +253,11 @@ create or replace package body test_game_ot is
       l_actual integer;
    begin
       -- arrange
-      o_game := game_ot('proxy', 1, text_ct());
+      o_game := game_ot(
+                   in_solution  => 'proxy',
+                   in_hard_mode => 1,
+                   in_guesses   => text_ct()
+                );
       
       -- act
       select distinct_letters
