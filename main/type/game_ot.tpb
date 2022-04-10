@@ -262,7 +262,7 @@ select word
                               || util.to_csv(l_list)
                               || ')';
          end if;
-         return l_where_clause;
+         return l_where_clause; -- NOSONAR G-7430: nested function, false positive
       end all_letters;
       --
       function not_like_patterns return varchar2 is
@@ -279,7 +279,7 @@ select word
                       || t_not_like_patterns(i)
                       || '''';
          end loop patterns;
-         return l_pred;
+         return l_pred; -- NOSONAR G-7430: nested function, false positive
       end not_like_patterns;
       --
       function wrong_pos_matches return varchar2 is
@@ -298,7 +298,7 @@ select word
                       || regexp_count(self.solution, t_containing_letters(i))
                       || ') > 0';
          end loop letters;
-         return l_pred;
+         return l_pred; -- NOSONAR G-7430: nested function, false positive
       end wrong_pos_matches;
       --
       function no_matches return varchar2 is
@@ -315,7 +315,7 @@ select word
                       || t_missing_letters(i)
                       || '%''';
          end loop letters;
-         return l_pred;
+         return l_pred; -- NOSONAR G-7430: nested function, false positive
       end no_matches;
       --
       function guess_list return varchar2 is
@@ -338,7 +338,7 @@ select word
             end loop not_in_pred;
             l_pred := l_pred || ')';
          end if;
-         return l_pred;
+         return l_pred; -- NOSONAR G-7430: nested function, false positive
       end guess_list;
    begin
       t_valid_guesses := self.valid_guesses;
@@ -360,7 +360,7 @@ select word
          l_query := replace(l_query, '#SUGGESTIONS#', in_rows);
          l_query := replace(l_query, '#GUESS_LIST#', guess_list());
       end if;
-      return l_query;
+      return l_query; -- NOSONAR G-7430: nested function, false positive
    end suggestions_query;
 
    -- -----------------------------------------------------------------------------------------------------------------

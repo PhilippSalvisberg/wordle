@@ -17,22 +17,27 @@ create or replace package body wordle is
       select game_id
         into l_game_id
         from words
-       where game_date = in_game_date
-         and rownum = 1;
+       where game_date = in_game_date;
       return l_game_id;
+   exception
+      when no_data_found or too_many_rows then
+         raise;
    end game_id;
 
    -- -----------------------------------------------------------------------------------------------------------------
    -- solution (private)
    -- -----------------------------------------------------------------------------------------------------------------
    function solution(in_game_id in integer) return varchar2 is
-      l_solution varchar2(5);
+      l_solution words.word%type;
    begin
       select word
         into l_solution
         from words
        where game_id = in_game_id;
       return l_solution;
+   exception
+      when no_data_found or too_many_rows then
+         raise;
    end solution;
    
    -- -----------------------------------------------------------------------------------------------------------------
@@ -62,7 +67,7 @@ create or replace package body wordle is
    -- -----------------------------------------------------------------------------------------------------------------
    -- set_hard_mode (public)
    -- -----------------------------------------------------------------------------------------------------------------
-   procedure set_hard_mode(in_hard_mode boolean default true) is
+   procedure set_hard_mode(in_hard_mode in boolean default true) is
    begin
       g_hard_mode := in_hard_mode;
    end set_hard_mode;
@@ -89,7 +94,7 @@ create or replace package body wordle is
             if t_suggestions.count > 0 then
                o_game.add_guess(t_suggestions(1));
             end if;
-            exit when o_game.is_completed() = 1 or l_loop_counter > co_max_guesses;
+            exit autoplay_loop when o_game.is_completed() = 1 or l_loop_counter > co_max_guesses;
          end loop autoplay_loop;
          t_games.extend;
          t_games(t_games.count) := o_game;
@@ -104,7 +109,7 @@ create or replace package body wordle is
                       g.solution,
                       g.hard_mode,
                       g.is_completed() as is_completed,
-                      (select count(*) from g.valid_guesses()) as number_of_guesses,
+                      (select count(*) from g.valid_guesses()) as number_of_guesses, -- NOSONAR G-3120: false postive
                       g.guesses as guesses,
                       g.object_value as game
                  from table(t_games) g
@@ -116,11 +121,11 @@ create or replace package body wordle is
                       count(*) as number_of_games,
                       sum(is_completed) as number_of_completed_games,
                       sum(case
-                            when number_of_guesses > 6 then
-                               1
-                            else
-                               0
-                         end) as games_with_too_many_tries
+                             when number_of_guesses > 6 then
+                                1
+                             else
+                                0
+                          end) as games_with_too_many_tries
                  from games
             ),
             calc as (
@@ -158,10 +163,10 @@ create or replace package body wordle is
                                                case
                                                   when g.number_of_guesses > 6 then
                                                      xmlcdata(chr(10)
-                                                        || g.game.suggestions_query(10, 5)
+                                                        || g.game.suggestions_query(in_rows => 10, in_for_guess => 5)
                                                         || chr(10))
                                                   else
-                                                      null
+                                                     null
                                                end
                                             )
                                          ) order by number_of_guesses desc, game_id
@@ -174,7 +179,10 @@ create or replace package body wordle is
                 ) as doc
            into l_doc
            from calc;
-         return l_doc;
+         return l_doc; -- NOSONAR G-7430: nested function, false postive
+      exception
+         when no_data_found or too_many_rows then
+            raise;
       end create_xmldoc;
    begin
       -- main 
@@ -194,7 +202,7 @@ create or replace package body wordle is
       loop
          solve(r_game.word);
       end loop games;
-      return create_xmldoc;
+      return create_xmldoc; -- NOSONAR G-7430: nested function, false postive
    end bulkplay;
 
    -- -----------------------------------------------------------------------------------------------------------------
@@ -297,7 +305,7 @@ create or replace package body wordle is
          print_evaluation;
          if o_game.is_completed() = 1 then
             print_final_line;
-            exit autoplay_loop;
+            exit autoplay_loop; -- NOSONAR: G-4375: repeating if condition does not make sense (false positive)
          elsif g_suggestions > 0 then
             t_suggestions := o_game.suggestions(g_suggestions);
             if t_suggestions.count > 0 then

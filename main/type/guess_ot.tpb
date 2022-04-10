@@ -3,7 +3,7 @@ create or replace type body guess_ot as
    -- guess_ot (constructor)
    -- -----------------------------------------------------------------------------------------------------------------
    constructor function guess_ot(
-      self              in out nocopy guess_ot,
+      self              in out nocopy guess_ot, -- NOSONAR G-7150: cannot remove self, false positive
       in_word           in            varchar2,
       in_solution       in            varchar2,
       in_previous_guess in            guess_ot,
@@ -65,7 +65,8 @@ create or replace type body guess_ot as
          select count(*)
            into l_count
            from words
-          where word = in_word;
+          where word = in_word
+            and rownum = 1;
          return l_count > 0;
       end exists_word;
    begin
@@ -100,13 +101,13 @@ create or replace type body guess_ot as
    member function is_valid return integer is
    begin
       return (
-         case
-            when errors is not null and errors.count = 0 and length(word) = 5 and length(pattern) = 5 then
-               1
-            else
-               0
-         end
-      );
+            case
+               when errors is not null and errors.count = 0 and length(word) = 5 and length(pattern) = 5 then
+                  1
+               else
+                  0
+            end
+         );
    end is_valid;
    
    -- -----------------------------------------------------------------------------------------------------------------
@@ -178,7 +179,7 @@ create or replace type body guess_ot as
       <<letters>>
       for i in 1..5
       loop
-         if substr(pattern, i, 1) = '1' 
+         if substr(pattern, i, 1) = '1'
             or substr(pattern, i, 1) = '0' and instr(in_solution, substr(word, i, 1)) > 0
          then
             t_result.extend;

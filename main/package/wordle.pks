@@ -1,11 +1,11 @@
 create or replace package wordle is
-   procedure set_ansiconsole(in_ansiconsole boolean default true);
+   procedure set_ansiconsole(in_ansiconsole in boolean default true);
 
-   procedure set_suggestions(in_suggestions integer default 10);
+   procedure set_suggestions(in_suggestions in integer default 10);
 
-   procedure set_show_query(in_show_query boolean default true);
+   procedure set_show_query(in_show_query in boolean default true);
 
-   procedure set_hard_mode(in_hard_mode boolean default true);
+   procedure set_hard_mode(in_hard_mode in boolean default true);
    
    function bulkplay(
       in_from_game_id in integer default null,
