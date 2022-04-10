@@ -260,7 +260,7 @@ create or replace package body test_game_ot is
                 );
       
       -- act
-      select distinct_letters
+      select w.distinct_letters
         into l_actual
         from words w
         join table(o_game.suggestions(1)) s
