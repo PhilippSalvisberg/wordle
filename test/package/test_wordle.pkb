@@ -86,7 +86,7 @@ create or replace package body test_wordle is
       select column_value into l_actual
         from wordle.play(213, 'glory')
        where column_value like 'with%select%';
-      ut.expect(l_actual).to_match('^with.*fetch first 1 row only', 'n');
+      ut.expect(l_actual).to_match(a_pattern => '^with.*fetch first 1 row only', a_modifiers => 'n');
    end set_show_query;
    
    -- -----------------------------------------------------------------------------------------------------------------
@@ -140,10 +140,13 @@ create or replace package body test_wordle is
       wordle.set_hard_mode(true);
       
       -- act
-      l_actual := wordle.bulkplay(867, 869).getstringval();
+      l_actual := wordle.bulkplay(in_from_game_id => 867, in_to_game_id => 869).getstringval();
       
       -- assert
-      ut.expect(l_actual).to_match('^<bulkplay>.*<solved_games_percent>66.67</.*10 rows only', 'n');
+      ut.expect(l_actual).to_match(
+         a_pattern   => '^<bulkplay>.*<solved_games_percent>66.67</.*10 rows only',
+         a_modifiers => 'n'
+      );
    end bulkplay;
    
    -- -----------------------------------------------------------------------------------------------------------------
