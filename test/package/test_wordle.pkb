@@ -1,5 +1,5 @@
 create or replace package body test_wordle is
-   subtype vc2_type is varchar2(4000 byte);
+   subtype vc2_type is varchar2(4000 byte); -- NOSONAR G-2120: keep scope to package
 
    -- -----------------------------------------------------------------------------------------------------------------
    -- reset_package_config
