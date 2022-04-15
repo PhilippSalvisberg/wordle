@@ -12,6 +12,8 @@ prompt =========================================================================
 @test/package/test_guess_ot.pkb
 @test/package/test_initial_load.pks
 @test/package/test_initial_load.pkb
+@test/package/test_util.pks
+@test/package/test_util.pkb
 @test/package/test_wordle.pks
 @test/package/test_wordle.pkb
 
