@@ -216,7 +216,7 @@ create or replace type body game_ot is
    hard_mode as (
       select word
         from words
-       where word like '#LIKE_PATTERN#'#NOT_LIKE_PATTERNS##WRONG_POS_MATCHES##NO_MATCHES##GUESS_LIST#
+       where word like '#LIKE_PATTERN#'#NOT_LIKE_PATTERNS##WRONG_POS_MATCHES##NO_MATCHES#
        order by case when game_id is not null then 0 else 1 end,
              distinct_letters desc,
              occurrences desc,
@@ -237,7 +237,7 @@ select word
    hard_mode as (
       select word
         from words
-       where word like '#LIKE_PATTERN#'#NOT_LIKE_PATTERNS##WRONG_POS_MATCHES##NO_MATCHES##GUESS_LIST#
+       where word like '#LIKE_PATTERN#'#NOT_LIKE_PATTERNS##WRONG_POS_MATCHES##NO_MATCHES#
        order by case when game_id is not null then 0 else 1 end,
              distinct_letters desc,
              occurrences desc,
@@ -317,29 +317,6 @@ select word
          end loop letters;
          return l_pred; -- NOSONAR G-7430: nested function, false positive
       end no_matches;
-      --
-      function guess_list return varchar2 is
-         l_pred varchar2(4000 byte);
-      begin
-         if t_valid_guesses.count > 0 then
-            l_pred := l_pred
-                      || chr(10)
-                      || '         and word not in (';
-            <<not_in_pred>>
-            for i in 1..t_valid_guesses.count
-            loop
-               if i > 1 then
-                  l_pred := l_pred || ', ';
-               end if;
-               l_pred := l_pred
-                         || ''''
-                         || t_valid_guesses(i).word
-                         || '''';
-            end loop not_in_pred;
-            l_pred := l_pred || ')';
-         end if;
-         return l_pred; -- NOSONAR G-7430: nested function, false positive
-      end guess_list;
    begin
       t_valid_guesses := self.valid_guesses;
       if (in_for_guess is not null and t_valid_guesses.count > in_for_guess) then
@@ -358,7 +335,6 @@ select word
          l_query := replace(l_query, '#WRONG_POS_MATCHES#', wrong_pos_matches());
          l_query := replace(l_query, '#NO_MATCHES#', no_matches());
          l_query := replace(l_query, '#SUGGESTIONS#', in_rows);
-         l_query := replace(l_query, '#GUESS_LIST#', guess_list());
       end if;
       return l_query; -- NOSONAR G-7430: nested function, false positive
    end suggestions_query;

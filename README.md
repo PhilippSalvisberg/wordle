@@ -134,7 +134,6 @@ with
          and word not like '%l%'
          and word not like '%u%'
          and word not like '%r%'
-         and word not in ('noise', 'lunar')
        order by case when game_id is not null then 0 else 1 end,
              distinct_letters desc,
              occurrences desc,
