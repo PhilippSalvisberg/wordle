@@ -7,9 +7,7 @@ create or replace package body test_initial_load is
       c_expected sys_refcursor;
    begin
       -- arrange
-      delete from letter_in_words;
-      delete from words;
-      delete from letters;
+      initial_load.cleanup;
       
       -- act
       initial_load.load;
@@ -63,10 +61,7 @@ create or replace package body test_initial_load is
       l_actual integer;
    begin
       -- arrange
-      delete from letter_in_words;
-      delete from words;
-      delete from letters;
-      initial_load.load;
+      initial_load.reload;
       
       -- act
       initial_load.cleanup;
@@ -94,9 +89,7 @@ create or replace package body test_initial_load is
       l_expected_letter_in_words integer;
    begin
       -- arrange
-      delete from letter_in_words;
-      delete from words;
-      delete from letters;
+      initial_load.cleanup;
       initial_load.load;
       select count(*) into l_expected_letters from letters;
       select count(*) into l_expected_words from words;
