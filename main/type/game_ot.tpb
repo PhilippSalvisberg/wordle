@@ -295,7 +295,8 @@ select word
                       || '         and instr(word, '''
                       || t_containing_letters(i)
                       || ''', 1, '
-                      || regexp_count(self.solution, t_containing_letters(i))
+                      || greatest(1, least(regexp_count(self.solution, t_containing_letters(i)),
+                                           regexp_count(t_valid_guesses(t_valid_guesses.count).word, t_containing_letters(i))))
                       || ') > 0';
          end loop letters;
          return l_pred; -- NOSONAR G-7430: nested function, false positive
