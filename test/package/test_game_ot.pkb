@@ -271,5 +271,49 @@ create or replace package body test_game_ot is
       -- assert
       ut.expect(l_actual).to_equal(5);
    end first_suggestion;
+   
+   -- -----------------------------------------------------------------------------------------------------------------
+   -- multiple_instead_of_single_occurrence_of_letter_hard
+   -- -----------------------------------------------------------------------------------------------------------------
+   procedure multiple_instead_of_single_occurrence_of_letter_hard is
+      o_game   game_ot;
+      l_actual vc2_type;
+   begin
+      -- arrange (see issue #28)
+      o_game := game_ot(
+                   in_solution  => 'fewer',
+                   in_hard_mode => 1,
+                   in_guesses   => text_ct('noise')
+                );
+                
+      -- act
+      l_actual := o_game.suggestions_query();
+      
+      -- assert
+      ut.expect(l_actual).to_be_like(q'[%and instr(word, 'e', 1, 1) > 0%]');
+   end multiple_instead_of_single_occurrence_of_letter_hard;
+
+   -- -----------------------------------------------------------------------------------------------------------------
+   -- multiple_instead_of_single_occurrence_of_letter_normal
+   -- -----------------------------------------------------------------------------------------------------------------
+   procedure multiple_instead_of_single_occurrence_of_letter_normal is
+      o_game   game_ot;
+      l_actual vc2_type;
+   begin
+      -- arrange (see issue #28), "r" is not reused in second guess, but occurrences must be 1!
+      o_game := game_ot(
+                   in_solution  => 'fewer',
+                   in_hard_mode => 0,
+                   in_guesses   => text_ct('rynds', 'clept')
+                );
+                
+      -- act
+      l_actual := o_game.suggestions_query();
+      
+      -- assert
+      ut.expect(l_actual).to_be_like(q'[%and instr(word, 'r', 1, 1) > 0%]');
+      ut.expect(l_actual).to_be_like(q'[%and instr(word, 'e', 1, 1) > 0%]');
+   end multiple_instead_of_single_occurrence_of_letter_normal;
+
 end test_game_ot;
 /
