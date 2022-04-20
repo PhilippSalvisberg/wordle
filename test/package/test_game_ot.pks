@@ -47,6 +47,16 @@ create or replace package test_game_ot is
 
    --%test(return first suggestion with 5 different letters)
    procedure first_suggestion;
+   
+   --%endcontext
+
+   --%context(suggestions query bug fix issue #28)
+
+   --%test(multiple instead of single occurrence of letter in hard mode)
+   procedure multiple_instead_of_single_occurrence_of_letter_hard;
+
+   --%test(multiple instead of single occurrence of letter in normal mode)
+   procedure multiple_instead_of_single_occurrence_of_letter_normal;
 
    --%endcontext
 end test_game_ot;

@@ -28,16 +28,16 @@ create or replace type body game_ot is
    member function is_initialized return integer is
    begin
       return (
-         case
-            when self.solution is not null
-               and self.hard_mode is not null
-               and self.guesses is not null
-            then
-               1
-            else
-               0
-         end
-      );
+            case
+               when self.solution is not null
+                  and self.hard_mode is not null
+                  and self.guesses is not null
+               then
+                  1
+               else
+                  0
+            end
+         );
    end is_initialized;
    
    -- -----------------------------------------------------------------------------------------------------------------
@@ -48,16 +48,16 @@ create or replace type body game_ot is
    begin
       t_valid_guesses := self.valid_guesses();
       return (
-         case
-            when self.is_initialized = 1
-               and t_valid_guesses.count > 0
-               and t_valid_guesses(t_valid_guesses.count).pattern = '22222'
-            then
-               1
-            else
-               0
-         end
-      );
+            case
+               when self.is_initialized = 1
+                  and t_valid_guesses.count > 0
+                  and t_valid_guesses(t_valid_guesses.count).pattern = '22222'
+               then
+                  1
+               else
+                  0
+            end
+         );
    end is_completed;
 
    -- -----------------------------------------------------------------------------------------------------------------
@@ -295,7 +295,8 @@ select word
                       || '         and instr(word, '''
                       || t_containing_letters(i)
                       || ''', 1, '
-                      || regexp_count(self.solution, t_containing_letters(i))
+                      || greatest(1, least(regexp_count(self.solution, t_containing_letters(i)),
+                                           regexp_count(t_valid_guesses(t_valid_guesses.count).word, t_containing_letters(i))))
                       || ') > 0';
          end loop letters;
          return l_pred; -- NOSONAR G-7430: nested function, false positive
