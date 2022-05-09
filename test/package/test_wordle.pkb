@@ -139,8 +139,8 @@ create or replace package body test_wordle is
       -- arrange
       wordle.set_hard_mode(true);
       
-      -- act
-      l_actual := wordle.bulkplay(in_from_game_id => 867, in_to_game_id => 869).getstringval();
+      -- act (solutions: vista, relax, cover; last one needs more than 6 guesses)
+      l_actual := wordle.bulkplay(in_from_game_id => 863, in_to_game_id => 865).getclobval();
       
       -- assert
       ut.expect(l_actual).to_match(
