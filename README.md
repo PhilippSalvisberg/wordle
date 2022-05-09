@@ -40,7 +40,7 @@ The installation scripts creates and populates this database model:
 
 ![Data Model](model/data-model.png)
 
-The main table is `WORDS`. It contains `12972` accepted words. `2309` of these words are used as solutions. They have an assosciated `GAME_ID` and `GAME_DATE`. As a result they are used only once. The last Wordle game #2308 is scheduled for 2027-10-14.
+The main table is `WORDS`. It contains `12974` accepted words. `2309` of these words are used as solutions. They have an assosciated `GAME_ID` and `GAME_DATE`. As a result they are used only once. The last Wordle game #2308 is scheduled for 2027-10-14.
 
 ## Semantic
 
