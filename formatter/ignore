@@ -1,0 +1,2 @@
+# file with very long lines that causes a stack overflow
+**/main/package/initial_load.pkb
