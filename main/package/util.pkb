@@ -170,11 +170,11 @@ create or replace package body util is
    is
    begin
       return (case
-            when in_bool then
-               1
-            else
-               0
-         end);
+                 when in_bool then
+                    1
+                 else
+                    0
+              end);
    end bool_to_int;
 
    -- -----------------------------------------------------------------------------------------------------------------

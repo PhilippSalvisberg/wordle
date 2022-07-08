@@ -6,7 +6,7 @@ create or replace package wordle is
    procedure set_show_query(in_show_query in boolean default true);
 
    procedure set_hard_mode(in_hard_mode in boolean default true);
-   
+
    function bulkplay(
       in_from_game_id in integer default null,
       in_to_game_id   in integer default null

@@ -280,11 +280,11 @@ create or replace package body test_game_ot is
       l_actual vc2_type;
    begin
       -- arrange (see issue #28)
-      o_game := game_ot(
-                   in_solution  => 'fewer',
-                   in_hard_mode => 1,
-                   in_guesses   => text_ct('noise')
-                );
+      o_game   := game_ot(
+                     in_solution  => 'fewer',
+                     in_hard_mode => 1,
+                     in_guesses   => text_ct('noise')
+                  );
                 
       -- act
       l_actual := o_game.suggestions_query();
@@ -301,11 +301,11 @@ create or replace package body test_game_ot is
       l_actual vc2_type;
    begin
       -- arrange (see issue #28), "r" is not reused in second guess, but occurrences must be 1!
-      o_game := game_ot(
-                   in_solution  => 'fewer',
-                   in_hard_mode => 0,
-                   in_guesses   => text_ct('rynds', 'clept')
-                );
+      o_game   := game_ot(
+                     in_solution  => 'fewer',
+                     in_hard_mode => 0,
+                     in_guesses   => text_ct('rynds', 'clept')
+                  );
                 
       -- act
       l_actual := o_game.suggestions_query();

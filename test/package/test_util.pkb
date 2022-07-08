@@ -279,8 +279,8 @@ create or replace package body test_util is
    -- to_csv_some_string
    -- -----------------------------------------------------------------------------------------------------------------
    procedure to_csv_some_string is
-      t_input text_ct := text_ct('a', 'b', 'c');
-      l_actual varchar2(1000 char);
+      t_input    text_ct             := text_ct('a', 'b', 'c');
+      l_actual   varchar2(1000 char);
       l_expected varchar2(1000 char) := q'['a', 'b', 'c']';
    begin
       -- act
@@ -304,7 +304,7 @@ create or replace package body test_util is
    -- to_csv_empty
    -- -----------------------------------------------------------------------------------------------------------------
    procedure to_csv_empty is
-      t_input text_ct := text_ct();
+      t_input  text_ct := text_ct();
       l_actual varchar2(1000 char);
    begin
       -- act
