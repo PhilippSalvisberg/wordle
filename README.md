@@ -30,7 +30,7 @@ As a database fanboy I wanted to query possible candidates via SQL, to more effi
 
 4. Connect to the database and execute this script (I've used it sucessfully with SQLcl und SQL Developer):
 
-    ```sql
+    ```
     @install.sql
     ```  
 
