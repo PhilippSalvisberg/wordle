@@ -9,3 +9,11 @@
 
 # Windows
 Thumbs.db
+
+# SonarQube and utPLSQL
+junit_test_results.xml
+test_results.xml
+coverage.xml
+coverage.html
+coverage.html_assets
+.scannerwork
