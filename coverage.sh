@@ -1,11 +1,7 @@
 time $HOME/github/utPLSQL/utPLSQL-cli/bin/utplsql run wh/wh@fillmore/odb.docker \
 -source_path=main -owner=wh \
 -p=':wordle' \
--test_path=test -c \
-  -regex_expression="test/(\w+)(/(\w+))*/(\w+)\.(.{3})$" \
-  -owner_subexpression=1 \
-  -type_subexpression=5 \
-  -name_subexpression=4 \
+-test_path=test \
 -f=ut_coverage_sonar_reporter     -o=coverage.xml \
 -f=ut_coverage_html_reporter      -o=coverage.html \
 -f=ut_sonar_test_reporter         -o=test_results.xml \
