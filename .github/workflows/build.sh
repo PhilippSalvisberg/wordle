@@ -61,6 +61,7 @@ function create_codecop_issues() {
     # - G-1050: Avoid using literals in your code.
     # - G-2130: Try to use subtypes for constructs used often in your code.
     # - G-5010: Try to use a error/logging framework for your application.
+    # - G-7130: Always use parameters or pull in definitions rather than referencing external variables in a local program unit.
     # - G-7460: Try to define your packaged/standalone function deterministic if appropriate.
     # - G-8310: Always validate input parameter size by assigning the parameter to a size limited variable in the declaration section of program unit.
     .tools/tvdcc/tvdcc.sh \
@@ -68,7 +69,7 @@ function create_codecop_issues() {
         html=false \
         excel=false \
         json=true \
-        skip=0,1050,2130,5010,7460,8310 \
+        skip=0,1050,2130,5010,7130,7460,8310 \
         validator=com.trivadis.tvdcc.validators.TrivadisGuidelines3Plus
 }
 
