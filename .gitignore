@@ -17,3 +17,7 @@ coverage.xml
 coverage.html
 coverage.html_assets
 .scannerwork
+tvdcc_report.json
+
+# sqlcl, utplsql-cli, db* COODECOP
+.tools
