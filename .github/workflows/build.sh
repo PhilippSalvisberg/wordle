@@ -44,10 +44,9 @@ EOF
     export JAVA_TOOL_OPTIONS="-DTNS_ADMIN=$TNS_ADMIN"
     .tools/utPLSQL-cli/bin/utplsql run $DB_USER/$DB_PASS@$DB \
     -source_path=main -owner=$DB_USER \
-    -p=':wordle' \
+    -p='wh' \
     -test_path=test \
     -f=ut_coverage_sonar_reporter     -o=coverage.xml \
-    -f=ut_coverage_html_reporter      -o=coverage.html \
     -f=ut_sonar_test_reporter         -o=test_results.xml \
     -f=ut_junit_reporter              -o=junit_test_results.xml \
     -f=ut_documentation_reporter      -o=test_results.log -s
