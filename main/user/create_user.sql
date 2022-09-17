@@ -11,7 +11,7 @@ grant connect, resource, unlimited tablespace to wh;
 grant debug connect session, debug any procedure to wh;
 grant execute on dbms_debug_jdwp to wh;
 begin
-   dbms_network_acl_admin.append_host_ace(
+   sys.dbms_network_acl_admin.append_host_ace(
       host => '*',
       ace  => sys.xs$ace_type(
                  privilege_list => sys.xs$name_list('JDWP'),

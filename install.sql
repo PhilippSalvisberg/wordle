@@ -24,6 +24,7 @@ prompt =========================================================================
 prompt install PL/SQL package specifications
 prompt ================================================================================================================
 
+@main/package/common.pks
 @main/package/util.pks
 @main/package/initial_load.pks
 @main/package/wordle.pks

@@ -10,7 +10,7 @@ create or replace package body util is
    is
    begin
       <<entries>>
-      for i in 1..in_text_ct.count
+      for i in 1..in_text_ct.count -- NOSONAR: plsql:ForLoopUsageCheck dense array
       loop
          if in_text_ct(i) = in_entry then
             return true; -- NOSONAR G-7430: return a.s.a.p
@@ -28,13 +28,13 @@ create or replace package body util is
    ) return varchar2
       deterministic
    is
-      type t_letter_type is table of pls_integer index by varchar2(1);
+      type t_letter_type is table of pls_integer index by varchar2(1 char);
       t_solution_letters         t_letter_type := t_letter_type();
       t_rightpos_letters         t_letter_type := t_letter_type();
       t_running_wrongpos_letters t_letter_type := t_letter_type();
-      l_pattern                  varchar2(5);
-      l_solution_letter          varchar2(1);
-      l_guess_letter             varchar2(1);
+      l_pattern                  varchar2(common.co_word_len char);
+      l_solution_letter          varchar2(1 char);
+      l_guess_letter             varchar2(1 char);
       --
       procedure add_letter(
          io_letters             in out t_letter_type,
@@ -155,7 +155,7 @@ create or replace package body util is
       for i in 1..length(in_word)
       loop
          append_letter(upper(substr(in_word, i, 1)), substr(in_pattern, i, 1));
-         if i < 5 then
+         if i < common.co_word_len then
             append(' '); -- character separator
          end if;
       end loop process_pattern_positions;
@@ -186,7 +186,7 @@ create or replace package body util is
    ) is
    begin
       <<entries>>
-      for i in 1..in_text_ct.count
+      for i in 1..in_text_ct.count -- NOSONAR: plsql:ForLoopUsageCheck dense array
       loop
          if not contains(io_text_ct, in_text_ct(i)) then
             io_text_ct.extend;
@@ -202,7 +202,7 @@ create or replace package body util is
       l_list varchar2(4000 byte);
    begin
       <<entries>>
-      for i in 1..in_list.count
+      for i in 1..in_list.count -- NOSONAR: plsql:ForLoopUsageCheck dense array
       loop
          if l_list is not null then
             l_list := l_list || ', ';
