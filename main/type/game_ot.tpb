@@ -15,7 +15,7 @@ create or replace type body game_ot is
       self.hard_mode := in_hard_mode;
       self.guesses   := guess_ct();
       <<add_guesses>>
-      for i in 1..in_guesses.count
+      for i in 1..in_guesses.count -- NOSONAR: plsql:ForLoopUsageCheck dense array
       loop
          self.add_guess(in_guesses(i));
       end loop add_guesses;
@@ -67,7 +67,7 @@ create or replace type body game_ot is
       t_errors text_ct := text_ct();
    begin
       <<add_errors>>
-      for i in 1..guesses.count
+      for i in 1..guesses.count -- NOSONAR: plsql:ForLoopUsageCheck dense array
       loop
          util.add_text_ct(io_text_ct => t_errors, in_text_ct => guesses(i).errors);
       end loop add_errors;
@@ -98,7 +98,7 @@ create or replace type body game_ot is
       t_guesses guess_ct := guess_ct();
    begin
       <<add_valid_guesses>>
-      for i in 1..guesses.count
+      for i in 1..guesses.count -- NOSONAR: plsql:ForLoopUsageCheck dense array
       loop
          if guesses(i).is_valid = 1 then
             t_guesses.extend;
@@ -117,7 +117,7 @@ create or replace type body game_ot is
    begin
       t_valid_guesses := self.valid_guesses;
       <<combine>>
-      for i in 1..t_valid_guesses.count
+      for i in 1..t_valid_guesses.count -- NOSONAR: plsql:ForLoopUsageCheck dense array
       loop
          util.add_text_ct(io_text_ct => t_result, in_text_ct => t_valid_guesses(i).containing_letters);
       end loop combine;
@@ -133,7 +133,7 @@ create or replace type body game_ot is
    begin
       t_valid_guesses := self.valid_guesses;
       <<combine>>
-      for i in 1..t_valid_guesses.count
+      for i in 1..t_valid_guesses.count -- NOSONAR: plsql:ForLoopUsageCheck dense array
       loop
          util.add_text_ct(io_text_ct => t_result, in_text_ct => t_valid_guesses(i).missing_letters(self.solution));
       end loop combine;
@@ -151,7 +151,7 @@ create or replace type body game_ot is
    begin
       t_valid_guesses := self.valid_guesses;
       <<populate_t_like>>
-      for i in 1..t_valid_guesses.count
+      for i in 1..t_valid_guesses.count -- NOSONAR: plsql:ForLoopUsageCheck dense array
       loop
          t_like.extend;
          t_like(t_like.count) := t_valid_guesses(i).like_pattern;
@@ -160,7 +160,7 @@ create or replace type body game_ot is
       for i in 1..5
       loop
          <<combine>>
-         for j in 1..t_like.count
+         for j in 1..t_like.count -- NOSONAR: plsql:ForLoopUsageCheck dense array
          loop
             l_pattern_char := substr(t_like(j), i, 1);
             if (l_result is null or length(l_result) < i) and l_pattern_char != '_' then
@@ -183,7 +183,7 @@ create or replace type body game_ot is
    begin
       t_valid_guesses := self.valid_guesses;
       <<combine>>
-      for i in 1..t_valid_guesses.count
+      for i in 1..t_valid_guesses.count -- NOSONAR: plsql:ForLoopUsageCheck dense array
       loop
          util.add_text_ct(io_text_ct => t_result, in_text_ct => t_valid_guesses(i).not_like_patterns(solution));
       end loop combine;
@@ -271,7 +271,7 @@ select word
       begin
          t_not_like_patterns := self.not_like_patterns;
          <<patterns>>
-         for i in 1..t_not_like_patterns.count
+         for i in 1..t_not_like_patterns.count -- NOSONAR: plsql:ForLoopUsageCheck dense array
          loop
             l_pred := l_pred
                       || chr(10)
@@ -288,7 +288,7 @@ select word
       begin
          t_containing_letters := self.containing_letters;
          <<letters>>
-         for i in 1..t_containing_letters.count
+         for i in 1..t_containing_letters.count -- NOSONAR: plsql:ForLoopUsageCheck dense array
          loop
             l_pred := l_pred
                       || chr(10)
@@ -308,7 +308,7 @@ select word
       begin
          t_missing_letters := self.missing_letters;
          <<letters>>
-         for i in 1..t_missing_letters.count
+         for i in 1..t_missing_letters.count -- NOSONAR: plsql:ForLoopUsageCheck dense array
          loop
             l_pred := l_pred
                       || chr(10)
