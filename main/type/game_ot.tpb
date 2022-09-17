@@ -144,8 +144,8 @@ create or replace type body game_ot is
    member function like_pattern return varchar2 is
       t_valid_guesses guess_ct;
       t_like          text_ct := text_ct();
-      l_pattern_char  varchar2(1);
-      l_result        varchar2(5);
+      l_pattern_char  varchar2(1 char);
+      l_result        varchar2(5 char);
    begin
       t_valid_guesses := self.valid_guesses;
       <<populate_t_like>>
