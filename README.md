@@ -298,6 +298,14 @@ Bravo! You completed Wordle 209 4/6
 
 In this case no guess was used as starting point. This works. `autoplay` always chooses the first suggestion, also for the very first guess. This process is repeated until a solution is found. It does not matter how many guesses are necessary. In 99.87 percent of the cases a solution is found within 6 guesses in normal mode (98.27 percent in hard mode).
 
+You can test that yourself by running
+
+```sql
+exec wordle.set_hard_mode(true);
+select wordle.bulkplay(in_from_game_id => 0, in_to_game_id => 2308).getclobval()
+  from dual;
+```
+
 ### Signatures
 
 Here are the relevant signaturs of the PL/SQL package `wordle` for the `autoplay` functions.
