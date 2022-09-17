@@ -33,8 +33,8 @@ create or replace type body guess_ot as
       end number_of_letters_in_guess;
       --
       procedure check_hard_mode is
-         l_match  varchar2(1);
-         l_letter varchar2(1);
+         l_match  varchar2(1 char);
+         l_letter varchar2(1 char);
       begin
          <<letters>>
          for i in 1..5
@@ -156,7 +156,7 @@ create or replace type body guess_ot as
    -- like_pattern (member)
    -- -----------------------------------------------------------------------------------------------------------------
    member function like_pattern return varchar2 is
-      l_result varchar2(5);
+      l_result varchar2(5 char);
    begin
       <<letters>>
       for i in 1..5
