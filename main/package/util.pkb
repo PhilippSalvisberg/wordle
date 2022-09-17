@@ -28,13 +28,13 @@ create or replace package body util is
    ) return varchar2
       deterministic
    is
-      type t_letter_type is table of pls_integer index by varchar2(1);
+      type t_letter_type is table of pls_integer index by varchar2(1 char);
       t_solution_letters         t_letter_type := t_letter_type();
       t_rightpos_letters         t_letter_type := t_letter_type();
       t_running_wrongpos_letters t_letter_type := t_letter_type();
-      l_pattern                  varchar2(5);
-      l_solution_letter          varchar2(1);
-      l_guess_letter             varchar2(1);
+      l_pattern                  varchar2(5 char);
+      l_solution_letter          varchar2(1 char);
+      l_guess_letter             varchar2(1 char);
       --
       procedure add_letter(
          io_letters             in out t_letter_type,
