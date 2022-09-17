@@ -8,8 +8,6 @@ create or replace type body game_ot is
       in_hard_mode in            integer,
       in_guesses   in            text_ct
    ) return self as result is
-      o_guess         guess_ot;
-      t_valid_guesses guess_ct;
    begin
       self.solution  := in_solution;
       self.hard_mode := in_hard_mode;
