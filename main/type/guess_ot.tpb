@@ -21,7 +21,7 @@ create or replace type body guess_ot as
          l_count integer := 0;
       begin
          <<letters>>
-         for i in 1..5
+         for i in 1..common.co_word_len
          loop
             if substr(in_previous_guess.word, i, 1) = in_letter then
                if substr(in_previous_guess.pattern, i, 1) in ('2', '1') then
@@ -37,7 +37,7 @@ create or replace type body guess_ot as
          l_letter varchar2(1 char);
       begin
          <<letters>>
-         for i in 1..5
+         for i in 1..common.co_word_len
          loop
             l_match  := substr(in_previous_guess.pattern, i, 1);
             l_letter := substr(in_previous_guess.word, i, 1);
@@ -73,8 +73,11 @@ create or replace type body guess_ot as
       word   := lower(in_word);
       errors := text_ct();
       if word is not null then
-         if length(word) < 5 or length(word) > 5 then
-            add_error(word || ' does not have exactly 5 letters.');
+         if length(word) < common.co_word_len or length(word) > common.co_word_len then
+            add_error(word
+               || ' does not have exactly '
+               || common.co_word_len
+               || ' letters.');
          end if;
          if not exists_word(word) then
             add_error(word || ' is not in word list.');
@@ -102,7 +105,10 @@ create or replace type body guess_ot as
    begin
       return (
             case
-               when errors is not null and errors.count = 0 and length(word) = 5 and length(pattern) = 5 then
+               when errors is not null and errors.count = 0
+                  and length(word) = common.co_word_len
+                  and length(pattern) = common.co_word_len
+               then
                   1
                else
                   0
@@ -156,10 +162,10 @@ create or replace type body guess_ot as
    -- like_pattern (member)
    -- -----------------------------------------------------------------------------------------------------------------
    member function like_pattern return varchar2 is
-      l_result varchar2(5 char);
+      l_result varchar2(common.co_word_len char);
    begin
       <<letters>>
-      for i in 1..5
+      for i in 1..common.co_word_len
       loop
          if substr(pattern, i, 1) = '2' then
             l_result := l_result || substr(word, i, 1);
@@ -177,7 +183,7 @@ create or replace type body guess_ot as
       t_result text_ct := text_ct();
    begin
       <<letters>>
-      for i in 1..5
+      for i in 1..common.co_word_len
       loop
          if substr(pattern, i, 1) = '1'
             or substr(pattern, i, 1) = '0' and instr(in_solution, substr(word, i, 1)) > 0
@@ -185,7 +191,7 @@ create or replace type body guess_ot as
             t_result.extend;
             t_result(t_result.count) := rpad('_', i - 1, '_')
                                         || substr(word, i, 1)
-                                        || rpad('_', 5 - i, '_');
+                                        || rpad('_', common.co_word_len - i, '_');
          end if;
       end loop letters;
       return t_result;

@@ -32,7 +32,7 @@ create or replace package body util is
       t_solution_letters         t_letter_type := t_letter_type();
       t_rightpos_letters         t_letter_type := t_letter_type();
       t_running_wrongpos_letters t_letter_type := t_letter_type();
-      l_pattern                  varchar2(5 char);
+      l_pattern                  varchar2(common.co_word_len char);
       l_solution_letter          varchar2(1 char);
       l_guess_letter             varchar2(1 char);
       --
@@ -155,7 +155,7 @@ create or replace package body util is
       for i in 1..length(in_word)
       loop
          append_letter(upper(substr(in_word, i, 1)), substr(in_pattern, i, 1));
-         if i < 5 then
+         if i < common.co_word_len then
             append(' '); -- character separator
          end if;
       end loop process_pattern_positions;

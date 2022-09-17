@@ -145,7 +145,7 @@ create or replace type body game_ot is
       t_valid_guesses guess_ct;
       t_like          text_ct := text_ct();
       l_pattern_char  varchar2(1 char);
-      l_result        varchar2(5 char);
+      l_result        varchar2(common.co_word_len char);
    begin
       t_valid_guesses := self.valid_guesses;
       <<populate_t_like>>
@@ -155,7 +155,7 @@ create or replace type body game_ot is
          t_like(t_like.count) := t_valid_guesses(i).like_pattern;
       end loop populate_t_like;
       <<pattern_pos>>
-      for i in 1..5
+      for i in 1..common.co_word_len
       loop
          <<combine>>
          for j in 1..t_like.count -- NOSONAR: plsql:ForLoopUsageCheck dense array

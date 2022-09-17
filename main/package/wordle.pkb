@@ -161,9 +161,11 @@ create or replace package body wordle is
                                             ),
                                             xmlelement("queryBeforeLastAttempt",
                                                case
-                                                  when g.number_of_guesses > 6 then
+                                                  when g.number_of_guesses > common.co_max_guesses then
                                                      xmlcdata(chr(10)
-                                                        || g.game.suggestions_query(in_rows => 10, in_for_guess => 5)
+                                                        || g.game.suggestions_query(
+                                                           in_rows      => 10,
+                                                           in_for_guess => common.co_max_guesses - 1)
                                                         || chr(10))
                                                   else
                                                      null
