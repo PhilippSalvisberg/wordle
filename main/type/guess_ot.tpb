@@ -18,18 +18,18 @@ create or replace type body guess_ot as
       function number_of_letters_in_guess(
          in_letter in varchar2
       ) return integer is
-         i_count integer := 0;
+         l_count integer := 0;
       begin
          <<letters>>
          for i in 1..5
          loop
             if substr(in_previous_guess.word, i, 1) = in_letter then
                if substr(in_previous_guess.pattern, i, 1) in ('2', '1') then
-                  i_count := i_count + 1;
+                  l_count := l_count + 1;
                end if;
             end if;
          end loop letters;
-         return i_count;
+         return l_count;
       end number_of_letters_in_guess;
       --
       procedure check_hard_mode is
