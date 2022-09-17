@@ -232,7 +232,7 @@ create or replace package body wordle is
          if t_errors.count > 0 then
             append('reduced input due to the following errors:');
             <<errors>>
-            for i in 1..t_errors.count
+            for i in 1..t_errors.count -- NOSONAR: plsql:ForLoopUsageCheck dense array
             loop
                append('- ' || t_errors(i));
             end loop errors;
@@ -246,7 +246,7 @@ create or replace package body wordle is
          t_guesses := o_game.valid_guesses();
          if t_guesses.count > 0 then
             <<guesses>>
-            for i in 1..t_guesses.count
+            for i in 1..t_guesses.count -- NOSONAR: plsql:ForLoopUsageCheck dense array
             loop
                append(util.encode(t_guesses(i).word, t_guesses(i).pattern, util.bool_to_int(g_ansiconsole)));
             end loop guesses;
@@ -263,7 +263,7 @@ create or replace package body wordle is
             append();
          end if;
          <<suggestions>>
-         for i in 1..t_suggestions.count
+         for i in 1..t_suggestions.count -- NOSONAR: plsql:ForLoopUsageCheck dense array
          loop
             append(t_suggestions(i));
          end loop suggestions;
