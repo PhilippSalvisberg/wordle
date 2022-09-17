@@ -40,7 +40,7 @@ The installation scripts creates and populates this database model:
 
 ![Data Model](model/data-model.png)
 
-The main table is `WORDS`. It contains `12974` accepted words. `2309` of these words are used as solutions. They have an assosciated `GAME_ID` and `GAME_DATE`. As a result they are used only once. The last Wordle game #2308 is scheduled for 2027-10-14.
+The main table is `WORDS`. It contains `14855` accepted words. `2309` of these words are used as solutions. They have an assosciated `GAME_ID` and `GAME_DATE`. As a result they are used only once. The last Wordle game #2308 is scheduled for 2027-10-14.
 
 ## Semantic
 
@@ -296,7 +296,15 @@ autoplay added: tangy (4)
 Bravo! You completed Wordle 209 4/6
 ```
 
-In this case no guess was used as starting point. This works. `autoplay` always chooses the first suggestion, also for the very first guess. This process is repeated until a solution is found. It does not matter how many guesses are necessary. In 99.87 percent of the cases a solution is found within 6 guesses in normal mode (98.44 percent in hard mode).
+In this case no guess was used as starting point. This works. `autoplay` always chooses the first suggestion, also for the very first guess. This process is repeated until a solution is found. It does not matter how many guesses are necessary. In 99.87 percent of the cases a solution is found within 6 guesses in normal mode (98.27 percent in hard mode).
+
+You can test that yourself by running
+
+```sql
+exec wordle.set_hard_mode(true);
+select wordle.bulkplay(in_from_game_id => 0, in_to_game_id => 2308).getclobval()
+  from dual;
+```
 
 ### Signatures
 
