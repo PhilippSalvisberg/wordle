@@ -10,7 +10,7 @@ create or replace package body util is
    is
    begin
       <<entries>>
-      for i in 1..in_text_ct.count
+      for i in 1..in_text_ct.count -- NOSONAR: plsql:ForLoopUsageCheck dense array
       loop
          if in_text_ct(i) = in_entry then
             return true; -- NOSONAR G-7430: return a.s.a.p
@@ -186,7 +186,7 @@ create or replace package body util is
    ) is
    begin
       <<entries>>
-      for i in 1..in_text_ct.count
+      for i in 1..in_text_ct.count -- NOSONAR: plsql:ForLoopUsageCheck dense array
       loop
          if not contains(io_text_ct, in_text_ct(i)) then
             io_text_ct.extend;
@@ -202,7 +202,7 @@ create or replace package body util is
       l_list varchar2(4000 byte);
    begin
       <<entries>>
-      for i in 1..in_list.count
+      for i in 1..in_list.count -- NOSONAR: plsql:ForLoopUsageCheck dense array
       loop
          if l_list is not null then
             l_list := l_list || ', ';
